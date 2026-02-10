@@ -1,4 +1,4 @@
-<items gfxroot="gfx/olympians/items/" version="1" deathanm2="gfx/death_items.anm2">
+<items gfxroot="gfx/gauntlet/items/" version="1" deathanm2="gfx/death_items.anm2">
 
 	<passive id="1" 
 		name="Hephaestus" description="Go for gold"

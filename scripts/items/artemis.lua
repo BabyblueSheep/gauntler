@@ -56,17 +56,17 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player
     local rng = player:GetCollectibleRNG(TheGauntlet.Items.Artemis.CollectibleType)
 
     local data = player:GetData()
-    if data.OlympianArtemis == nil then
-        data.OlympianArtemis = {
+    if data.GauntletArtemis == nil then
+        data.GauntletArtmeis = {
             TimeLeft = TIME_BETWEEN_ARROW_DIRECTION_CHANGE,
             Direction = RandomCardinalVector(rng)
         }
     end
 
-    data.OlympianArtemis.TimeLeft = data.OlympianArtemis.TimeLeft - 1
-    if data.OlympianArtemis.TimeLeft <= 0 then
-        data.OlympianArtemis.TimeLeft = TIME_BETWEEN_ARROW_DIRECTION_CHANGE
-        data.OlympianArtemis.Direction = RandomCardinalVector(rng)
+    data.GauntletArtmeis.TimeLeft = data.GauntletArtmeis.TimeLeft - 1
+    if data.GauntletArtmeis.TimeLeft <= 0 then
+        data.GauntletArtmeis.TimeLeft = TIME_BETWEEN_ARROW_DIRECTION_CHANGE
+        data.GauntletArtmeis.Direction = RandomCardinalVector(rng)
     end
 end)
 
@@ -78,11 +78,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, function (_, tear)
     if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end
 
     local data = player:GetData()
-    if data.OlympianArtemis == nil then return end
+    if data.GauntletArtmeis == nil then return end
 
     local tearDirection = tear.Velocity:Normalized()
     ---@type Vector
-    local arrowDirection = data.OlympianArtemis.Direction
+    local arrowDirection = data.GauntletArtmeis.Direction
 
     local angleDifference = tearDirection:Dot(arrowDirection)
     if angleDifference > MINIMUM_VALID_ANGLE_DIFFERENCE then
@@ -102,11 +102,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_BOMB, function (_, bomb)
     if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end
 
     local data = player:GetData()
-    if data.OlympianArtemis == nil then return end
+    if data.GauntletArtmeis == nil then return end
 
     local tearDirection = bomb.Velocity:Normalized()
     ---@type Vector
-    local arrowDirection = data.OlympianArtemis.Direction
+    local arrowDirection = data.GauntletArtmeis.Direction
 
     local angleDifference = tearDirection:Dot(arrowDirection)
     if angleDifference > MINIMUM_VALID_ANGLE_DIFFERENCE then
@@ -124,13 +124,13 @@ TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, function (_, p
     if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end
 
     local data = player:GetData()
-    if data.OlympianArtemis == nil then return end
+    if data.GauntletArtmeis == nil then return end
 
     local tearFireDirection = player:GetFireDirection()
     if tearFireDirection == Direction.NO_DIRECTION then return end
     local tearDirection = Isaac.GetAxisAlignedUnitVectorFromDir(tearFireDirection)
     ---@type Vector
-    local arrowDirection = data.OlympianArtemis.Direction
+    local arrowDirection = data.GauntletArtmeis.Direction
 
     local angleDifference = tearDirection:Dot(arrowDirection)
     if angleDifference > MINIMUM_VALID_ANGLE_DIFFERENCE then
@@ -153,9 +153,9 @@ local ANGLE_TO_ARROW = {
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_RENDER, function (_, player)
     local data = player:GetData()
-    if data.OlympianArtemis == nil then return end
+    if data.GauntletArtmeis == nil then return end
     ---@type Vector
-    local direction = data.OlympianArtemis.Direction
+    local direction = data.GauntletArtmeis.Direction
 
     local drawPosition = Isaac.WorldToScreen(player.Position)
     Isaac.RenderText(ANGLE_TO_ARROW[math.floor(direction:GetAngleDegrees() + 90)], drawPosition.X, drawPosition.Y - 50, 1, 1, 1, 255)
