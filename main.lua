@@ -3,8 +3,9 @@ TheGauntlet = RegisterMod("The Gauntlet", 1)
 TheGauntlet.SaveManager = include("scripts.library.save_manager")
 TheGauntlet.SaveManager.Init(TheGauntlet)
 
-TheGauntlet.Gauntlet = {}
-include("scripts.gauntlet.chance")
+TheGauntlet.GauntletRoom = {}
+include("scripts.gauntlet_room.chance")
+include("scripts.gauntlet_room.generation")
 
 TheGauntlet.Items = {}
 include("scripts.items.artemis")

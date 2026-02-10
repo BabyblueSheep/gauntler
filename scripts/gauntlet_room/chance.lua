@@ -15,6 +15,15 @@ local FLOORS_WITH_CHALLENGE_ROOMS = {
     [LevelStage.STAGE5] = true,
 }
 
+---@param isContinued boolean
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, isContinued)
+    if not isContinued then
+        TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted = 0
+        TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted = 0
+    end
+end)
+
+
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_ROOM_CLEAR, function (_, player)
     --ModCallbacks.MC_POST_ROOM_TRIGGER_CLEAR doesn't trigger after completing challenge waves
@@ -26,30 +35,25 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_ROOM_CLEAR, function
     if level:GetCurrentRoomDesc().Data.Type ~= RoomType.ROOM_CHALLENGE then return end
 
     if FLOORS_WITH_BOSS_CHALLENGE_ROOMS[level:GetStage()] then
-        if TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted == nil then
-            TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted = 0
-        end
         TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted + 1
     else
-        if TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted == nil then
-            TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted = 0
-        end
         TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted + 1
     end
 end)
 
-function TheGauntlet.Gauntlet.GetGenerationChance()
+---@return number
+function TheGauntlet.GauntletRoom.GetGenerationChance()
     local stage = Game():GetLevel():GetStage()
     if not FLOORS_WITH_CHALLENGE_ROOMS[stage] and not FLOORS_WITH_BOSS_CHALLENGE_ROOMS[stage] then
         return 0
     end
 
-    local defaultChance = 1
+    local defaultChance = 0.01
 
     local challengeRoomCompletionChance = TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted * GAUNTLET_ROOM_CHANCE_PER_COMPLETED_CHALLENGE_ROOM
     local bossChallengeRoomCompletionChance = TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted * GAUNTLET_ROOM_CHANCE_PER_COMPLETED_BOSS_CHALLENGE_ROOM
 
     local totalChance = defaultChance + challengeRoomCompletionChance + bossChallengeRoomCompletionChance
 
-    return totalChance
+    return 1--totalChance
 end
