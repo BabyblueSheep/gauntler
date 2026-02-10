@@ -1,0 +1,27 @@
+<items gfxroot="gfx/olympians/items/" version="1" deathanm2="gfx/death_items.anm2">
+
+	<passive id="1" 
+		name="Hephaestus" description="Go for gold"
+		gfx="hephaestus.png"
+		quality="3" craftquality="4"
+		tags="summonable offensive lazarussharedglobal"
+	/>
+	
+	<passive id="2" 
+		name="Dionysus" description="You feel tipsy"
+		gfx="dionysus.png"
+		tears="0.5" damage="1" speed="0.3" range="1.25" luck="1"
+		maxhearts="2" hearts="2"
+		bombs="1" keys="1" coins="1"
+		quality="3"
+		tags="summonable offensive"
+	/>
+
+	<passive id="3" 
+		name="Artemis" description="Aim and fire"
+		gfx="artemis.png"
+		quality="2"
+		tags="summonable offensive"
+	/>
+	
+</items>
