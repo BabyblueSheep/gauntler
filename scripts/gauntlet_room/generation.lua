@@ -8,7 +8,7 @@ function TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom()
     local typeIsCorrect = roomDescriptor.Data.Type == RoomType.ROOM_CHALLENGE
     local subtypesMatch = roomDescriptor.Data.Subtype == TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_SUBTYPE
 
-    return subtypesMatch
+    return typeIsCorrect and subtypesMatch
 end
 
 ---@param roomDescriptor RoomDescriptor
@@ -17,7 +17,7 @@ function TheGauntlet.GauntletRoom.IsRoomGauntletRoom(roomDescriptor)
     local typeIsCorrect = roomDescriptor.Data.Type == RoomType.ROOM_CHALLENGE
     local subtypesMatch = roomDescriptor.Data.Subtype == TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_SUBTYPE
 
-    return subtypesMatch
+    return typeIsCorrect and subtypesMatch
 end
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_, player)
@@ -38,8 +38,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_, player)
         TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_SUBTYPE
     )
 
-    print(entranceRoomConfigToPlace)
-
     local entranceRoomValidPlacementIndexes = level:FindValidRoomPlacementLocations
     (
         entranceRoomConfigToPlace, nil,
@@ -59,7 +57,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     local level = Game():GetLevel()
 
-    --Force all Toxic Ashpit rooms adjacent to the entrance room to be barred off
     local currentRoomDescriptor = level:GetCurrentRoomDesc()
     local neighbourRooms = currentRoomDescriptor:GetNeighboringRooms()
     for doorSlot, roomDescriptorNeighbour in pairs(neighbourRooms) do
@@ -67,9 +64,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
             local doorGridEntity = room:GetDoor(doorSlot):ToDoor()
 
             doorGridEntity:Close(true)
-            doorGridEntity:SetVariant(DoorVariant.DOOR_LOCKED_CRACKED)
+            doorGridEntity:SetVariant(DoorVariant.DOOR_LOCKED)
             doorGridEntity.State = DoorState.STATE_CLOSED
-            doorGridEntity:SetRoomTypes(RoomType.ROOM_DEFAULT, RoomType.ROOM_DEFAULT)
+            doorGridEntity.VarData = 1
+            doorGridEntity:SetRoomTypes(RoomType.ROOM_DEFAULT, RoomType.ROOM_SECRET_EXIT)
+            doorGridEntity:GetSprite():Load("gfx/grid/door_mausoleum.anm2", true);
             doorGridEntity:Update()
         end
     end
