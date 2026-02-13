@@ -41,8 +41,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_ROOM_CLEAR, function
     end
 end)
 
----@return number
-function TheGauntlet.GauntletRoom.GetGenerationChance()
+function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
     local stage = Game():GetLevel():GetStage()
     if not FLOORS_WITH_CHALLENGE_ROOMS[stage] and not FLOORS_WITH_BOSS_CHALLENGE_ROOMS[stage] then
         return 0
@@ -55,5 +54,9 @@ function TheGauntlet.GauntletRoom.GetGenerationChance()
 
     local totalChance = defaultChance + challengeRoomCompletionChance + bossChallengeRoomCompletionChance
 
-    return 1--totalChance
+    TheGauntlet.SaveManager.GetRunSave().GauntletGenerationChance = totalChance
+end
+
+function TheGauntlet.GauntletRoom.GetGenerationChance()
+    return TheGauntlet.SaveManager.GetRunSave().GauntletGenerationChance
 end
