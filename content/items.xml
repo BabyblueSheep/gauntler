@@ -23,5 +23,20 @@
 		quality="2"
 		tags="summonable offensive"
 	/>
+
+	<passive id="4" 
+		name="Zeus" description="Shocking actives"
+		gfx="zeus.png"
+		quality="3"
+		tags="summonable offensive"
+	/>
+
+	<active id="5" 
+		name=" Zeus " description="Shocking actives"
+		gfx="zeus.png"
+		maxcharges="4"
+		quality="3"
+		tags="noeden" hidden="true"
+	/>
 	
 </items>
