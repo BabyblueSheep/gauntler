@@ -1,0 +1,12 @@
+<backdrops gfxroot="gfx/gauntlet/backdrop/" gridgfxroot="gfx/gauntlet/grid/" effectsgfxroot="gfx/gauntlet/effects/">
+	<backdrop name="Gauntlet Room Backdrop" gfx="gauntlet_room.png" walls="1" wallvariants="1" floors="1" floorvariants="1"
+		props		= "gauntlet_props.anm2"
+		rocks		= "rocks_gehenna.png"
+		pit			= "grid_pit_necropolis.png"
+		waterpit	= "grid_pit_blood_sacrifice.png"
+		bridge		= "grid_bridge_gehenna.png"
+		door		= "door_14_depthsdoor.png"
+		holeinwall	= "door_08_holeinwall_depths.png"
+		waterpitsmode	= "2"
+    />
+</backdrops>
