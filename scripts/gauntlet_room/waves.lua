@@ -7,17 +7,17 @@ local GAUNTLET_ROOM_ITEM_POOL = Isaac.GetPoolIdByName("gauntletRoom")
 
 local WAVE_CONFIGURATIONS_NORMAL_MODE = {
     { 10, 5, 5 },
-    { 10, 5, 10 },
-    { 10, 5, 15 },
-    { 10, 10, 15 },
-    { 11, 1, 5 },
+    { 10, 10, 10 },
+    { 10, 10, 10 },
+    { 10, 15, 15 },
+    { 11, 1, 1 },
 }
 local WAVE_CONFIGURATIONS_HARD_MODE = {
-    { 10, 5, 15 },
-    { 10, 10, 15 },
-    { 11, 1, 5 },
+    { 10, 10, 10 },
     { 10, 15, 15 },
-    { 11, 5, 10 },
+    { 11, 1, 1 },
+    { 10, 15, 15 },
+    { 11, 5, 5 },
 }
 
 ---@param type EntityType
@@ -73,7 +73,8 @@ end, FAKE_PENTAGRAM_VARIANT)
 ---@param maxDifficulty integer
 local function SpawnAmbush(type, minDifficulty, maxDifficulty)
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
-    local rng = RNG(roomSave.WaveSeed)
+    local tempSave = TheGauntlet.SaveManager.GetTempSave()
+    local rng = RNG(tempSave.WaveSeed)
 
     local ambushWave = RoomConfig.GetRandomRoom
     (
@@ -107,15 +108,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     if not roomSave.Init then
         roomSave.TeleportSeed = room:GetAwardSeed()
-        roomSave.WaveSeed = room:GetAwardSeed()
-
-        roomSave.WaveDelay = 0
-        roomSave.WaveNumber = 0
 
         roomSave.Init = true
     end
-
-    roomSave.DidHostileEnemiesExist = false
 
     if room:IsAmbushDone() then
         musicManager:Play(Music.MUSIC_BOSS_OVER, 0)
@@ -131,16 +126,28 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     if room:IsAmbushDone() then return end
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
+    local tempSave = TheGauntlet.SaveManager.GetTempSave()
 
-    for _, doorSlot in pairs(DoorSlot) do
-        local door = room:GetDoor(doorSlot)
-        if door == nil then goto continue end
+    if not tempSave.Init then
+        for _, doorSlot in pairs(DoorSlot) do
+            local door = room:GetDoor(doorSlot)
+            if door == nil then goto continue end
 
-        door:Close(true)
+            door:Close(true)
 
-        ::continue::
+            ::continue::
+        end
+
+        tempSave.WaveSeed = room:GetAwardSeed()
+
+        tempSave.WaveDelay = 0
+        tempSave.WaveNumber = 0
+
+        roomSave.DidHostileEnemiesExist = false
+
+        tempSave.Init = true
     end
-    room:SetClear(false)
+
     room:KeepDoorsClosed()
 
     local doHostileEnemiesExist = false
@@ -153,12 +160,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     end
 
     if doHostileEnemiesExist then
-        roomSave.WaveDelay = 0
+        tempSave.WaveDelay = 0
     else
-        roomSave.WaveDelay = roomSave.WaveDelay + 1
+        tempSave.WaveDelay = tempSave.WaveDelay + 1
     end
 
-    if not doHostileEnemiesExist and roomSave.DidHostileEnemiesExist then
+    if not doHostileEnemiesExist and tempSave.DidHostileEnemiesExist then
         for _, entity in ipairs(Isaac.GetRoomEntities()) do
             if entity:ToPlayer() ~= nil then
                 entity:ToPlayer():TriggerRoomClear()
@@ -169,13 +176,13 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
         end
     end
 
-    if roomSave.WaveDelay > 30 then
-        roomSave.WaveDelay = 0
+    if tempSave.WaveDelay > 30 then
+        tempSave.WaveDelay = 0
 
-        roomSave.WaveNumber = roomSave.WaveNumber + 1
+        tempSave.WaveNumber = tempSave.WaveNumber + 1
         local waveConfigurations = Game().Difficulty == Difficulty.DIFFICULTY_HARD and WAVE_CONFIGURATIONS_HARD_MODE or WAVE_CONFIGURATIONS_NORMAL_MODE
 
-        if roomSave.WaveNumber > #waveConfigurations then
+        if tempSave.WaveNumber > #waveConfigurations then
             room:SetClear(true)
             room:SetAmbushDone(true)
 
@@ -198,12 +205,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
                 musicManager:Play(Music.MUSIC_CHALLENGE_FIGHT, 0)
                 musicManager:UpdateVolume()
             end
-            local waveConfiguration = waveConfigurations[roomSave.WaveNumber]
+            local waveConfiguration = waveConfigurations[tempSave.WaveNumber]
             SpawnAmbush(waveConfiguration[1], waveConfiguration[2], waveConfiguration[3])
         end
     end
 
-    roomSave.DidHostileEnemiesExist = doHostileEnemiesExist
+    tempSave.DidHostileEnemiesExist = doHostileEnemiesExist
 end)
 
 ---@param entity Entity
@@ -214,6 +221,9 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
     if Game():GetRoom():IsAmbushDone() then return end
+
+    if damageFlags & DamageFlag.DAMAGE_FAKE == DamageFlag.DAMAGE_FAKE then return end
+    if damageFlags & DamageFlag.DAMAGE_NO_PENALTIES == DamageFlag.DAMAGE_NO_PENALTIES then return end
 
     if entity.Type ~= EntityType.ENTITY_PLAYER then return end
     ---@type EntityPlayer
