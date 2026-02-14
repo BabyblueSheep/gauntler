@@ -15,29 +15,32 @@ local FLOORS_WITH_CHALLENGE_ROOMS = {
     [LevelStage.STAGE5] = true,
 }
 
----@param isContinued boolean
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, isContinued)
-    if not isContinued then
-        TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted = 0
-        TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted = 0
-    end
-end)
-
-
----@param player EntityPlayer
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_TRIGGER_ROOM_CLEAR, function (_, player)
-    --ModCallbacks.MC_POST_ROOM_TRIGGER_CLEAR doesn't trigger after completing challenge waves
-    --So, use ModCallbacks.MC_POST_PLAYER_TRIGGER_ROOM_CLEAR and call only on one player
-    if player:GetPlayerIndex() ~= 0 then return end
-
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
+    local room = Game():GetRoom()
     local level = Game():GetLevel()
 
     if level:GetCurrentRoomDesc().Data.Type ~= RoomType.ROOM_CHALLENGE then return end
 
-    if FLOORS_WITH_BOSS_CHALLENGE_ROOMS[level:GetStage()] then
-        TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted + 1
-    else
-        TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted + 1
+    local runSave = TheGauntlet.SaveManager.GetRunSave()
+    local roomSave = TheGauntlet.SaveManager.GetRoomSave()
+
+    if roomSave.RoomAccountedFor == true then return end
+
+    if room:IsAmbushDone() then
+        if runSave.BossChallengeRoomsCompleted == nil then
+            runSave.BossChallengeRoomsCompleted = 0
+        end
+        if runSave.ChallengeRoomsCompleted == nil then
+            runSave.ChallengeRoomsCompleted = 0
+        end
+
+        roomSave.RoomAccountedFor = true
+
+        if level:GetCurrentRoomDesc().Data.Subtype == 1 then
+            runSave.BossChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted + 1
+        else
+            runSave.ChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted + 1
+        end
     end
 end)
 

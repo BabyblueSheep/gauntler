@@ -1,0 +1,3 @@
+<entities anm2root="gfx/" version="5" deathanm2="gfx/enemy_death_portraits.anm2">
+	<entity id="1000" variant="2051" subtype="0" name="A Replication and Recreation of a Spawn Pentagram added in Repentance Plus" anm2path="1000.203_spawn pentagram.anm2"/>
+</entities>

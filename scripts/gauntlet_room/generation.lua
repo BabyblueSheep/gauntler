@@ -65,6 +65,32 @@ end
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     InitializeDoors()
+
+    if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
+
+    local room = Game():GetRoom()
+
+    for _, doorSlot in pairs(DoorSlot) do
+        local door = room:GetDoor(doorSlot)
+
+        if door == nil then goto continue end
+
+        local targetRoom = Game():GetLevel():GetCurrentRoomDesc():GetNeighboringRooms()[door.Slot]
+        if targetRoom == nil then goto continue end
+        if targetRoom.Data.Type == RoomType.ROOM_SECRET or targetRoom.Data.Type == RoomType.ROOM_SUPERSECRET then goto continue end
+        
+        local sprite = door:GetSprite()
+
+        if sprite:GetFilename() ~= "gfx/gauntlet/grid/door_gauntlet_room.anm2" then
+            local animation = sprite:GetAnimation()
+            local frame = sprite:GetFrame()
+            sprite:Load("gfx/gauntlet/grid/door_gauntlet_room.anm2", true)
+            sprite:SetAnimation(animation, false)
+            sprite:SetFrame(frame)
+        end
+
+        ::continue::
+    end
 end)
 
 ---@param door GridEntityDoor
@@ -155,6 +181,7 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_ITEM, CallbackPriority.EARLY
     if collectibleType ~= CollectibleType.COLLECTIBLE_D7 then return end
 
     local room = Game():GetRoom()
+    if room:IsClear() then return end
 
     for _, doorSlot in pairs(DoorSlot) do
         local door = room:GetDoor(doorSlot)
