@@ -1,0 +1,5 @@
+<sounds root="sfx/gauntlet/">
+	<sound name="TheGauntlet Shadow Spell">
+		<sample weight="1" path="shadow spell.wav" /> <!-- https://freesound.org/people/EminYILDIRIM/sounds/559088/ -->
+	</sound>
+</sounds>

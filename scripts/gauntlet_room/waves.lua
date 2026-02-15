@@ -3,7 +3,12 @@ local musicManager = MusicManager()
 
 local FAKE_PENTAGRAM_VARIANT = Isaac.GetEntityVariantByName("A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
 
-local GAUNTLET_ROOM_ITEM_POOL = Isaac.GetPoolIdByName("gauntletRoom")
+TheGauntlet.GauntletRoom.ItenPool = Isaac.GetPoolIdByName("The Gauntlet gauntletRoom")
+
+TheGauntlet.GauntletRoom.ShadowSpellSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Shadow Spell")
+
+local TIME_BEFORE_DOORS_CLOSE = 10
+local TIME_BETWEEN_WAVES = 30 --TODO: figure out the actual time between waves for accuracy
 
 local WAVE_CONFIGURATIONS_NORMAL_MODE = {
     { 10, 5, 5 },
@@ -15,8 +20,8 @@ local WAVE_CONFIGURATIONS_NORMAL_MODE = {
 local WAVE_CONFIGURATIONS_HARD_MODE = {
     { 10, 10, 10 },
     { 10, 15, 15 },
-    { 11, 1, 1 },
     { 10, 15, 15 },
+    { 11, 1, 1 },
     { 11, 5, 5 },
 }
 
@@ -64,7 +69,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
         )
         effect:Remove()
 
-        sfxManager:Play(SoundEffect.SOUND_SUMMONSOUND)
+        ---@diagnostic disable-next-line param-type-mismatch
+        sfxManager:Play(872)
     end
 end, FAKE_PENTAGRAM_VARIANT)
 
@@ -102,7 +108,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     local room = Game():GetRoom()
 
-    room:SetItemPool(GAUNTLET_ROOM_ITEM_POOL)
+    room:SetItemPool(TheGauntlet.GauntletRoom.ItenPool)
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
 
@@ -129,6 +135,25 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     local tempSave = TheGauntlet.SaveManager.GetTempSave()
 
     if not tempSave.Init then
+        tempSave.WaveSeed = room:GetAwardSeed()
+
+        tempSave.WaveDelay = 0
+        tempSave.WaveNumber = 0
+
+        tempSave.ProperChallengeStartDelay = TIME_BEFORE_DOORS_CLOSE
+
+        roomSave.DidHostileEnemiesExist = false
+
+        tempSave.Init = true
+    end
+
+    if tempSave.ProperChallengeStartDelay > 0 then
+        tempSave.ProperChallengeStartDelay = tempSave.ProperChallengeStartDelay - 1
+
+        return
+    elseif tempSave.ProperChallengeStartDelay == 0 then
+        tempSave.ProperChallengeStartDelay = -1
+
         for _, doorSlot in pairs(DoorSlot) do
             local door = room:GetDoor(doorSlot)
             if door == nil then goto continue end
@@ -137,15 +162,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
             ::continue::
         end
-
-        tempSave.WaveSeed = room:GetAwardSeed()
-
-        tempSave.WaveDelay = 0
-        tempSave.WaveNumber = 0
-
-        roomSave.DidHostileEnemiesExist = false
-
-        tempSave.Init = true
     end
 
     room:KeepDoorsClosed()
@@ -176,7 +192,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
         end
     end
 
-    if tempSave.WaveDelay > 30 then
+    if tempSave.WaveDelay > TIME_BETWEEN_WAVES then
         tempSave.WaveDelay = 0
 
         tempSave.WaveNumber = tempSave.WaveNumber + 1
@@ -200,11 +216,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             )
 
             room:TriggerClear(true)
-        else 
+        else
             if musicManager:GetCurrentMusicID() ~= Music.MUSIC_CHALLENGE_FIGHT then
                 musicManager:Play(Music.MUSIC_CHALLENGE_FIGHT, 0)
                 musicManager:UpdateVolume()
             end
+
             local waveConfiguration = waveConfigurations[tempSave.WaveNumber]
             SpawnAmbush(waveConfiguration[1], waveConfiguration[2], waveConfiguration[3])
         end
@@ -234,6 +251,19 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     local teleportRNG = RNG(roomSave.TeleportSeed)
     roomSave.TeleportSeed = teleportRNG:Next()
 
-    local randomRoomIndex = Game():GetLevel():GetRandomRoomIndex(false, roomSave.TeleportSeed)
+    local currentRoomDescriptor = Game():GetLevel():GetCurrentRoomDesc()
+
+    local adjacentRooms = {}
+    for _, neighborDescriptor in pairs(currentRoomDescriptor:GetNeighboringRooms()) do
+        print(neighborDescriptor.GridIndex, neighborDescriptor.Data)
+        if neighborDescriptor.Data ~= nil then
+            table.insert(adjacentRooms, neighborDescriptor.GridIndex)
+        end
+    end
+
+    local randomRoomIndex = adjacentRooms[teleportRNG:RandomInt(#adjacentRooms) + 1]
+    print(randomRoomIndex)
     Game():StartRoomTransition(randomRoomIndex, -1, RoomTransitionAnim.TELEPORT)
+
+    sfxManager:Play(TheGauntlet.GauntletRoom.ShadowSpellSoundEffect)
 end)
