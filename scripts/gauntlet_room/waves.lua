@@ -255,14 +255,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     local adjacentRooms = {}
     for _, neighborDescriptor in pairs(currentRoomDescriptor:GetNeighboringRooms()) do
-        print(neighborDescriptor.GridIndex, neighborDescriptor.Data)
         if neighborDescriptor.Data ~= nil then
             table.insert(adjacentRooms, neighborDescriptor.GridIndex)
         end
     end
 
     local randomRoomIndex = adjacentRooms[teleportRNG:RandomInt(#adjacentRooms) + 1]
-    print(randomRoomIndex)
     Game():StartRoomTransition(randomRoomIndex, -1, RoomTransitionAnim.TELEPORT)
 
     sfxManager:Play(TheGauntlet.GauntletRoom.ShadowSpellSoundEffect)
