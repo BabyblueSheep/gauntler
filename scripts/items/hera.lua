@@ -39,17 +39,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     end
 end)
 
----@param shouldSave boolean
-TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, function (_, shouldSave)
-    for _, entity in ipairs(Isaac.GetRoomEntities()) do
-        if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == FamiliarVariant.MINISAAC then
-            if entity:GetData().HeraTemporary then
-                entity:Remove()
-            end
-        end
-    end
-end)
-
 local pregnantIcon = Sprite()
 pregnantIcon:Load("gfx/gauntlet/statuseffects.anm2", true)
 pregnantIcon:Play("Pregnant", true)
@@ -92,5 +81,15 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
         familiar.Velocity = rng:RandomVector() * TheGauntlet.Utility.RandomFloat(0, 5, rng)
 
         familiar:GetData().HeraTemporary = true
+        TheGauntlet.SaveManager.GetRunSave(familiar).HeraTemporary = true
+    end
+end)
+
+---@param familiar EntityFamiliar
+TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, function (_, familiar)
+    if TheGauntlet.SaveManager.GetRunSave(familiar).HeraTemporary then
+        if not familiar:GetData().HeraTemporary then
+            familiar:Remove()
+        end
     end
 end)
