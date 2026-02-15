@@ -268,7 +268,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
         end
     end
 
-    local randomRoomIndex = TheGauntlet.Utility.RandomItemFromList(teleportRNG, adjacentRooms)
+    local randomRoomIndex = TheGauntlet.Utility.RandomItemFromList(adjacentRooms, teleportRNG)
     Game():StartRoomTransition(randomRoomIndex, -1, RoomTransitionAnim.TELEPORT)
 
     sfxManager:Play(TheGauntlet.GauntletRoom.ShadowSpellSoundEffect)

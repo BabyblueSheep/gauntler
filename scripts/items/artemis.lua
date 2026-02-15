@@ -14,30 +14,6 @@ local CARDINAL_DIRECTIONS = {
     Vector(0, -1)
 }
 
-local TEAR_COPYING_FAMILIARS = {
-    [FamiliarVariant.INCUBUS] = true,
-    [FamiliarVariant.TWISTED_BABY] = true,
-    [FamiliarVariant.BLOOD_BABY] = true,
-    [FamiliarVariant.SPRINKLER] = true,
-    [FamiliarVariant.UMBILICAL_BABY] = true,
-    [FamiliarVariant.CAINS_OTHER_EYE] = true,
-    [FamiliarVariant.FATES_REWARD] = true
-}
-
----@param tear EntityTear
----@return EntityPlayer?
-local function GetPlayerFromTear(tear)
-    local player = tear.SpawnerEntity and tear.SpawnerEntity:ToPlayer()
-    if not player then
-        local familiar = tear.SpawnerEntity and tear.SpawnerEntity:ToFamiliar()
-        if not familiar then return end
-        if not TEAR_COPYING_FAMILIARS[familiar.Variant] then return end
-        player = familiar.Player
-    end
-    if player then return player end
-    return nil
-end
-
 local PIERCING_TEAR_VARIANTS = {
     [TearVariant.BLUE] = TearVariant.CUPID_BLUE,
     [TearVariant.BLOOD] = TearVariant.CUPID_BLOOD
@@ -46,7 +22,7 @@ local PIERCING_TEAR_VARIANTS = {
 ---@param rng RNG
 ---@return Vector
 local function RandomCardinalVector(rng)
-    return TheGauntlet.Utility.RandomItemFromList(rng, CARDINAL_DIRECTIONS)
+    return TheGauntlet.Utility.RandomItemFromList(CARDINAL_DIRECTIONS, rng)
 end
 
 ---@param player EntityPlayer
@@ -72,7 +48,7 @@ end)
 
 ---@param tear EntityTear
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, function (_, tear)
-    local player = GetPlayerFromTear(tear)
+    local player = TheGauntlet.Utility.GetPlayerFromEntity(tear, true)
     if player == nil then return end
 
     if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end
@@ -96,7 +72,7 @@ end)
 
 ---@param bomb EntityTear
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_BOMB, function (_, bomb)
-    local player = GetPlayerFromTear(bomb)
+    local player = TheGauntlet.Utility.GetPlayerFromEntity(bomb, true)
     if player == nil then return end
 
     if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end

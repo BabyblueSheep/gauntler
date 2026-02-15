@@ -81,7 +81,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
 
     local goldenPickupEntry = nil
     while goldenPickupEntry == nil do
-        local randomGoldenPickupEntry = TheGauntlet.Utility.RandomItemFromList(rng, TheGauntlet.Items.Hephaestus.GoldenPickups)
+        local randomGoldenPickupEntry = TheGauntlet.Utility.RandomItemFromList(TheGauntlet.Items.Hephaestus.GoldenPickups, rng)
         if randomGoldenPickupEntry.Condition() then
             goldenPickupEntry = randomGoldenPickupEntry
         end

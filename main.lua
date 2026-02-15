@@ -3,9 +3,8 @@ TheGauntlet = RegisterMod("The Gauntlet", 1)
 TheGauntlet.SaveManager = include("scripts.library.save_manager")
 TheGauntlet.SaveManager.Init(TheGauntlet)
 
-include("scripts.library.status_effect_library")
-
 TheGauntlet.Utility = {}
+include("scripts.utility.entity")
 include("scripts.utility.math")
 include("scripts.utility.random")
 
