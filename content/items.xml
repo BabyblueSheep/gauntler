@@ -34,9 +34,16 @@
 	<active id="5" 
 		name=" Zeus " description="Shocking actives"
 		gfx="zeus.png"
-		maxcharges="4"
+		maxcharges="4" initcharge="0"
 		quality="3"
 		tags="noeden" hidden="true"
+	/>
+
+	<passive id="5" 
+		name="Hera" description="Revenge of mother"
+		gfx="hera.png"
+		quality="3"
+		tags="summonable offensive"
 	/>
 	
 </items>

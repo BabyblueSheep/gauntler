@@ -16,7 +16,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, colle
     if not player:HasCollectible(TheGauntlet.Items.Zeus.CollectibleType) then return end
 
     local itemConfig = Isaac.GetItemConfig():GetCollectible(collectibleType)
-    if itemConfig.Type == ItemType.ITEM_ACTIVE and itemConfig.InitCharge == -1 and firstTime then
+    local pickedUpZeus = collectibleType == TheGauntlet.Items.Zeus.CollectibleType
+    local pickedUpActive = itemConfig.Type == ItemType.ITEM_ACTIVE
+    if (pickedUpZeus or pickedUpActive) and firstTime then
         player:AddActiveCharge(99, slot, true, true)
     end
 
@@ -28,7 +30,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, colle
     local hasNotZeus = hasNotZeusInPrimarySlot or hasNotZeusInSecondarySlot
 
     if player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == 0 then
-        player:AddCollectible(TheGauntlet.Items.Zeus.CollectibleTypeActive)
+        player:AddCollectible(TheGauntlet.Items.Zeus.CollectibleTypeActive, 0, true)
 
         local hasSchoolbagCostume = false
         for _, costume in ipairs(player:GetCostumeSpriteDescs()) do
@@ -55,10 +57,16 @@ end)
 ---@param removeFromPlayerForm boolean
 ---@param wisp boolean
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, function (_, player, collectibleType, removeFromPlayerForm, wisp)
+    if collectibleType == TheGauntlet.Items.Zeus.CollectibleType then
+        if player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == TheGauntlet.Items.Zeus.CollectibleTypeActive then
+            player:RemoveCollectible(TheGauntlet.Items.Zeus.CollectibleTypeActive)
+        end
+    end
+
     if not player:HasCollectible(TheGauntlet.Items.Zeus.CollectibleType) then return end
 
     if player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == 0 then
-        player:AddCollectible(TheGauntlet.Items.Zeus.CollectibleTypeActive)
+        player:AddCollectible(TheGauntlet.Items.Zeus.CollectibleTypeActive, 0, false)
 
         local hasSchoolbagCostume = false
         for _, costume in ipairs(player:GetCostumeSpriteDescs()) do
@@ -105,7 +113,7 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_ITEM, CallbackPriority.EARLY
 
     local delayBetweenLightningBolts = TheGauntlet.Utility.LerpClamp(DELAY_BETWEEN_LIGHTNING_STRIKES_2_CHARGES, DELAY_BETWEEN_LIGHTNING_STRIKES_12_CHARGES, TheGauntlet.Utility.InverseLerp(2, 12, player:GetTotalActiveCharge(slot)))
     delayBetweenLightningBolts = math.ceil(delayBetweenLightningBolts)
-    for i = 1, player:GetActiveCharge(slot) do
+    for i = 1, (player:GetActiveCharge(slot) + 2) do
         local cooldown = (i - 1) * delayBetweenLightningBolts
         Isaac.CreateTimer(function ()
             Isaac.Spawn
