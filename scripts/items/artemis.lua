@@ -46,7 +46,7 @@ local PIERCING_TEAR_VARIANTS = {
 ---@param rng RNG
 ---@return Vector
 local function RandomCardinalVector(rng)
-    return CARDINAL_DIRECTIONS[rng:RandomInt(#CARDINAL_DIRECTIONS) + 1]
+    return TheGauntlet.Utility.RandomItemFromList(rng, CARDINAL_DIRECTIONS)
 end
 
 ---@param player EntityPlayer

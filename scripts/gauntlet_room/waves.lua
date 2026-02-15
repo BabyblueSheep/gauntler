@@ -3,7 +3,7 @@ local musicManager = MusicManager()
 
 local FAKE_PENTAGRAM_VARIANT = Isaac.GetEntityVariantByName("A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
 
-TheGauntlet.GauntletRoom.ItenPool = Isaac.GetPoolIdByName("The Gauntlet gauntletRoom")
+TheGauntlet.GauntletRoom.ItemPool = Isaac.GetPoolIdByName("TheGauntlet gauntletRoom")
 
 TheGauntlet.GauntletRoom.ShadowSpellSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Shadow Spell")
 
@@ -11,25 +11,42 @@ local TIME_BEFORE_DOORS_CLOSE = 10
 local TIME_BETWEEN_WAVES = 30 --TODO: figure out the actual time between waves for accuracy
 
 local WAVE_CONFIGURATIONS_NORMAL_MODE = {
-    { 10, 5, 5 },
-    { 10, 10, 10 },
-    { 10, 10, 10 },
-    { 10, 15, 15 },
-    { 11, 1, 1 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 15, MaxDifficulty = 15 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 1,  MaxDifficulty = 1 },
 }
 local WAVE_CONFIGURATIONS_HARD_MODE = {
-    { 10, 10, 10 },
-    { 10, 15, 15 },
-    { 10, 15, 15 },
-    { 11, 1, 1 },
-    { 11, 5, 5 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 15, MaxDifficulty = 15 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 15, MaxDifficulty = 15 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 1,  MaxDifficulty = 1 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 5,  MaxDifficulty = 5 },
 }
 
+local function OnFinishGauntletRoom()
+    local room = Game():GetRoom()
+
+    local collectibleSpawnPosition = room:FindFreePickupSpawnPosition(room:GetCenterPos())
+
+    Isaac.Spawn
+    (
+        EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0,
+        collectibleSpawnPosition, Vector.Zero,
+        nil
+    )
+
+    --This is where I would put Temporary Tattoo's effect, but it already spawns a chest (the intended effect) so it works out, lol
+    room:TriggerClear(true)
+end
+
+--TODO: see if the sprite is accurate to normal ambush indicators
 ---@param type EntityType
 ---@param variant integer
 ---@param subtype integer
 ---@param position Vector
-local function SpawnEnemyDelayed(type, variant, subtype, position)
+local function SpawnEnemyIndicator(type, variant, subtype, position)
     local entityConfig = EntityConfig.GetEntity(type, variant, subtype)
     if entityConfig == nil then return end
 
@@ -70,7 +87,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
         effect:Remove()
 
         ---@diagnostic disable-next-line param-type-mismatch
-        sfxManager:Play(872)
+        sfxManager:Play(872) --SoundEffect.SOUND_SUMMON_WAVE
     end
 end, FAKE_PENTAGRAM_VARIANT)
 
@@ -99,7 +116,7 @@ local function SpawnAmbush(type, minDifficulty, maxDifficulty)
 
         local gridIndex = enemySpawn.X + 1 + (enemySpawn.Y + 1) * Game():GetRoom():GetGridWidth()
 
-        SpawnEnemyDelayed(enemySpawnEntry.Type, enemySpawnEntry.Variant, enemySpawnEntry.Subtype, Game():GetRoom():GetGridPosition(gridIndex))
+        SpawnEnemyIndicator(enemySpawnEntry.Type, enemySpawnEntry.Variant, enemySpawnEntry.Subtype, Game():GetRoom():GetGridPosition(gridIndex))
     end
 end
 
@@ -108,7 +125,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     local room = Game():GetRoom()
 
-    room:SetItemPool(TheGauntlet.GauntletRoom.ItenPool)
+    room:SetItemPool(TheGauntlet.GauntletRoom.ItemPool)
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
 
@@ -206,16 +223,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             musicManager:UpdateVolume()
             musicManager:Queue(Music.MUSIC_BOSS_OVER)
 
-            local collectibleSpawnPosition = room:FindFreePickupSpawnPosition(room:GetCenterPos())
-
-            Isaac.Spawn
-            (
-                EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0,
-                collectibleSpawnPosition, Vector.Zero,
-                nil
-            )
-
-            room:TriggerClear(true)
+            OnFinishGauntletRoom()
         else
             if musicManager:GetCurrentMusicID() ~= Music.MUSIC_CHALLENGE_FIGHT then
                 musicManager:Play(Music.MUSIC_CHALLENGE_FIGHT, 0)
@@ -223,7 +231,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             end
 
             local waveConfiguration = waveConfigurations[tempSave.WaveNumber]
-            SpawnAmbush(waveConfiguration[1], waveConfiguration[2], waveConfiguration[3])
+            SpawnAmbush(waveConfiguration.RoomSubtype, waveConfiguration.MinDifficulty, waveConfiguration.MaxDifficulty)
         end
     end
 
@@ -260,7 +268,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
         end
     end
 
-    local randomRoomIndex = adjacentRooms[teleportRNG:RandomInt(#adjacentRooms) + 1]
+    local randomRoomIndex = TheGauntlet.Utility.RandomItemFromList(teleportRNG, adjacentRooms)
     Game():StartRoomTransition(randomRoomIndex, -1, RoomTransitionAnim.TELEPORT)
 
     sfxManager:Play(TheGauntlet.GauntletRoom.ShadowSpellSoundEffect)

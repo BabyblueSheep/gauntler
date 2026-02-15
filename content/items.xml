@@ -39,7 +39,7 @@
 		tags="noeden" hidden="true"
 	/>
 
-	<passive id="5" 
+	<passive id="6" 
 		name="Hera" description="Revenge of mother"
 		gfx="hera.png"
 		quality="3"

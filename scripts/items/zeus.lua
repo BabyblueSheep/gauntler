@@ -6,6 +6,27 @@ TheGauntlet.Items.Zeus.CollectibleTypeActive = Isaac.GetItemIdByName(" Zeus ")
 local DELAY_BETWEEN_LIGHTNING_STRIKES_2_CHARGES = 15
 local DELAY_BETWEEN_LIGHTNING_STRIKES_12_CHARGES = 5
 
+--If Isaac has no active items, always give a custom active one
+--To prevent said active being dropped when picking up another active, also give Schoolbag without the costume
+local function TryGiveZeusActiveItem(player, firstTime)
+    if player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == 0 then
+        player:AddCollectible(TheGauntlet.Items.Zeus.CollectibleTypeActive, 0, firstTime)
+
+        local hasSchoolbagCostume = false
+        for _, costume in ipairs(player:GetCostumeSpriteDescs()) do
+            if costume:GetItemConfig().ID == CollectibleType.COLLECTIBLE_SCHOOLBAG then
+                hasSchoolbagCostume = true
+                break
+            end
+        end
+
+        player:AddInnateCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 1)
+        if not hasSchoolbagCostume then
+            player:RemoveCostume(Isaac.GetItemConfig():GetCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG))
+        end
+    end
+end
+
 ---@param collectibleType CollectibleType
 ---@param charge integer
 ---@param firstTime boolean
@@ -22,31 +43,17 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, colle
         player:AddActiveCharge(99, slot, true, true)
     end
 
+    --Prevent redundant double calls from these items being added; reasoning for adding below
     if collectibleType == CollectibleType.COLLECTIBLE_SCHOOLBAG then return end
     if collectibleType == TheGauntlet.Items.Zeus.CollectibleTypeActive then return end
 
-    local hasNotZeusInPrimarySlot = player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) ~= 0 and player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) ~= TheGauntlet.Items.Zeus.CollectibleTypeActive
-    local hasNotZeusInSecondarySlot = player:GetActiveItem(ActiveSlot.SLOT_SECONDARY) ~= 0 and player:GetActiveItem(ActiveSlot.SLOT_SECONDARY) ~= TheGauntlet.Items.Zeus.CollectibleTypeActive
-    local hasNotZeus = hasNotZeusInPrimarySlot or hasNotZeusInSecondarySlot
+    local hasActiveThatIsntZeusInPrimarySlot = player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) ~= 0 and player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) ~= TheGauntlet.Items.Zeus.CollectibleTypeActive
+    local hasActiveThatIsntZeusInSecondarySlot = player:GetActiveItem(ActiveSlot.SLOT_SECONDARY) ~= 0 and player:GetActiveItem(ActiveSlot.SLOT_SECONDARY) ~= TheGauntlet.Items.Zeus.CollectibleTypeActive
+    local hasActiveThatIsntZeus = hasActiveThatIsntZeusInPrimarySlot or hasActiveThatIsntZeusInSecondarySlot
 
-    if player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == 0 then
-        player:AddCollectible(TheGauntlet.Items.Zeus.CollectibleTypeActive, 0, true)
+    TryGiveZeusActiveItem(player, true)
 
-        local hasSchoolbagCostume = false
-        for _, costume in ipairs(player:GetCostumeSpriteDescs()) do
-            if costume:GetItemConfig().ID == CollectibleType.COLLECTIBLE_SCHOOLBAG then
-                hasSchoolbagCostume = true
-                break
-            end
-        end
-
-        player:AddInnateCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 1)
-        if not hasSchoolbagCostume then
-            player:RemoveCostume(Isaac.GetItemConfig():GetCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG))
-        end
-    end
-
-    if hasNotZeus then
+    if hasActiveThatIsntZeus then
         player:RemoveCollectible(TheGauntlet.Items.Zeus.CollectibleTypeActive)
         player:AddInnateCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, -1)
     end
@@ -65,22 +72,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, functi
 
     if not player:HasCollectible(TheGauntlet.Items.Zeus.CollectibleType) then return end
 
-    if player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == 0 then
-        player:AddCollectible(TheGauntlet.Items.Zeus.CollectibleTypeActive, 0, false)
-
-        local hasSchoolbagCostume = false
-        for _, costume in ipairs(player:GetCostumeSpriteDescs()) do
-            if costume:GetItemConfig().ID == CollectibleType.COLLECTIBLE_SCHOOLBAG then
-                hasSchoolbagCostume = true
-                break
-            end
-        end
-
-        player:AddInnateCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 1)
-        if not hasSchoolbagCostume then
-            player:RemoveCostume(Isaac.GetItemConfig():GetCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG))
-        end
-    end
+    TryGiveZeusActiveItem(player, false)
 end)
 
 ---@param collectibleType CollectibleType
@@ -90,6 +82,7 @@ end)
 ---@param slot ActiveSlot
 ---@param varData integer
 TheGauntlet:AddCallback(ModCallbacks.MC_USE_ITEM, function (_, collectibleType, rng, player, useFlags, slot, varData)
+    --Zeus the active item does nothing by itself; lightning strikes are handled by the passive item
     if collectibleType == TheGauntlet.Items.Zeus.CollectibleTypeActive then
         return {
             Discharge = true,

@@ -3,8 +3,11 @@ TheGauntlet = RegisterMod("The Gauntlet", 1)
 TheGauntlet.SaveManager = include("scripts.library.save_manager")
 TheGauntlet.SaveManager.Init(TheGauntlet)
 
+include("scripts.library.status_effect_library")
+
 TheGauntlet.Utility = {}
 include("scripts.utility.math")
+include("scripts.utility.random")
 
 TheGauntlet.GauntletRoom = {}
 include("scripts.gauntlet_room.common")
@@ -18,4 +21,5 @@ TheGauntlet.Items = {}
 include("scripts.items.artemis")
 include("scripts.items.dionysus")
 include("scripts.items.hephaestus")
+include("scripts.items.hera")
 include("scripts.items.zeus")
