@@ -45,5 +45,12 @@
 		quality="3"
 		tags="summonable offensive"
 	/>
+
+	<passive id="7" 
+		name="Ares" description="Challenge brings power"
+		gfx="ares.png"
+		quality="3"
+		tags="summonable offensive"
+	/>
 	
 </items>

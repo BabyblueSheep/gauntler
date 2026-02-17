@@ -1,0 +1,73 @@
+<shaders>
+  <shader name="TheGauntlet Drunk Distortion">
+    <parameters>
+      <param name="WaveAmplitudes" type="vec4" />
+      <param name="Timers" type="vec4" />
+      <param name="WaveContributionWeights" type="vec4" />
+    </parameters>
+    <vertex><![CDATA[
+      attribute vec3 Position;
+      attribute vec4 Color;
+      attribute vec2 TexCoord;
+      attribute vec4 RenderData;
+      attribute float Scale;
+      
+      uniform mat4 Transform;
+      
+      varying vec4 Color0;
+      varying vec2 TexCoord0;
+      varying vec4 RenderDataOut;
+      varying float ScaleOut;
+      
+      attribute vec4 WaveAmplitudes;
+      attribute vec4 Timers;
+      attribute vec4 WaveContributionWeights;
+      
+      varying vec4 WaveAmplitudes0;
+      varying vec4 Timers0;
+      varying vec4 WaveContributionWeights0;
+      
+      void main(void) {
+          Color0 = Color;
+          TexCoord0 = TexCoord;
+          RenderDataOut = RenderData;
+          ScaleOut = Scale;
+          gl_Position = Transform * vec4(Position.xyz, 1.0);
+      
+          WaveAmplitudes0 = WaveAmplitudes;
+          Timers0 = Timers;
+          WaveContributionWeights0 = WaveContributionWeights;
+      }
+    ]]></vertex>
+    <fragment><![CDATA[
+      varying lowp vec4 Color0;
+      varying mediump vec2 TexCoord0;
+      varying lowp vec4 RenderDataOut;
+      varying lowp float ScaleOut;
+      
+      uniform sampler2D Texture0;
+      
+      varying lowp vec4 WaveAmplitudes0;
+      varying lowp vec4 Timers0;
+      varying lowp vec4 WaveContributionWeights0;
+      
+      void main(void) {
+          vec2 uv = TexCoord0;
+      
+          vec4 textureTotal = vec4(0);
+      
+          for (int i = 0; i < 4; i++)
+          {
+              vec2 uvRotated = uv;
+              uvRotated.x += cos(uvRotated.y + Timers0[i]) * WaveAmplitudes0[i];
+              uvRotated.y += sin(uvRotated.x + Timers0[i]) * WaveAmplitudes0[i];
+      
+              vec4 texture = texture2D(Texture0, uvRotated);
+              textureTotal += texture * WaveContributionWeights0[i];
+          }
+      
+          gl_FragColor = Color0 * textureTotal;
+      }
+    ]]></fragment>
+  </shader>
+</shaders>

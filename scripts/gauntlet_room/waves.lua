@@ -1,7 +1,8 @@
 local sfxManager = SFXManager()
 local musicManager = MusicManager()
 
-local FAKE_PENTAGRAM_VARIANT = Isaac.GetEntityVariantByName("A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
+local FAKE_PENTAGRAM_VARIANT = Isaac.GetEntityVariantByName("TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
+local FAKE_PENTAGRAM_SUBTYPE = Isaac.GetEntitySubTypeByName("TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
 
 TheGauntlet.GauntletRoom.ItemPool = Isaac.GetPoolIdByName("TheGauntlet gauntletRoom")
 
@@ -54,7 +55,7 @@ local function SpawnEnemyIndicator(type, variant, subtype, position)
     ---@diagnostic disable-next-line assign-type-mismatch
     local effect = Isaac.Spawn
     (
-        EntityType.ENTITY_EFFECT, FAKE_PENTAGRAM_VARIANT, 0,
+        EntityType.ENTITY_EFFECT, FAKE_PENTAGRAM_VARIANT, FAKE_PENTAGRAM_SUBTYPE,
         position, Vector.Zero, nil
     ):ToEffect()
 
@@ -74,6 +75,8 @@ end
 
 ---@param effect EntityEffect
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
+    if effect.SubType ~= FAKE_PENTAGRAM_SUBTYPE then return end
+
     local sprite = effect:GetSprite()
     if sprite:IsFinished() then
         local enemyData = effect:GetData().FakeAmbush
@@ -186,7 +189,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     local doHostileEnemiesExist = false
 
     for _, entity in ipairs(Isaac.GetRoomEntities()) do
-        if (entity:IsActiveEnemy(true) and entity:CanShutDoors()) or (entity.Type == EntityType.ENTITY_EFFECT and entity.Variant == FAKE_PENTAGRAM_VARIANT) then
+        if (entity:IsActiveEnemy(true) and entity:CanShutDoors()) or (entity.Type == EntityType.ENTITY_EFFECT and entity.Variant == FAKE_PENTAGRAM_VARIANT and entity.SubType == FAKE_PENTAGRAM_SUBTYPE) then
             doHostileEnemiesExist = true
             break
         end
