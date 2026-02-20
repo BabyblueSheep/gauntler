@@ -3,6 +3,7 @@
 		<sample weight="1" path="shadow spell.wav" /> <!-- https://freesound.org/people/EminYILDIRIM/sounds/559088/ -->
 	</sound>
 	<sound name="TheGauntlet Thunder Zap">
-		<sample weight="1" path="thunder zap.wav" /> <!-- https://www.weloveindies.com/en/sounds-for-games -->
+		<sample weight="1" path="thunder zap 1.wav" /> <!-- https://www.weloveindies.com/en/sounds-for-games -->
+		<sample weight="1" path="thunder zap 2.wav" />
 	</sound>
 </sounds>

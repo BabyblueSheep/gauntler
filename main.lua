@@ -18,10 +18,12 @@ include("scripts.gauntlet_room.generation")
 include("scripts.gauntlet_room.waves")
 
 TheGauntlet.Items = {}
+include("scripts.items.aphrodite")
 include("scripts.items.ares")
 include("scripts.items.artemis")
 include("scripts.items.dionysus")
 include("scripts.items.hephaestus")
 include("scripts.items.hera")
-include("scripts.items.zeus")
+TheGauntlet.Items.Zeus = {}
+include("scripts.items.zeus.item")
 include("scripts.items.zeus.lightning_bolt")

@@ -1,10 +1,7 @@
-TheGauntlet.Items.Zeus = {}
 TheGauntlet.Items.Zeus.CollectibleType = Isaac.GetItemIdByName("Zeus")
 TheGauntlet.Items.Zeus.CollectibleTypeActive = Isaac.GetItemIdByName(" Zeus ")
 
--- Delay for charges between 2 and 12 will be interpolated based on values below
-local DELAY_BETWEEN_LIGHTNING_STRIKES_2_CHARGES = 15
-local DELAY_BETWEEN_LIGHTNING_STRIKES_12_CHARGES = 5
+local activeItem
 
 --If Isaac has no active items, always give a custom active one
 --To prevent said active being dropped when picking up another active, also give Schoolbag without the costume
@@ -92,6 +89,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_USE_ITEM, function (_, collectibleType, 
     end
 end)
 
+local boltAmountDefaultCase = include("scripts.items.zeus.cases.default")
+
 ---@param collectibleType CollectibleType
 ---@param rng RNG
 ---@param player EntityPlayer
@@ -104,12 +103,13 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_ITEM, CallbackPriority.EARLY
     local doesntOwnItem = (useFlags & UseFlag.USE_OWNED == 0) or (useFlags & UseFlag.USE_MIMIC ~= 0) or (slot == -1)
     if doesntOwnItem then return end
 
-    local delayBetweenLightningBolts = TheGauntlet.Utility.LerpClamp(DELAY_BETWEEN_LIGHTNING_STRIKES_2_CHARGES, DELAY_BETWEEN_LIGHTNING_STRIKES_12_CHARGES, TheGauntlet.Utility.InverseLerp(2, 12, player:GetTotalActiveCharge(slot)))
-    delayBetweenLightningBolts = math.ceil(delayBetweenLightningBolts)
-    for i = 1, (player:GetActiveCharge(slot) + 2) do
-        local cooldown = (i - 1) * delayBetweenLightningBolts
-        Isaac.CreateTimer(function ()
-            TheGauntlet.Items.Zeus.SpawnLightningBolt(Game():GetRoom():GetRandomPosition(10), player)
-        end, cooldown, 1, true)
+    local boltAmount = 0
+
+    local itemConfig = Isaac.GetItemConfig():GetCollectible(collectibleType)
+
+    boltAmount = boltAmountDefaultCase(itemConfig, player, slot)
+
+    for i = 1, boltAmount do
+        TheGauntlet.Items.Zeus.ScheduleLightningBolt(Game():GetRoom():GetRandomPosition(10), player)
     end
 end)
