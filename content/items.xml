@@ -30,7 +30,6 @@
 		quality="3"
 		tags="summonable offensive"
 	/>
-
 	<active id="5" 
 		name=" Zeus " description="Shocking actives"
 		gfx="zeus.png"
@@ -52,5 +51,7 @@
 		quality="3"
 		tags="summonable offensive"
 	/>
+	<null id="1" name="Ares Challenge Room Stats" damage="2" persistent="true" />
+	<null id="1" name="Ares Boss Challenge Room Stats" damage="3" persistent="true" />
 	
 </items>

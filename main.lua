@@ -4,6 +4,7 @@ TheGauntlet.SaveManager = include("scripts.library.save_manager")
 TheGauntlet.SaveManager.Init(TheGauntlet)
 
 TheGauntlet.Utility = {}
+include("scripts.utility.callbacks")
 include("scripts.utility.entity")
 include("scripts.utility.math")
 include("scripts.utility.random")

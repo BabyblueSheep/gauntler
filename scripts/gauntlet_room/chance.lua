@@ -15,32 +15,21 @@ local FLOORS_WITH_CHALLENGE_ROOMS = {
     [LevelStage.STAGE5] = true,
 }
 
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
-    local room = Game():GetRoom()
-    local level = Game():GetLevel()
-
-    if level:GetCurrentRoomDesc().Data.Type ~= RoomType.ROOM_CHALLENGE then return end
-
+---@param challengeRoomType ChallengeRoomType
+TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.POST_CHALLENGE_ROOM_TRIGGER_CLEARED, function (_, challengeRoomType)
     local runSave = TheGauntlet.SaveManager.GetRunSave()
-    local roomSave = TheGauntlet.SaveManager.GetRoomSave()
 
-    if roomSave.RoomAccountedFor == true then return end
+    if runSave.BossChallengeRoomsCompleted == nil then
+        runSave.BossChallengeRoomsCompleted = 0
+    end
+    if runSave.ChallengeRoomsCompleted == nil then
+        runSave.ChallengeRoomsCompleted = 0
+    end
 
-    if room:IsAmbushDone() then
-        if runSave.BossChallengeRoomsCompleted == nil then
-            runSave.BossChallengeRoomsCompleted = 0
-        end
-        if runSave.ChallengeRoomsCompleted == nil then
-            runSave.ChallengeRoomsCompleted = 0
-        end
-
-        roomSave.RoomAccountedFor = true
-
-        if level:GetCurrentRoomDesc().Data.Subtype == 1 then
-            runSave.BossChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted + 1
-        else
-            runSave.ChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted + 1
-        end
+    if challengeRoomType == TheGauntlet.Utility.ChallengeRoomType.NORMAL then
+        runSave.ChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted + 1
+    elseif challengeRoomType == TheGauntlet.Utility.ChallengeRoomType.BOSS then
+        runSave.BossChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted + 1
     end
 end)
 
