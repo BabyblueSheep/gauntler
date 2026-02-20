@@ -39,8 +39,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     end
 end)
 
-local pregnantIcon = Sprite()
-pregnantIcon:Load("gfx/gauntlet/statuseffects.anm2", true)
+local pregnantIcon = Sprite("gfx/gauntlet/statuseffects.anm2", true)
 pregnantIcon:Play("Pregnant", true)
 
 local PREGNANT_ICON_RENDER_OFFSET = Vector(0, -5)

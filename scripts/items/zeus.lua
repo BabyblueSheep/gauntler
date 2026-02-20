@@ -101,20 +101,15 @@ end)
 TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_ITEM, CallbackPriority.EARLY, function (_, collectibleType, rng, player, useFlags, slot, varData)
     if not player:HasCollectible(TheGauntlet.Items.Zeus.CollectibleType) then return end
 
-    local ownsItem = (useFlags & UseFlag.USE_OWNED == UseFlag.USE_OWNED) or (useFlags & UseFlag.USE_MIMIC == 0) or (slot == -1)
-    if not ownsItem then return end
+    local doesntOwnItem = (useFlags & UseFlag.USE_OWNED == 0) or (useFlags & UseFlag.USE_MIMIC ~= 0) or (slot == -1)
+    if doesntOwnItem then return end
 
     local delayBetweenLightningBolts = TheGauntlet.Utility.LerpClamp(DELAY_BETWEEN_LIGHTNING_STRIKES_2_CHARGES, DELAY_BETWEEN_LIGHTNING_STRIKES_12_CHARGES, TheGauntlet.Utility.InverseLerp(2, 12, player:GetTotalActiveCharge(slot)))
     delayBetweenLightningBolts = math.ceil(delayBetweenLightningBolts)
     for i = 1, (player:GetActiveCharge(slot) + 2) do
         local cooldown = (i - 1) * delayBetweenLightningBolts
         Isaac.CreateTimer(function ()
-            Isaac.Spawn
-            (
-                EntityType.ENTITY_EFFECT, EffectVariant.CRACK_THE_SKY, 0,
-                Game():GetRoom():GetRandomPosition(10), Vector.Zero,
-                player
-            )
+            TheGauntlet.Items.Zeus.SpawnLightningBolt(Game():GetRoom():GetRandomPosition(10), player)
         end, cooldown, 1, true)
     end
 end)
