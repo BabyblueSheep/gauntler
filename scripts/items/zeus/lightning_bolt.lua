@@ -5,7 +5,7 @@ TheGauntlet.Items.Zeus.LightningBoltSubType = Isaac.GetEntitySubTypeByName("TheG
 
 TheGauntlet.Items.Zeus.ThunderZapSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Thunder Zap")
 
-local CHANCE_TO_GIVE_PIP_ON_KILL = 10
+local CHANCE_TO_GIVE_PIP_ON_KILL = 0.1
 
 local scheduledLightningBolts = {}
 local currentLightningBoltDelay = 0
@@ -14,8 +14,16 @@ local function DelayBetweenBolts(currentAmount)
     return math.ceil(TheGauntlet.Utility.Lerp(15, 5, TheGauntlet.Utility.InverseLerp(2, 10, currentAmount)))
 end
 
-function TheGauntlet.Items.Zeus.ScheduleLightningBolt(position, source)
-    table.insert(scheduledLightningBolts, {position, source})
+---@enum ZeusBoltTargetType
+TheGauntlet.Items.Zeus.TargetType = {
+    RANDOM = 0,
+    ENEMY = 1,
+}
+
+---@param targetType ZeusBoltTargetType
+---@param source Entity
+function TheGauntlet.Items.Zeus.ScheduleLightningBolt(targetType, source)
+    table.insert(scheduledLightningBolts, {TargetType = targetType, Source = source})
 end
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
@@ -24,8 +32,24 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
         local delayToUse = DelayBetweenBolts(#scheduledLightningBolts)
         if currentLightningBoltDelay > delayToUse then
+
+            local enemyPositions = {}
+            for _, entity in ipairs(Isaac.GetRoomEntities()) do
+                if entity:IsActiveEnemy() then
+                    table.insert(enemyPositions, entity.Position)
+                end
+            end
+
             local bolt = table.remove(scheduledLightningBolts, 1)
-            TheGauntlet.Items.Zeus.SpawnLightningBolt(bolt[1], bolt[2])
+            local targetPosition = Vector.Zero
+
+            if bolt.TargetType == TheGauntlet.Items.Zeus.TargetType.ENEMY and #enemyPositions > 0 then
+                targetPosition = TheGauntlet.Utility.RandomItemFromList(enemyPositions, bolt.Source:GetCollectibleRNG(TheGauntlet.Items.Zeus.CollectibleType))
+            else
+                targetPosition = Game():GetRoom():GetRandomPosition(10)
+            end
+
+            TheGauntlet.Items.Zeus.SpawnLightningBolt(targetPosition, bolt.Source)
 
             currentLightningBoltDelay = 0
         end
@@ -131,6 +155,24 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_EFFECT_RENDER, function(_, effect, o
     end
     coloredBeam:Render()
     whiteBeam:Render()
+
+    return false
+end)
+
+---@param entity Entity
+---@param damage number
+---@param damageFlags DamageFlag
+---@param source EntityRef
+---@param damageCooldown integer
+TheGauntlet:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
+    if source.Entity == nil then return end
+    if source.Entity.Type ~= EntityType.ENTITY_EFFECT then return end
+    if source.Entity.Variant ~= TheGauntlet.Items.Zeus.LightningBoltVariant then return end
+    if source.Entity.SubType ~= TheGauntlet.Items.Zeus.LightningBoltSubType then return end
+
+    if entity.Type ~= EntityType.ENTITY_PLAYER then return end
+
+    if damageFlags & DamageFlag.DAMAGE_EXPLOSION == 0 then return end
 
     return false
 end)
