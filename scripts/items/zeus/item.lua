@@ -59,8 +59,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, colle
         [CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES] = true,
         [TheGauntlet.Items.Zeus.CollectibleTypeActive] = true,
     }
-    local hasActiveThatIsntZeusInPrimarySlot = notCountedActives[player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)] == false
-    local hasActiveThatIsntZeusInSecondarySlot = notCountedActives[player:GetActiveItem(ActiveSlot.SLOT_SECONDARY)] == false
+    local hasActiveThatIsntZeusInPrimarySlot = notCountedActives[player:GetActiveItem(ActiveSlot.SLOT_PRIMARY)] ~= true
+    local hasActiveThatIsntZeusInSecondarySlot = notCountedActives[player:GetActiveItem(ActiveSlot.SLOT_SECONDARY)] ~= true
     local hasActiveThatIsntZeus = hasActiveThatIsntZeusInPrimarySlot or hasActiveThatIsntZeusInSecondarySlot
 
     TryGiveZeusActiveItem(player, true)

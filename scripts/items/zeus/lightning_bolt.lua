@@ -124,7 +124,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
     if effect.Variant ~= TheGauntlet.Items.Zeus.LightningBoltVariant then return end
     if effect.SubType ~= TheGauntlet.Items.Zeus.LightningBoltSubType then return end
 
-    if effect.FrameCount > 5 then
+    if effect.FrameCount > 4 then
         effect:Remove()
     end
 end)
@@ -145,7 +145,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_EFFECT_RENDER, function(_, effect, o
     if effect.Variant ~= TheGauntlet.Items.Zeus.LightningBoltVariant then return end
     if effect.SubType ~= TheGauntlet.Items.Zeus.LightningBoltSubType then return end
 
-    local alpha = TheGauntlet.Utility.InverseLerp(0, 2, effect.FrameCount) * TheGauntlet.Utility.InverseLerp(5, 2, effect.FrameCount)
+    local alpha = TheGauntlet.Utility.InverseLerp(4, 0, effect.FrameCount)
 
     for i, point in ipairs(effect:GetData().BeamPoints) do
         local whiteColor = Color(1, 1, 1, alpha)
