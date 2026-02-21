@@ -5,55 +5,37 @@ TheGauntlet.Items.Poseidon.CollectibleType = Isaac.GetItemIdByName("Poseidon")
 
 local FLOW_SOUND = Isaac.GetSoundIdByName("TheGauntlet Custom Water Flow")
 
-local DEFAULT_CURRENT_SPEED = 0.5
-local PLAYER_CURRENT_SPEED = 1
+local EPSILON = 0.01
 
-local roomTargetCurrent = Vector.Zero
+local ENEMY_FLOW_SPEED = 10
+local PICKUP_FLOW_SPEED = 0.5
+
+local actualWaterCurrent = Vector.Zero
+local targetCurrent = Vector.Zero
+local fakeCurrentWaterCurrent = Vector.Zero
+
 local waterUpdates = 0
 local targetCurrentVolume = 0
 
-TheGauntlet:AddCallback(ModCallbacks.MC_PRE_NEW_ROOM, function (_)
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then return end
-
-    sfxManager:StopLoopingSounds()
-    sfxManager:Stop(SoundEffect.SOUND_WATER_FLOW_LOOP)
-    sfxManager:Stop(SoundEffect.SOUND_WATER_FLOW_LARGE)
-end)
-
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
+    if Game():GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
+    
     local room = Game():GetRoom()
 
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then return end
 
-    roomTargetCurrent = TheGauntlet.Utility.RandomCardinalVector(Isaac.GetPlayer():GetCollectibleRNG(TheGauntlet.Items.Poseidon.CollectibleType)) * DEFAULT_CURRENT_SPEED
+    fakeCurrentWaterCurrent = Vector(EPSILON, EPSILON)
 
     room:SetWaterAmount(1)
-    room:SetWaterCurrent(roomTargetCurrent)
+    room:SetWaterCurrent(Vector.Zero)
     targetCurrentVolume = 0
-
-    sfxManager:StopLoopingSounds()
-    sfxManager:Stop(SoundEffect.SOUND_WATER_FLOW_LOOP)
-    sfxManager:Stop(SoundEffect.SOUND_WATER_FLOW_LARGE)
 
     sfxManager:SetAmbientSound(FLOW_SOUND, 0, 1)
 end)
 
----@param player EntityPlayer 
-TheGauntlet:AddCallback(ModCallbacks.MC_PRE_PLAYER_UPDATE, function (_, player)
-    --player:GetData().TheGauntletPoseidonSavedCurrent = Game():GetRoom():GetWaterCurrent()
-    if player:HasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then
-        
-    end
-end)
-
----@param player EntityPlayer 
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player)
-    if player:HasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then
-        
-    end
-end)
-
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
+    if Game():GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
+    
     local room = Game():GetRoom()
 
     if waterUpdates > 0 then
@@ -65,25 +47,35 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then return end
 
-    local targetCurrent = Vector.Zero
+    targetCurrent = Vector.Zero
 
     for _, player in ipairs(PlayerManager.GetPlayers()) do
         if not player:HasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then goto continue end
 
-        local direction = player:GetAimDirection()
-        targetCurrent = targetCurrent + direction * PLAYER_CURRENT_SPEED
+        local direction = Isaac.GetAxisAlignedUnitVectorFromDir(player:GetFireDirection())
+        targetCurrent = targetCurrent + direction
+
+        ::continue::
+    end
+
+    for _, entity in ipairs(Isaac.GetRoomEntities()) do
+        if entity.Mass >= 100 then goto continue end
+
+        if entity:IsEnemy() then
+            if entity:IsFlying() then goto continue end
+
+            entity:AddVelocity(targetCurrent * ENEMY_FLOW_SPEED / entity.Mass)
+        elseif entity.Type == EntityType.ENTITY_PICKUP then
+            entity:AddVelocity(targetCurrent * PICKUP_FLOW_SPEED)
+        end
 
         ::continue::
     end
 
     local shouldBeLoud = true
-    if targetCurrent:Length() < 0.01 then
-        targetCurrent = roomTargetCurrent
+    if targetCurrent:Length() < EPSILON then
         shouldBeLoud = false
     end
-
-    local currentCurrent = room:GetWaterCurrent()
-    room:SetWaterCurrent(currentCurrent:Lerp(targetCurrent, 0.25))
 
     if shouldBeLoud then
         targetCurrentVolume = targetCurrentVolume + 0.02
@@ -93,16 +85,31 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     targetCurrentVolume = math.min(0.2, math.max(0, targetCurrentVolume))
 
     sfxManager:SetAmbientSound(FLOW_SOUND, targetCurrentVolume, 1)
+end)
 
-    sfxManager:Stop(SoundEffect.SOUND_WATER_FLOW_LOOP)
-    sfxManager:Stop(SoundEffect.SOUND_WATER_FLOW_LARGE)
+
+TheGauntlet:AddCallback(ModCallbacks.MC_PRE_RENDER, function (_)
+    if Game():GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
+
+    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then return end
+
+    local room = Game():GetRoom()
+    actualWaterCurrent = room:GetWaterCurrent()
+
+    fakeCurrentWaterCurrent = fakeCurrentWaterCurrent:Lerp(targetCurrent, 0.25)
+    if fakeCurrentWaterCurrent:Length() < EPSILON then
+        fakeCurrentWaterCurrent = Vector(EPSILON, EPSILON)
+    end
+    room:SetWaterCurrent(fakeCurrentWaterCurrent)
 end)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_RENDER, function (_)
+    if Game():GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
+
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then return end
 
-    sfxManager:Stop(SoundEffect.SOUND_WATER_FLOW_LOOP)
-    sfxManager:Stop(SoundEffect.SOUND_WATER_FLOW_LARGE)
+    local room = Game():GetRoom()
+    room:SetWaterCurrent(actualWaterCurrent)
 end)
 
 ---@param collectibleType CollectibleType
