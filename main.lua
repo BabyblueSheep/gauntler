@@ -24,6 +24,7 @@ include("scripts.items.artemis")
 include("scripts.items.dionysus")
 include("scripts.items.hephaestus")
 include("scripts.items.hera")
+include("scripts.items.poseidon")
 TheGauntlet.Items.Zeus = {}
 include("scripts.items.zeus.item")
 include("scripts.items.zeus.lightning_bolt")

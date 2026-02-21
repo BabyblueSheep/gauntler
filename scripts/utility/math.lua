@@ -37,3 +37,16 @@ function TheGauntlet.Utility.InverseLerp(a, b, t, clamp)
     end
     return result
 end
+
+local CARDINAL_DIRECTIONS = {
+    Vector(1, 0),
+    Vector(-1, 0),
+    Vector(0, 1),
+    Vector(0, -1)
+}
+
+---@param rng RNG
+---@return Vector
+function TheGauntlet.Utility.RandomCardinalVector(rng)
+    return TheGauntlet.Utility.RandomItemFromList(CARDINAL_DIRECTIONS, rng)
+end

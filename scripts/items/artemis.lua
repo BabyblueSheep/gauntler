@@ -7,23 +7,11 @@ local MINIMUM_VALID_ANGLE_DIFFERENCE = 0.9
 local ARROW_DAMAGE_MULTIPLIER = 1.5
 local ARROW_SHOT_SPEED_MULTIPLIER = 1.5
 
-local CARDINAL_DIRECTIONS = {
-    Vector(1, 0),
-    Vector(-1, 0),
-    Vector(0, 1),
-    Vector(0, -1)
-}
-
 local PIERCING_TEAR_VARIANTS = {
     [TearVariant.BLUE] = TearVariant.CUPID_BLUE,
     [TearVariant.BLOOD] = TearVariant.CUPID_BLOOD
 }
 
----@param rng RNG
----@return Vector
-local function RandomCardinalVector(rng)
-    return TheGauntlet.Utility.RandomItemFromList(CARDINAL_DIRECTIONS, rng)
-end
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player)
@@ -35,14 +23,14 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player
     if data.GauntletArtemis == nil then
         data.GauntletArtemis = {
             TimeLeft = TIME_BETWEEN_ARROW_DIRECTION_CHANGE,
-            Direction = RandomCardinalVector(rng)
+            Direction =  TheGauntlet.Utility.RandomCardinalVector(rng)
         }
     end
 
     data.GauntletArtemis.TimeLeft = data.GauntletArtemis.TimeLeft - 1
     if data.GauntletArtemis.TimeLeft <= 0 then
         data.GauntletArtemis.TimeLeft = TIME_BETWEEN_ARROW_DIRECTION_CHANGE
-        data.GauntletArtemis.Direction = RandomCardinalVector(rng)
+        data.GauntletArtemis.Direction = TheGauntlet.Utility.RandomCardinalVector(rng)
     end
 end)
 

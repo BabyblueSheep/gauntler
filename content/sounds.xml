@@ -6,4 +6,7 @@
 		<sample weight="1" path="thunder zap 1.wav" /> <!-- https://www.weloveindies.com/en/sounds-for-games -->
 		<sample weight="1" path="thunder zap 2.wav" />
 	</sound>
+	<sound name="TheGauntlet Custom Water Flow">
+		<sample weight="1" path="water_flow_large.wav" />
+	</sound>
 </sounds>

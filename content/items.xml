@@ -49,7 +49,7 @@
 		name="Ares" description="Challenge brings power"
 		gfx="ares.png"
 		quality="3"
-		tags="summonable offensive nocantrip"
+		tags="summonable offensive nocantrip lazarussharedglobal"
 	/>
 	<null id="1" name="Ares Challenge Room Stats" damage="2" persistent="true" />
 	<null id="1" name="Ares Boss Challenge Room Stats" damage="3" persistent="true" />
@@ -57,7 +57,14 @@
 	<passive id="8" 
 		name="Aphrodite" description="Love conquers all"
 		gfx="aphrodite.png"
-		quality="3"
+		quality="2"
+		tags="summonable nolostbr"
+	/>
+
+	<passive id="9" 
+		name="Poseidon" description="Flood the masses"
+		gfx="poseidon.png"
+		quality="2"
 		tags="summonable offensive"
 	/>
 	
