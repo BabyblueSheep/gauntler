@@ -73,7 +73,7 @@ function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source)
     )
     bolt.RenderZOffset = -1000
 
-    sfxManager:Play(TheGauntlet.Items.Zeus.ThunderZapSoundEffect)
+    sfxManager:Play(TheGauntlet.Items.Zeus.ThunderZapSoundEffect, 1, 2, false, math.random() * 0.4 + 0.8)
 
     Game():BombExplosionEffects(position, 100, TearFlags.TEAR_JACOBS, Color.Default, bolt, 0.5)
 end
