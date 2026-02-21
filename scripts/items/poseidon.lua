@@ -89,6 +89,8 @@ end)
 
 
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_RENDER, function (_)
+    if MenuManager.IsActive() then return end
+
     if Game():GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
 
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then return end
