@@ -21,6 +21,7 @@ TheGauntlet.Items = {}
 include("scripts.items.aphrodite")
 include("scripts.items.ares")
 include("scripts.items.artemis")
+include("scripts.items.demeter")
 include("scripts.items.dionysus")
 include("scripts.items.hephaestus")
 include("scripts.items.hera")

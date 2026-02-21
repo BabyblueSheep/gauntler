@@ -27,7 +27,7 @@
 	<passive id="4" 
 		name="Zeus" description="Shocking actives"
 		gfx="zeus.png"
-		quality="3"
+		quality="4"
 		tags="offensive"
 	/>
 	<active id="5" 
@@ -65,7 +65,14 @@
 		name="Poseidon" description="Flood the masses"
 		gfx="poseidon.png"
 		quality="2"
-		tags="summonable offensive"
+		tags="summonable offensive lazarussharedglobal"
+	/>
+
+	<passive id="10" 
+		name="Demeter" description="Time waits for none"
+		gfx="demeter.png"
+		quality="2"
+		tags="summonable offensive lazarussharedglobal"
 	/>
 	
 </items>
