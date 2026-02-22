@@ -8,7 +8,7 @@
 	/>
 	
 	<passive id="2" 
-		name="Dionysus" description="You feel tipsy"
+		name="Dionysus" description="All stats up + you feel tipsy"
 		gfx="dionysus.png"
 		tears="0.5" damage="1" speed="0.3" range="1.25" luck="1"
 		maxhearts="2" hearts="2"

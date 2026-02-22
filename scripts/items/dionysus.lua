@@ -5,6 +5,7 @@ TheGauntlet.Items.Dionysus.CollectibleType = Isaac.GetItemIdByName("Dionysus")
 
 local currentDrunkAmount = 0
 local previousDrunkAmount = 0
+local shouldGetDrunk = false
 
 local drunkTimerOne = 0
 local drunkTimerTwo = 0
@@ -12,17 +13,6 @@ local drunkTimerThree = 0
 
 TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderName)
     if shaderName ~= "TheGauntlet Drunk Distortion" then return end
-
-    if PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Dionysus.CollectibleType) then
-        currentDrunkAmount = currentDrunkAmount + 0.01
-    else
-        currentDrunkAmount = currentDrunkAmount - 0.01
-        if currentDrunkAmount < 0 then
-            currentDrunkAmount = 0
-        end
-    end
-    currentDrunkAmount = TheGauntlet.Utility.Clamp(currentDrunkAmount, 0, 1)
-
 
     local pitchDifferenceTarget = TheGauntlet.Utility.Lerp(0, 0.1, currentDrunkAmount)
     if Isaac.GetFrameCount() % 30 == 0 then
@@ -59,4 +49,30 @@ end)
 ---@param isContinued boolean
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, isContinued)
     currentDrunkAmount = 0
+end)
+
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
+    if shouldGetDrunk then
+        currentDrunkAmount = currentDrunkAmount + 0.05
+        if currentDrunkAmount >= 1 then
+            shouldGetDrunk = false
+        end
+    else
+        currentDrunkAmount = currentDrunkAmount - 0.01
+    end
+    currentDrunkAmount = TheGauntlet.Utility.Clamp(currentDrunkAmount, 0, 1)
+end)
+
+---@param entity Entity
+---@param damage number
+---@param damageFlags DamageFlag
+---@param source EntityRef
+---@param damageCooldown integer
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
+    local player = entity:ToPlayer()
+    if player == nil then return end
+
+    if not player:HasCollectible(TheGauntlet.Items.Dionysus.CollectibleType) then return end
+
+    shouldGetDrunk = true
 end)
