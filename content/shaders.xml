@@ -70,4 +70,58 @@
       }
     ]]></fragment>
   </shader>
+  <shader name="TheGauntlet ScreenColorize">
+    <parameters>
+      <param name="ColorToChangeTo" type="vec4"/>
+    </parameters>
+    <vertex><![CDATA[
+      attribute vec3 Position;
+      attribute vec4 Color;
+      attribute vec2 TexCoord;
+      attribute vec4 RenderData;
+      attribute float Scale;
+      
+      uniform mat4 Transform;
+      
+      varying vec4 Color0;
+      varying vec2 TexCoord0;
+      varying vec4 RenderDataOut;
+      varying float ScaleOut;
+      
+      attribute vec4 ColorToChangeTo;
+      varying vec4 ColorToChangeTo0;
+      
+      void main(void) {
+          Color0 = Color;
+          TexCoord0 = TexCoord;
+          RenderDataOut = RenderData;
+          ScaleOut = Scale;
+          gl_Position = Transform * vec4(Position.xyz, 1.0);
+      
+          ColorToChangeTo0 = ColorToChangeTo;
+      }
+    ]]></vertex>
+    <fragment><![CDATA[
+      varying lowp vec4 Color0;
+      varying mediump vec2 TexCoord0;
+      varying lowp vec4 RenderDataOut;
+      varying lowp float ScaleOut;
+      
+      uniform sampler2D Texture0;
+      
+      varying lowp vec4 ColorToChangeTo0;
+      
+      void main(void) {
+          vec2 uv = TexCoord0;
+      
+          vec4 texture = texture2D(Texture0, uv);
+          vec3 originalColor = texture.rgb;
+          float grayscaleColor = 0.2126 * originalColor.r + 0.7152 * originalColor.g + 0.0722 * originalColor.b;
+      
+          vec3 newColor = mix(texture.rgb, vec3(grayscaleColor) * ColorToChangeTo0.rgb, ColorToChangeTo0.a);
+      
+          gl_FragColor = Color0 * vec4(newColor.r, newColor.g, newColor.b, texture.a);
+      }
+    ]]></fragment>
+  </shader>
 </shaders>
