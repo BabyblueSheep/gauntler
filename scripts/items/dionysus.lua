@@ -58,7 +58,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             shouldGetDrunk = false
         end
     else
-        currentDrunkAmount = currentDrunkAmount - 0.01
+        currentDrunkAmount = currentDrunkAmount - 0.005
     end
     currentDrunkAmount = TheGauntlet.Utility.Clamp(currentDrunkAmount, 0, 1)
 end)
