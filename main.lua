@@ -19,6 +19,7 @@ include("scripts.gauntlet_room.generation")
 include("scripts.gauntlet_room.waves")
 
 TheGauntlet.Items = {}
+include("scripts.items.apollo")
 include("scripts.items.aphrodite")
 include("scripts.items.ares")
 include("scripts.items.artemis")
