@@ -1,7 +1,15 @@
 <ItemPools>
 	<Pool Name="TheGauntlet gauntletRoom">
 		<Item Name="Zeus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Hera" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Poseidon" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Hades" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Demeter" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<!--Item Name="Athena" Weight="1" DecreaseBy="1" RemoveOn="0.1"/-->
+		<Item Name="Ares" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Aphrodite" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Hephaestus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
+		<Item Name="Apollo" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Artemis" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Dionysus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 	</Pool>
