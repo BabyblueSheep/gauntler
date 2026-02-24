@@ -3,6 +3,8 @@ local musicManager = MusicManager()
 TheGauntlet.Items.Dionysus = {}
 TheGauntlet.Items.Dionysus.CollectibleType = Isaac.GetItemIdByName("Dionysus")
 
+local DRUNK_MOVEMENT_TIME = 30 * 6
+
 local currentDrunkAmount = 0
 local previousDrunkAmount = 0
 local shouldGetDrunk = false
@@ -63,6 +65,22 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     currentDrunkAmount = TheGauntlet.Utility.Clamp(currentDrunkAmount, 0, 1)
 end)
 
+---@param player EntityPlayer
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player)
+    local data = player:GetData()
+    if data.TheGauntletDionysusDrunkMovementTimer == nil then
+        data.TheGauntletDionysusDrunkMovementTimer = 0
+    end
+
+    if data.TheGauntletDionysusDrunkMovementTimer > 0 then
+        data.TheGauntletDionysusDrunkMovementTimer = data.TheGauntletDionysusDrunkMovementTimer - 1
+
+        player.Velocity = TheGauntlet.Utility.Lerp(player.Velocity, data.TheGauntletDionysusPreviousVelocity, 0.75)
+    end
+
+    data.TheGauntletDionysusPreviousVelocity = player.Velocity
+end)
+
 ---@param entity Entity
 ---@param damage number
 ---@param damageFlags DamageFlag
@@ -73,6 +91,13 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     if player == nil then return end
 
     if not player:HasCollectible(TheGauntlet.Items.Dionysus.CollectibleType) then return end
+
+    local data = player:GetData()
+    if data.TheGauntletDionysusDrunkMovementTimer == nil then
+        data.TheGauntletDionysusDrunkMovementTimer = 0
+    end
+    data.TheGauntletDionysusDrunkMovementTimer = DRUNK_MOVEMENT_TIME
+    data.TheGauntletDionysusPreviousVelocity = player.Velocity
 
     shouldGetDrunk = true
 end)
