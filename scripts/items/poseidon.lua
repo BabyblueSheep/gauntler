@@ -7,7 +7,7 @@ local FLOW_SOUND = Isaac.GetSoundIdByName("TheGauntlet Custom Water Flow")
 
 local EPSILON = 0.01
 
-local ENEMY_FLOW_SPEED = 10
+local ENEMY_FLOW_SPEED = 5
 local PICKUP_FLOW_SPEED = 0.5
 
 local actualWaterCurrent = Vector.Zero
