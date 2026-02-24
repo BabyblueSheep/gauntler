@@ -3,7 +3,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_, player)
 
     local rng = RNG(level:GetDungeonPlacementSeed())
 
-    --if rng:RandomFloat() > TheGauntlet.GauntletRoom.GetGenerationChance() then return end
+    if rng:RandomFloat() > TheGauntlet.GauntletRoom.GetGenerationChance() then return end
 
     local entranceRoomConfigToPlace = RoomConfig.GetRandomRoom
     (
