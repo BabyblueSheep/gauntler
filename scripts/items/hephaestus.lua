@@ -75,7 +75,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
     
     local room = Game():GetRoom()
 
-    local spawnPosition = room:FindFreePickupSpawnPosition(room:GetCenterPos())
+    local spawnPosition = room:FindFreePickupSpawnPosition(room:GetCenterPos(), nil, true)
 
     local rng = Isaac.GetPlayer(0):GetCollectibleRNG(TheGauntlet.Items.Hephaestus.CollectibleType)
 
