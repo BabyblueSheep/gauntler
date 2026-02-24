@@ -36,7 +36,7 @@ end)
 
 ---@param tear EntityTear
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, function (_, tear)
-    local player = TheGauntlet.Utility.GetPlayerFromEntity(tear, true)
+    local player = TheGauntlet.Utility.GetPlayerFromEntity(tear.SpawnerEntity, true)
     if player == nil then return end
 
     if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end
@@ -60,7 +60,7 @@ end)
 
 ---@param bomb EntityTear
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_BOMB, function (_, bomb)
-    local player = TheGauntlet.Utility.GetPlayerFromEntity(bomb, true)
+    local player = TheGauntlet.Utility.GetPlayerFromEntity(bomb.SpawnerEntity, true)
     if player == nil then return end
 
     if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end

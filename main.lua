@@ -3,6 +3,8 @@ TheGauntlet = RegisterMod("The Gauntlet", 1)
 TheGauntlet.SaveManager = include("scripts.library.save_manager")
 TheGauntlet.SaveManager.Init(TheGauntlet)
 
+include("scripts.library.status_effect_library")
+
 TheGauntlet.Utility = {}
 include("scripts.utility.callbacks")
 include("scripts.utility.entity")
@@ -25,6 +27,7 @@ include("scripts.items.ares")
 include("scripts.items.artemis")
 include("scripts.items.demeter")
 include("scripts.items.dionysus")
+include("scripts.items.hades")
 include("scripts.items.hephaestus")
 include("scripts.items.hera")
 include("scripts.items.poseidon")

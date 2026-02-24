@@ -1,10 +1,20 @@
 TheGauntlet.Items.Hera = {}
 TheGauntlet.Items.Hera.CollectibleType = Isaac.GetItemIdByName("Hera")
 
+local PREGNANT_DURATION = 30 * 15
+
 local AMOUNT_OF_ENEMIES_TO_IMPREGNATE = 2
 
 local MINISAAC_MINIMUM_AMOUNT = 1
 local MINISAAC_MAXIMUM_AMOUNT = 2
+
+local pregnantStatusEffectSprite = Sprite("gfx/gauntlet/statuseffects.anm2", true)
+pregnantStatusEffectSprite:Play("Pregnant", true)
+
+StatusEffectLibrary.RegisterStatusEffect(
+	"TheGauntlet_HeraPregnant",
+	pregnantStatusEffectSprite
+)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Hera.CollectibleType) then return end
@@ -35,39 +45,23 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     local amountOfEnemiesToImpregnante = math.min(#enemiesToImpregnante, AMOUNT_OF_ENEMIES_TO_IMPREGNATE)
     for i = 1, amountOfEnemiesToImpregnante do
         local enemy = enemiesToImpregnante[i]
-        enemy:GetData().HeraPregnant = true
+        
+        StatusEffectLibrary:AddStatusEffect
+        (
+            enemy,
+            StatusEffectLibrary.StatusFlag.TheGauntlet_HeraPregnant,
+            PREGNANT_DURATION,
+            EntityRef(nil)
+        )
     end
-end)
-
-local pregnantIcon = Sprite("gfx/gauntlet/statuseffects.anm2", true)
-pregnantIcon:Play("Pregnant", true)
-
-local PREGNANT_ICON_RENDER_OFFSET = Vector(0, -5)
-
----@param npc EntityNPC
----@param offset Vector
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_NPC_RENDER, function (_, npc, offset)
-    if not npc:GetData().HeraPregnant then return end
-
-    if Game():GetRoom():GetRenderMode() == RenderMode.RENDER_WATER_REFLECT then return end
-
-    local renderPosition = Isaac.WorldToScreen(npc.Position + npc.PositionOffset + npc:GetNullOffset("OverlayEffect") + PREGNANT_ICON_RENDER_OFFSET)
-
-    pregnantIcon:Render(renderPosition)
-end)
-
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
-    pregnantIcon:Update()
 end)
 
 ---@param entity Entity
 ---@param killSource EntityRef
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, killSource)
-    if not entity:GetData().HeraPregnant then return end
+    if not StatusEffectLibrary:HasStatusEffect(entity, StatusEffectLibrary.StatusFlag.TheGauntlet_HeraPregnant) then return end
 
-    entity:GetData().HeraPregnant = false
-
-    local player = killSource.Entity and TheGauntlet.Utility.GetPlayerFromEntity(killSource.Entity)
+    local player = killSource.Entity and TheGauntlet.Utility.GetPlayerFromEntity(killSource.Entity.SpawnerEntity)
     if not player then
         player = Isaac.GetPlayer(0)
     end
@@ -82,6 +76,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
         familiar:GetData().HeraTemporary = true
         TheGauntlet.SaveManager.GetRunSave(familiar).HeraTemporary = true
     end
+    
+    StatusEffectLibrary:RemoveStatusEffect(entity, StatusEffectLibrary.StatusFlag.TheGauntlet_HeraPregnant)
 end)
 
 ---@param familiar EntityFamiliar

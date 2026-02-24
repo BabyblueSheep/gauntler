@@ -186,7 +186,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
     if killSource.Entity.Variant ~= TheGauntlet.Items.Zeus.LightningBoltVariant then return end
     if killSource.Entity.SubType ~= TheGauntlet.Items.Zeus.LightningBoltSubType then return end
 
-    local player = TheGauntlet.Utility.GetPlayerFromEntity(killSource.Entity)
+    local player = TheGauntlet.Utility.GetPlayerFromEntity(killSource.Entity.SpawnerEntity)
     if not player then return end
 
     local rng = player:GetCollectibleRNG(TheGauntlet.Items.Zeus.CollectibleType)

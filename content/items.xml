@@ -75,7 +75,7 @@
 		tags="summonable offensive lazarussharedglobal"
 	/>
 
-	<passive id="10" 
+	<passive id="11" 
 		name="Apollo" description="Gift of prophecy"
 		gfx="apollo.png"
 		quality="3"
@@ -83,5 +83,12 @@
 	/>
 	<null id="3" name="Apollo On Path Stats" damage="2" persistent="true" />
 	<null id="4" name="Apollo Off Path Stats" damagemult="0.8" persistent="true" />
+
+	<passive id="12" 
+		name="Hades" description="Fall and rise"
+		gfx="hades.png"
+		quality="3"
+		tags="summonable offensive"
+	/>
 	
 </items>

@@ -16,19 +16,18 @@ function TheGauntlet.Utility.GetPlayerFromEntity(entity, tearCopyingFamiliarsOnl
         tearCopyingFamiliarsOnly = false
     end
 
-    local player entity:ToPlayer()
-    if player then return player end
+    if entity == nil then return nil end
 
-    player = entity.SpawnerEntity and entity.SpawnerEntity:ToPlayer()
+    local player = entity:ToPlayer()
     if player then return player end
-
-    local familiar = entity.SpawnerEntity and entity.SpawnerEntity:ToFamiliar()
+    
+    local familiar = entity:ToFamiliar()
     if familiar then
         local familiarCounts = (not tearCopyingFamiliarsOnly) or (TEAR_COPYING_FAMILIARS[familiar.Variant] == true)
         if familiarCounts then
             player = familiar.Player
             if player then return player end
-        end 
+        end
     end
 
     return nil
