@@ -5,7 +5,7 @@
 		<Item Name="Poseidon" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Hades" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Demeter" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
-		<!--Item Name="Athena" Weight="1" DecreaseBy="1" RemoveOn="0.1"/-->
+		<Item Name="Athena" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Ares" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Aphrodite" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>
 		<Item Name="Hephaestus" Weight="1" DecreaseBy="1" RemoveOn="0.1"/>

@@ -1,4 +1,5 @@
 <entities anm2root="gfx/" version="5" deathanm2="gfx/enemy_death_portraits.anm2">
 	<entity id="1000" variant="2051" subtype="0" name="TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus" anm2path="1000.203_spawn pentagram.anm2"/>
 	<entity id="1000" variant="2051" subtype="1" name="TheGauntlet Zeus Lightning Bolt" anm2path="1000.043_poop explosion.anm2"/>
+	<entity id="1000" variant="2051" subtype="2" name="TheGauntlet Athena Aegis" anm2path="gauntlet/aegis.anm2"/>
 </entities>

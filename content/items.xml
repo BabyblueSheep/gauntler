@@ -90,5 +90,12 @@
 		quality="3"
 		tags="summonable offensive"
 	/>
+
+	<passive id="13" 
+		name="Athena" description="Shield-clad protection"
+		gfx="athena.png"
+		quality="3"
+		tags="summonable offensive"
+	/>
 	
 </items>
