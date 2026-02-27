@@ -1,3 +1,5 @@
+local sfxManager = SFXManager()
+
 TheGauntlet.Items.Athena = {}
 TheGauntlet.Items.Athena.CollectibleType = Isaac.GetItemIdByName("Athena")
 
@@ -7,7 +9,7 @@ TheGauntlet.Items.Athena.AegisSubtype = Isaac.GetEntitySubTypeByName("TheGauntle
 local SHIELD_AMOUNT = 5
 local SHIELD_ROTATION_SPEED = 3
 
-local SHIELD_HITBOX_SIZE = 24
+local SHIELD_HITBOX_SIZE = 18
 
 local SHIELD_RETRACT_TIME = 10
 local SHIELD_DISABLE_TIME = 30 * 10
@@ -62,6 +64,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
         if shieldData.RetractTimer == nil then
             shieldData.RetractTimer = 0
         end
+        if shieldData.EasedRetractTimer == nil then
+            shieldData.EasedRetractTimer = 0
+        end
         if shieldData.Retracting == nil then
             shieldData.Retracting = false
         end
@@ -73,7 +78,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
         end
 
         local direction = Vector.FromAngle(data.AthenaRotationTimer * SHIELD_ROTATION_SPEED + i / SHIELD_AMOUNT * 360)
-        local distanceFromPlayer = TheGauntlet.Utility.Lerp(40, 15, shieldData.RetractTimer)
+        local distanceFromPlayer = TheGauntlet.Utility.Lerp(40, 20, shieldData.EasedRetractTimer)
         shieldEffect.Position = player.Position + direction * distanceFromPlayer
         shieldEffect.Velocity = Vector.Zero
 
@@ -108,15 +113,36 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
         shieldSprite.Color = Color(1, 1, 1, alpha)
 
         if not shieldData.Disabled then
-            for _, entity in ipairs(Isaac.FindInRadius(shieldEffect.Position, SHIELD_HITBOX_SIZE, EntityPartition.BULLET)) do
-                local projectile = entity:ToProjectile()
+            local reflected = false
+            local collidingProjectiles = Isaac.FindInRadius(shieldEffect.Position, SHIELD_HITBOX_SIZE, EntityPartition.BULLET)
+            if #collidingProjectiles > 0 then
+                local projectile = collidingProjectiles[1]:ToProjectile()
                 if projectile ~= nil then
-                    projectile:Die()
+                    projectile.Velocity = projectile.Velocity:Length() * direction
+                    projectile:AddProjectileFlags(ProjectileFlags.HIT_ENEMIES | ProjectileFlags.CANT_HIT_PLAYER)
 
-                    shieldData.RetractTimer = 0
-                    shieldData.Retracting = true
-                    shieldData.Disabled = true
+                    sfxManager:Play(907) --SoundEffect.SOUND_RIB_DEFLECT
+
+                    reflected = true
                 end
+            else
+                local collidingEnemies = Isaac.FindInRadius(shieldEffect.Position, SHIELD_HITBOX_SIZE, EntityPartition.ENEMY)
+                if #collidingEnemies > 0 then
+                    local enemy = collidingEnemies[1]:ToNPC()
+                    if enemy ~= nil and enemy:IsActiveEnemy() then
+                        enemy:AddKnockback(EntityRef(player), direction * 10, 10, true)
+
+                        sfxManager:Play(907) --SoundEffect.SOUND_RIB_DEFLECT
+
+                        reflected = true
+                    end
+                end
+            end
+
+            if reflected then
+                shieldData.RetractTimer = 0
+                shieldData.Retracting = true
+                shieldData.Disabled = true
             end
         end
 
@@ -128,6 +154,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                     shieldData.Retracting = false
                     shieldData.DisabledTimer = 0
                 end
+                shieldData.EasedRetractTimer = 1.0 - (1.0 - shieldData.RetractTimer)^3
             elseif shieldData.Unretracting then
                 shieldData.RetractTimer = shieldData.RetractTimer - 1 / SHIELD_RETRACT_TIME
                 if shieldData.RetractTimer < 0 then
@@ -135,6 +162,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                     shieldData.Unretracting = false
                     shieldData.Disabled = false
                 end
+                shieldData.EasedRetractTimer = shieldData.RetractTimer^3
             else
                 shieldData.DisabledTimer = shieldData.DisabledTimer + 1 / SHIELD_DISABLE_TIME
                 if shieldData.DisabledTimer > 1 then
