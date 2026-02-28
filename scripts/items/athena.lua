@@ -12,7 +12,7 @@ local SHIELD_ROTATION_SPEED = 3
 local SHIELD_HITBOX_SIZE = 18
 
 local SHIELD_RETRACT_TIME = 10
-local SHIELD_DISABLE_TIME = 30 * 10
+local SHIELD_DISABLE_TIME = 30 * 15
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
