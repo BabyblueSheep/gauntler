@@ -36,3 +36,5 @@ include("scripts.items.poseidon")
 TheGauntlet.Items.Zeus = {}
 include("scripts.items.zeus.item")
 include("scripts.items.zeus.lightning_bolt")
+
+include("scripts.compat.accurate_blurbs")
