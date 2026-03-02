@@ -26,14 +26,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
 
         if not (shieldEffect ~= nil and shieldEffect:Exists()) then
             if hasAthena then
-                ---@type EntityEffect
-                ---@diagnostic disable-next-line assign-type-mismatch
-                local effect = Isaac.Spawn
+                local effect = TheGauntlet.Utility.SpawnEffect
                 (
                     EntityType.ENTITY_EFFECT, TheGauntlet.Items.Athena.AegisVariant, TheGauntlet.Items.Athena.AegisSubtype,
                     player.Position, Vector.Zero,
                     player
-                ):ToEffect()
+                )
                 effect:Update()
                 data["AthenaShield"..tostring(i)] = effect
             end

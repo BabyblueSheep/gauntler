@@ -65,7 +65,7 @@ end)
 ---@param position Vector
 ---@param source? Entity
 function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source)
-    local bolt = Isaac.Spawn
+    local bolt = TheGauntlet.Utility.SpawnEffect
     (
         EntityType.ENTITY_EFFECT, TheGauntlet.Items.Zeus.LightningBoltVariant, TheGauntlet.Items.Zeus.LightningBoltSubType,
         position, Vector.Zero,

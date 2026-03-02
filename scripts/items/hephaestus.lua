@@ -51,13 +51,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, colle
 
     local spawnPosition = room:FindFreePickupSpawnPosition(player.Position, 0, true)
 
-    ---@type EntityPickup
-    ---@diagnostic disable-next-line assign-type-mismatch
-    local trinket = Isaac.Spawn
+    local trinket = TheGauntlet.Utility.SpawnPickup
     (
         EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_TRINKET, 0,
         spawnPosition, Vector.Zero, nil
-    ):ToPickup()
+    )
 
     if Isaac.GetPersistentGameData():Unlocked(Achievement.GOLDEN_TRINKET) then
         trinket:Morph(
@@ -87,7 +85,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
         end
     end
 
-    Isaac.Spawn
+    TheGauntlet.Utility.SpawnPickup
     (
         goldenPickupEntry.Type, goldenPickupEntry.Variant, goldenPickupEntry.SubType,
         spawnPosition, Vector.Zero, nil

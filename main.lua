@@ -7,6 +7,7 @@ include("scripts.library.status_effect_library")
 
 TheGauntlet.Utility = {}
 include("scripts.utility.callbacks")
+include("scripts.utility.entity_spawn")
 include("scripts.utility.entity")
 include("scripts.utility.math")
 include("scripts.utility.misc")
@@ -38,3 +39,8 @@ include("scripts.items.zeus.item")
 include("scripts.items.zeus.lightning_bolt")
 
 include("scripts.compat.accurate_blurbs")
+
+
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, function ()
+    print("["..TheGauntlet.Name.."] Not affiliated with Team Rapture")
+end)

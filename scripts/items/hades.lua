@@ -82,7 +82,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
 
     local source = StatusEffectLibrary:GetStatusEffectData(entity, StatusEffectLibrary.StatusFlag.TheGauntlet_HadesSkull).Source
 
-    local bony = Isaac.Spawn
+    local bony = TheGauntlet.Utility.SpawnNPC
     (
         EntityType.ENTITY_BLACK_BONY, 0, 0,
         entity.Position, Vector.Zero,

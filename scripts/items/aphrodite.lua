@@ -34,30 +34,33 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     enemyToCharm:AddCharmed(EntityRef(player), -1)
 
-    local poofColor = Color
+    local POOF_COLOR = Color
     (
         0, 0, 0, 1,
         1, 0.66, 1
-    ) --Light pink color
-    local poofSize = Vector.One * (0.5 + enemyToCharm.Size / 144) --144 is roughly how big the poof is; the '0.5 +'' is to make the poof scale less with enemy size
+    )
 
-    local poof1 = Isaac.Spawn
+    local POOF_SPRITE_SIZE = 144
+
+    local poofFinalSpriteScale = Vector.One * (0.5 + enemyToCharm.Size / POOF_SPRITE_SIZE) --Hopefully a good enough scaling equation
+
+    local poof1 = TheGauntlet.Utility.SpawnEffect
     (
         EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 1,
         enemyToCharm.Position, Vector.Zero,
         nil
     )
-    poof1.SpriteScale = poofSize
-    poof1:GetSprite().Color = poofColor
+    poof1.SpriteScale = poofFinalSpriteScale
+    poof1:GetSprite().Color = POOF_COLOR
 
-    local poof2 = Isaac.Spawn
+    local poof2 = TheGauntlet.Utility.SpawnEffect
     (
         EntityType.ENTITY_EFFECT, EffectVariant.POOF02, 2,
         enemyToCharm.Position, Vector.Zero,
         nil
     )
-    poof2.SpriteScale = poofSize
-    poof2:GetSprite().Color = poofColor
+    poof2.SpriteScale = poofFinalSpriteScale
+    poof2:GetSprite().Color = POOF_COLOR
 
     sfxManager:Play(SoundEffect.SOUND_BLACK_POOF)
 end)

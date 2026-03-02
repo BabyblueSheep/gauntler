@@ -31,7 +31,7 @@ local function OnFinishGauntletRoom()
 
     local collectibleSpawnPosition = room:FindFreePickupSpawnPosition(room:GetCenterPos())
 
-    Isaac.Spawn
+    TheGauntlet.Utility.SpawnPickup
     (
         EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, 0,
         collectibleSpawnPosition, Vector.Zero,
@@ -51,13 +51,11 @@ local function SpawnEnemyIndicator(type, variant, subtype, position)
     local entityConfig = EntityConfig.GetEntity(type, variant, subtype)
     if entityConfig == nil then return end
 
-    ---@type EntityEffect
-    ---@diagnostic disable-next-line assign-type-mismatch
-    local effect = Isaac.Spawn
+    local effect = TheGauntlet.Utility.SpawnEffect
     (
         EntityType.ENTITY_EFFECT, FAKE_PENTAGRAM_VARIANT, FAKE_PENTAGRAM_SUBTYPE,
         position, Vector.Zero, nil
-    ):ToEffect()
+    )
 
     effect:GetData().FakeAmbush = {
         Type = type,
@@ -81,7 +79,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
     if sprite:IsFinished() then
         local enemyData = effect:GetData().FakeAmbush
 
-        Isaac.Spawn
+        TheGauntlet.Utility.SpawnEntity
         (
             enemyData.Type, enemyData.Variant, enemyData.SubType,
             effect.Position, Vector.Zero,

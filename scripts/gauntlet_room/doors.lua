@@ -390,7 +390,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
         tempSave.IsOpen = true
 
         local doorPosition = room:GetDoorSlotPosition(doorSlot)
-        Isaac.Spawn
+        TheGauntlet.Utility.SpawnEffect
         (
             EntityType.ENTITY_EFFECT, EffectVariant.CRACKED_ORB_POOF, 0,
             doorPosition, Vector.Zero,
