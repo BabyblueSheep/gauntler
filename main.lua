@@ -1,8 +1,6 @@
 TheGauntlet = RegisterMod("The Gauntlet", 1)
 
 TheGauntlet.SaveManager = include("scripts.library.save_manager")
-TheGauntlet.SaveManager.Init(TheGauntlet)
-
 include("scripts.library.status_effect_library")
 
 TheGauntlet.Utility = {}
@@ -40,6 +38,7 @@ include("scripts.items.zeus.lightning_bolt")
 
 include("scripts.compat.accurate_blurbs")
 
+TheGauntlet.SaveManager.Init(TheGauntlet)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, function ()
     print("["..TheGauntlet.Name.."] Not affiliated with Team Rapture")

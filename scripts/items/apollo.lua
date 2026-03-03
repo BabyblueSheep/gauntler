@@ -1,7 +1,11 @@
+local game = Game()
+
 TheGauntlet.Items.Apollo = {}
 TheGauntlet.Items.Apollo.CollectibleType = Isaac.GetItemIdByName("Apollo")
 TheGauntlet.Items.Apollo.CollectibleTypeOnPath = Isaac.GetNullItemIdByName("Apollo On Path Stats")
 TheGauntlet.Items.Apollo.CollectibleTypeOffPath = Isaac.GetNullItemIdByName("Apollo Off Path Stats")
+
+TheGauntlet.SaveManager.Utility.AddDefaultFloorData("ApolloShortestPathToBoss", {})
 
 local shortestPathToBoss = {}
 local currentRoomStack = {}
@@ -45,30 +49,52 @@ local function RecursiveSearchPathToBoss(level, currentRoomIndex)
     roomsCurrentlyInStack[currentRoomIndex] = nil
 end
 
+function TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
+    local level = game:GetLevel()
+    
+    local floorSave = TheGauntlet.SaveManager.GetFloorSave()
+
+    shortestPathToBoss = {}
+    currentRoomStack = {}
+    roomsCurrentlyInStack = {}
+
+    RecursiveSearchPathToBoss(level, level:GetStartingRoomIndex())
+
+    floorSave.ApolloShortestPathToBoss = TheGauntlet.Utility.CopyTable(shortestPathToBoss)
+end
+
+function TheGauntlet.Items.Apollo.TryRefreshShortestPathToBoss()
+    local floorSave = TheGauntlet.SaveManager.GetFloorSave()
+
+    if #floorSave.ApolloShortestPathToBoss == 0 then
+        TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
+    end
+end
+
+function TheGauntlet.Items.Apollo.IsOnShortestPathToBoss()
+    local level = Game():GetLevel()
+    local currentRoomIndex = level:GetCurrentRoomIndex()
+
+    local floorSave = TheGauntlet.SaveManager.GetFloorSave()
+
+    local isFollowingProphecy = false
+    for _, roomIndex in ipairs(floorSave.ApolloShortestPathToBoss) do
+        if currentRoomIndex == roomIndex then
+            isFollowingProphecy = true
+            break
+        end
+    end
+
+    return isFollowingProphecy
+end
+
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function ()
+    TheGauntlet.Items.Apollo.TryRefreshShortestPathToBoss()
+end)
+
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     Isaac.CreateTimer(function ()
-        local level = Game():GetLevel()
-        local currentRoomIndex = level:GetCurrentRoomIndex()
-
-        local floorSave = TheGauntlet.SaveManager.GetFloorSave()
-
-        if floorSave.ApolloShortestPathToBoss == nil then
-            shortestPathToBoss = {}
-            currentRoomStack = {}
-            roomsCurrentlyInStack = {}
-
-            RecursiveSearchPathToBoss(level, level:GetStartingRoomIndex())
-
-            floorSave.ApolloShortestPathToBoss = TheGauntlet.Utility.CopyTable(shortestPathToBoss)
-        end
-
-        local isFollowingProphecy = false
-        for _, roomIndex in ipairs(floorSave.ApolloShortestPathToBoss) do
-            if currentRoomIndex == roomIndex then
-                isFollowingProphecy = true
-                break
-            end
-        end
+        local isFollowingProphecy = TheGauntlet.Items.Apollo.IsOnShortestPathToBoss()
 
         for _, player in ipairs(PlayerManager.GetPlayers()) do
             if not player:HasCollectible(TheGauntlet.Items.Apollo.CollectibleType) then goto continue end
@@ -94,23 +120,10 @@ end)
 ---@param varData integer
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, collectibleType, charge, firstTime, slot, varData, player)
-    local level = Game():GetLevel()
-    local currentRoomIndex = level:GetCurrentRoomIndex()
-
-    local floorSave = TheGauntlet.SaveManager.GetFloorSave()
-
-    local isFollowingProphecy = false
-    for _, roomIndex in ipairs(floorSave.ApolloShortestPathToBoss) do
-        if currentRoomIndex == roomIndex then
-            isFollowingProphecy = true
-            break
-        end
-    end
-
     player:GetEffects():RemoveNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeOnPath, -1)
     player:GetEffects():RemoveNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeOffPath, -1)
 
-    if isFollowingProphecy then
+    if TheGauntlet.Items.Apollo.IsOnShortestPathToBoss() then
         player:GetEffects():AddNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeOnPath)
     else
         player:GetEffects():AddNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeOffPath)
