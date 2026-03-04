@@ -57,6 +57,15 @@ function TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
     local currentStage = level:GetStage()
     local allRooms = level:GetRooms()
 
+
+    --Greed mode has a set layout, so "fate" can probably just be the mandatory rooms + some near-mandatory ones.
+    if game:IsGreedMode() then
+        table.insert(shortestPathToBoss, 84)  --Starting/main room
+        table.insert(shortestPathToBoss, 85)  --Gold treasure room
+        table.insert(shortestPathToBoss, 98)  --Silver treasure room
+        table.insert(shortestPathToBoss, 71)  --Shop
+        table.insert(shortestPathToBoss, 110) --Exit room
+    end
     --Reaching Home is "part of fate", and it's a non-standard layout anyways (and nearly all rooms are mandatory to visit anyways so meh)
     if currentStage == LevelStage.STAGE8 then
         for i = 0, allRooms.Size-1 do
@@ -75,21 +84,17 @@ function TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
             if room.Data.Type ~= RoomType.ROOM_BOSS then goto continue end
 
             --"Fate" on Void leads to Delirium
-            if level:GetStage() == LevelStage.STAGE7 then --Void
+            if level:GetStage() == LevelStage.STAGE7 then
                 if room.DeliriumDistance == 1 then
                     bossRoomIndex = room.SafeGridIndex
                 end
             --"Fate" on all other floors leads to the boss that leads you down
             else
-                level:ChangeRoom(room.SafeGridIndex)
-
-                local currentRoom = game:GetRoom()
-
-                if currentRoom:IsCurrentRoomLastBoss() then
+                --It'd be nice if Apollo would only lead to the final boss room, but without hacks too disgusting to use, it doesn't seem possible. Bummer.
+                --if currentRoom:IsCurrentRoomLastBoss() then
+                if bossRoomIndex == -1 then
                     bossRoomIndex = room.SafeGridIndex
                 end
-
-                Isaac.ExecuteCommand("rewind")
             end
 
             if bossRoomIndex ~= -1 then
@@ -134,8 +139,7 @@ end
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     TheGauntlet.Items.Apollo.TryRefreshShortestPathToBoss()
-
-    --Isaac.CreateTimer(function ()
+    
     local isFollowingProphecy = TheGauntlet.Items.Apollo.IsOnShortestPathToBoss()
 
     for _, player in ipairs(PlayerManager.GetPlayers()) do
@@ -152,7 +156,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
         ::continue::
     end
-    --end, 1, 1, false)
 end)
 
 ---@param collectibleType CollectibleType
