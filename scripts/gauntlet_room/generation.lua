@@ -17,8 +17,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_, player)
         nil, nil,
         nil, nil,
         0,
-        TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_SUBTYPE
+        TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_SUBTYPE,
+        0
     )
+
+    if entranceRoomConfigToPlace == nil then return end
 
     local entranceRoomValidPlacementIndexes = level:FindValidRoomPlacementLocations
     (
