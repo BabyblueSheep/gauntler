@@ -81,8 +81,9 @@
 		quality="3"
 		tags="summonable offensive lazarussharedglobal"
 	/>
-	<null id="3" name="Apollo On Path Stats" damage="2" />
-	<null id="4" name="Apollo Off Path Stats" damagemult="0.8" />
+	<!-- These null items probably don't have to be persistent, as they only "last" for a room, but a bug is making me keep them here -->
+	<null id="3" name="Apollo On Path Stats" damage="2" persistent="true" />
+	<null id="4" name="Apollo Off Path Stats" damagemult="0.8" persistent="true" />
 
 	<passive id="12" 
 		name="Hades" description="Fall and rise"

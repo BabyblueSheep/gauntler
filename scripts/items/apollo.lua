@@ -57,17 +57,72 @@ function TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
     local currentStage = level:GetStage()
     local allRooms = level:GetRooms()
 
+    local returnValue = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.PRE_APOLLO_REFRESH_PATH_TO_BOSS)
 
-    --Greed mode has a set layout, so "fate" can probably just be the mandatory rooms + some near-mandatory ones.
-    if game:IsGreedMode() then
-        table.insert(shortestPathToBoss, 84)  --Starting/main room
-        table.insert(shortestPathToBoss, 85)  --Gold treasure room
-        table.insert(shortestPathToBoss, 98)  --Silver treasure room
-        table.insert(shortestPathToBoss, 71)  --Shop
-        table.insert(shortestPathToBoss, 110) --Exit room
+    local function CheckReturnValue()
+        if returnValue == nil then
+            return nil
+        end
+
+        if type(returnValue) == "number" then
+
+            if not TheGauntlet.Utility.IsInteger(returnValue) then
+                TheGauntlet.Utility.LogError("Number returned in "..TheGauntlet.Utility.Callbacks.PRE_APOLLO_REFRESH_PATH_TO_BOSS.." that is not an integer. Using default logic.")
+                return false
+            end
+            return true
+
+        end
+        if type(returnValue) == "table" then
+
+            local keyValuePairAmount = 0
+
+            for key, value in pairs(returnValue) do
+                keyValuePairAmount = keyValuePairAmount + 1
+
+                if not TheGauntlet.Utility.IsInteger(key) then
+                    TheGauntlet.Utility.LogError("Table returned in "..TheGauntlet.Utility.Callbacks.PRE_APOLLO_REFRESH_PATH_TO_BOSS.." is not a list. Using default logic.")
+                    return false
+                end
+                if not TheGauntlet.Utility.IsInteger(value) then
+                    TheGauntlet.Utility.LogError("Table returned in "..TheGauntlet.Utility.Callbacks.PRE_APOLLO_REFRESH_PATH_TO_BOSS.." has a non-integer element. Using default logic.")
+                    return false
+                end
+            end
+
+            if keyValuePairAmount == 0 then
+                TheGauntlet.Utility.LogWarning("Table returned in "..TheGauntlet.Utility.Callbacks.PRE_APOLLO_REFRESH_PATH_TO_BOSS.." is empty. Please make sure it has at least one element.")
+            end
+            return true
+
+        end
+
+        TheGauntlet.Utility.LogError("Value returned in "..TheGauntlet.Utility.Callbacks.PRE_APOLLO_REFRESH_PATH_TO_BOSS.." that isn't a number or a table. Using default logic.")
+        return false
     end
+    local isReturnValid = CheckReturnValue()
+
+    if isReturnValid == true then
+        if TheGauntlet.Utility.IsInteger(returnValue) then
+            table.insert(shortestPathToBoss, returnValue)
+        end
+        floorSave.ApolloShortestPathToBoss = TheGauntlet.Utility.CopyTable(shortestPathToBoss)
+        return
+    end
+
+    --Greed mode has a set layout, so "fate" can probably just be the mandatory rooms.
+    if game:IsGreedMode() then
+        if currentStage == LevelStage.STAGE7_GREED then
+            table.insert(shortestPathToBoss, 84)  --Starting room
+            table.insert(shortestPathToBoss, 71)  --Greed boss room
+            table.insert(shortestPathToBoss, 45)  --Ultra Greed boss room
+        else
+            table.insert(shortestPathToBoss, 84)  --Starting/main room
+            table.insert(shortestPathToBoss, 71)  --Shop
+            table.insert(shortestPathToBoss, 110) --Exit room
+        end
     --Reaching Home is "part of fate", and it's a non-standard layout anyways (and nearly all rooms are mandatory to visit anyways so meh)
-    if currentStage == LevelStage.STAGE8 then
+    elseif currentStage == LevelStage.STAGE8 then
         for i = 0, allRooms.Size-1 do
             local room = allRooms:Get(i)
 
@@ -90,9 +145,8 @@ function TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
                 end
             --"Fate" on all other floors leads to the boss that leads you down
             else
-                --It'd be nice if Apollo would only lead to the final boss room, but without hacks too disgusting to use, it doesn't seem possible. Bummer.
-                --if currentRoom:IsCurrentRoomLastBoss() then
-                if bossRoomIndex == -1 then
+
+                if room.SafeGridIndex == allRooms:Get(level:GetLastBossRoomListIndex()).SafeGridIndex then
                     bossRoomIndex = room.SafeGridIndex
                 end
             end
@@ -104,7 +158,8 @@ function TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
             ::continue::
         end
 
-        if bossRoomIndex == -1 then
+        if bossRoomIndex ~= -1 then
+            print("test")
             RecursiveSearchPath(level, level:GetStartingRoomIndex(), bossRoomIndex)
         end
     end
@@ -122,7 +177,7 @@ end
 
 function TheGauntlet.Items.Apollo.IsOnShortestPathToBoss()
     local level = Game():GetLevel()
-    local currentRoomIndex = level:GetCurrentRoomIndex()
+    local currentRoomIndex = level:GetCurrentRoomDesc().SafeGridIndex
 
     local floorSave = TheGauntlet.SaveManager.GetFloorSave()
 
@@ -137,16 +192,16 @@ function TheGauntlet.Items.Apollo.IsOnShortestPathToBoss()
     return isFollowingProphecy
 end
 
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
+local function GrantApolloDamage()
     TheGauntlet.Items.Apollo.TryRefreshShortestPathToBoss()
     
     local isFollowingProphecy = TheGauntlet.Items.Apollo.IsOnShortestPathToBoss()
 
     for _, player in ipairs(PlayerManager.GetPlayers()) do
-        if not player:HasCollectible(TheGauntlet.Items.Apollo.CollectibleType) then goto continue end
-        
         player:GetEffects():RemoveNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeOnPath, -1)
         player:GetEffects():RemoveNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeOffPath, -1)
+
+        if not player:HasCollectible(TheGauntlet.Items.Apollo.CollectibleType) then goto continue end
 
         if isFollowingProphecy then
             player:GetEffects():AddNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeOnPath)
@@ -156,6 +211,14 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
         ::continue::
     end
+end
+
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
+    GrantApolloDamage()
+end)
+
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
+    GrantApolloDamage()
 end)
 
 ---@param collectibleType CollectibleType

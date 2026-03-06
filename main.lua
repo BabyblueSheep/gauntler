@@ -7,6 +7,7 @@ TheGauntlet.Utility = {}
 include("scripts.utility.callbacks")
 include("scripts.utility.entity_spawn")
 include("scripts.utility.entity")
+include("scripts.utility.logging")
 include("scripts.utility.math")
 include("scripts.utility.misc")
 include("scripts.utility.random")

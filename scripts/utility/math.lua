@@ -50,3 +50,9 @@ local CARDINAL_DIRECTIONS = {
 function TheGauntlet.Utility.RandomCardinalVector(rng)
     return TheGauntlet.Utility.RandomItemFromList(CARDINAL_DIRECTIONS, rng)
 end
+
+---@param number number
+---@return boolean
+function TheGauntlet.Utility.IsInteger(number)
+    return tonumber(tostring(number), 10) ~= nil
+end
