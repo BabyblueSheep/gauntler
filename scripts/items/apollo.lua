@@ -145,7 +145,6 @@ function TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
                 end
             --"Fate" on all other floors leads to the boss that leads you down
             else
-
                 if room.SafeGridIndex == allRooms:Get(level:GetLastBossRoomListIndex()).SafeGridIndex then
                     bossRoomIndex = room.SafeGridIndex
                 end
@@ -159,7 +158,6 @@ function TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
         end
 
         if bossRoomIndex ~= -1 then
-            print("test")
             RecursiveSearchPath(level, level:GetStartingRoomIndex(), bossRoomIndex)
         end
     end
