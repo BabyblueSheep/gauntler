@@ -1,21 +1,9 @@
+local game = Game()
+
 TheGauntlet.Items.Ares = {}
 TheGauntlet.Items.Ares.CollectibleType = Isaac.GetItemIdByName("Ares")
 TheGauntlet.Items.Ares.CollectibleTypeNullChallenge = Isaac.GetNullItemIdByName("Ares Challenge Room Stats")
 TheGauntlet.Items.Ares.CollectibleTypeNullBossChallenge = Isaac.GetNullItemIdByName("Ares Boss Challenge Room Stats")
-
-local FLOORS_WITH_BOSS_CHALLENGE_ROOMS = {
-    [LevelStage.STAGE1_2] = true,
-    [LevelStage.STAGE2_2] = true,
-    [LevelStage.STAGE3_2] = true,
-    [LevelStage.STAGE4_2] = true,
-}
-
-local FLOORS_WITH_CHALLENGE_ROOMS = {
-    [LevelStage.STAGE2_1] = true,
-    [LevelStage.STAGE3_1] = true,
-    [LevelStage.STAGE4_1] = true,
-    [LevelStage.STAGE5] = true,
-}
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
     for _, player in ipairs(PlayerManager.GetPlayers()) do
@@ -25,38 +13,47 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
 
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Ares.CollectibleType) then return end
 
-    local level = Game():GetLevel()
+    if game:IsGreedMode() then return end
+
+    local level = game:GetLevel()
     
     local roomSubtype = -1
-    if FLOORS_WITH_CHALLENGE_ROOMS[level:GetStage()] then
-        roomSubtype = 0
-    end
-    if FLOORS_WITH_BOSS_CHALLENGE_ROOMS[level:GetStage()] then
+    if TheGauntlet.Utility.CanBossChallengeRoomsSpawn() then
         roomSubtype = 1
+    elseif TheGauntlet.Utility.CanNormalChallengeRoomsSpawn() then
+        roomSubtype = 0
     end
     
     if roomSubtype == -1 then return end
 
     local rng = RNG(level:GetDungeonPlacementSeed())
 
-    local entranceRoomConfigToPlace = RoomConfig.GetRandomRoom
-    (
-        rng:Next(),
-        true,
-        StbType.SPECIAL_ROOMS, RoomType.ROOM_CHALLENGE, nil,
-        nil, nil,
-        nil, nil,
-        0,
-        roomSubtype
-    )
+    local entranceRoomConfigToPlace = nil
+    local entranceRoomValidPlacementIndexes = nil
 
-    local entranceRoomValidPlacementIndexes = level:FindValidRoomPlacementLocations
-    (
-        entranceRoomConfigToPlace, nil,
-        false, false
-    )
+    local GENERATION_ATTEMPT_COUNT = 5
 
-    if #entranceRoomValidPlacementIndexes == 0 then return end
+    for _ = 1, GENERATION_ATTEMPT_COUNT do
+        entranceRoomConfigToPlace = RoomConfig.GetRandomRoom
+        (
+            rng:Next(),
+            true,
+            StbType.SPECIAL_ROOMS, RoomType.ROOM_CHALLENGE, nil,
+            nil, nil,
+            nil, nil,
+            0,
+            roomSubtype,
+            0
+        )
+
+        entranceRoomValidPlacementIndexes = level:FindValidRoomPlacementLocations
+        (
+            entranceRoomConfigToPlace, nil,
+            false, false
+        )
+
+        if #entranceRoomValidPlacementIndexes == 0 then return end
+    end
 
     level:TryPlaceRoom(entranceRoomConfigToPlace, entranceRoomValidPlacementIndexes[1], nil, rng:Next(), false)
 

@@ -3,8 +3,6 @@ local game = Game()
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_, player)
     local level = Game():GetLevel()
 
-    if game:IsGreedMode() then return end
-
     local rng = RNG(level:GetDungeonPlacementSeed())
 
     if rng:RandomFloat() > TheGauntlet.GauntletRoom.GetGenerationChance() then return end

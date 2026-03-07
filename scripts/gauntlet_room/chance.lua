@@ -1,19 +1,7 @@
+local game = Game()
+
 local GAUNTLET_ROOM_CHANCE_PER_COMPLETED_CHALLENGE_ROOM = 0.1
 local GAUNTLET_ROOM_CHANCE_PER_COMPLETED_BOSS_CHALLENGE_ROOM = 0.25
-
-local FLOORS_WITH_BOSS_CHALLENGE_ROOMS = {
-    [LevelStage.STAGE1_2] = true,
-    [LevelStage.STAGE2_2] = true,
-    [LevelStage.STAGE3_2] = true,
-    [LevelStage.STAGE4_2] = true,
-}
-
-local FLOORS_WITH_CHALLENGE_ROOMS = {
-    [LevelStage.STAGE2_1] = true,
-    [LevelStage.STAGE3_1] = true,
-    [LevelStage.STAGE4_1] = true,
-    [LevelStage.STAGE5] = true,
-}
 
 ---@param challengeRoomType ChallengeRoomType
 TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.POST_CHALLENGE_ROOM_TRIGGER_CLEARED, function (_, challengeRoomType)
@@ -41,8 +29,12 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.POST_CHALLENGE_ROOM_TRIGGE
 end)
 
 function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
-    local stage = Game():GetLevel():GetStage()
-    if not FLOORS_WITH_CHALLENGE_ROOMS[stage] and not FLOORS_WITH_BOSS_CHALLENGE_ROOMS[stage] then
+    if game:IsGreedMode() then
+        TheGauntlet.SaveManager.GetRunSave().GauntletGenerationChance = 0
+        return
+    end
+
+    if not TheGauntlet.Utility.CanChallengeRoomsSpawn() then
         TheGauntlet.SaveManager.GetRunSave().GauntletGenerationChance = 0
         return
     end
@@ -71,7 +63,6 @@ end
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
     local runSave = TheGauntlet.SaveManager.GetRunSave()
 
-    
     if runSave.BossChallengeRoomsCompleted == nil then
         runSave.BossChallengeRoomsCompleted = 0
     end
