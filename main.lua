@@ -5,6 +5,7 @@ include("scripts.library.status_effect_library")
 
 TheGauntlet.Utility = {}
 include("scripts.utility.callbacks")
+include("scripts.utility.challenge_rooms")
 include("scripts.utility.entity_spawn")
 include("scripts.utility.entity")
 include("scripts.utility.logging")

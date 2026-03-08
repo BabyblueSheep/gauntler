@@ -1,3 +1,4 @@
+---Generates a random decimal number within a range.
 ---@param min number
 ---@param max number
 ---@param rng RNG
@@ -6,6 +7,7 @@ function TheGauntlet.Utility.RandomFloat(min, max, rng)
     return min + (max - min) * rng:RandomFloat()
 end
 
+---Returns a random item from a list.
 ---@generic T
 ---@param list T[]
 ---@param rng RNG
@@ -14,16 +16,15 @@ function TheGauntlet.Utility.RandomItemFromList(list, rng)
     return list[rng:RandomInt(#list) + 1]
 end
 
---https://gist.github.com/Uradamus/10323382
+---Shuffles items in a list around.<br>
+---Creates a copy of the list and returns it.<br>
+---https://gist.github.com/Uradamus/10323382
 ---@generic T
 ---@param list T[]
 ---@param rng RNG
 ---@return table
 function TheGauntlet.Utility.ShuffleList(list, rng)
-    local listCopy = {}
-    for i = 1, #list do
-        listCopy[i] = list[i]
-    end
+    local listCopy = TheGauntlet.Utility.CopyListShallow(list)
     for i = #listCopy, 2, -1 do
         local j = rng:RandomInt(i) + 1
         listCopy[i], listCopy[j] = listCopy[j], listCopy[i]
@@ -31,6 +32,9 @@ function TheGauntlet.Utility.ShuffleList(list, rng)
     return listCopy
 end
 
+---Shuffles items in a list around.<br>
+---Modifies the table inputted as the argument.
+---https://gist.github.com/Uradamus/10323382
 ---@generic T
 ---@param list T[]
 ---@param rng RNG

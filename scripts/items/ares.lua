@@ -52,8 +52,10 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
             false, false
         )
 
-        if #entranceRoomValidPlacementIndexes == 0 then return end
+        if #entranceRoomValidPlacementIndexes ~= 0 then break end
     end
+
+    if #entranceRoomValidPlacementIndexes == 0 then return end
 
     level:TryPlaceRoom(entranceRoomConfigToPlace, entranceRoomValidPlacementIndexes[1], nil, rng:Next(), false)
 
@@ -66,7 +68,7 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.POST_CHALLENGE_ROOM_TRIGGE
         if player:HasCollectible(TheGauntlet.Items.Ares.CollectibleType) then
             if challengeRoomType == TheGauntlet.Utility.ChallengeRoomType.NORMAL then
                 player:GetEffects():AddNullEffect(TheGauntlet.Items.Ares.CollectibleTypeNullChallenge)
-            elseif challengeRoomType == TheGauntlet.Utility.ChallengeRoomType.BOSS then
+            else
                 player:GetEffects():AddNullEffect(TheGauntlet.Items.Ares.CollectibleTypeNullBossChallenge)
             end
         end

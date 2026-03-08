@@ -8,8 +8,9 @@ local TEAR_COPYING_FAMILIARS = {
     [FamiliarVariant.FATES_REWARD] = true
 }
 
+---Attempts to get a player from an entity. Used in scenarios where an entity could have been spawned by a player or a player-owned familiar.
 ---@param entity Entity
----@param tearCopyingFamiliarsOnly boolean?
+---@param tearCopyingFamiliarsOnly boolean? Whether all familiars are considered, or only familiars that copy player tears.
 ---@return EntityPlayer?
 function TheGauntlet.Utility.GetPlayerFromEntity(entity, tearCopyingFamiliarsOnly)
     if tearCopyingFamiliarsOnly == nil then

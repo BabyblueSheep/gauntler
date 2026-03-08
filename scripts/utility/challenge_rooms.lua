@@ -14,13 +14,17 @@ local FLOORS_WITH_CHALLENGE_ROOMS = {
     [LevelStage.STAGE5] = true,
 }
 
+---Returns whether normal (non-boss) challenge rooms are allowed to spawn on the current floor.
+---@return boolean
 function TheGauntlet.Utility.CanNormalChallengeRoomsSpawn()
     local level = game:GetLevel()
     local stage = level:GetStage()
-    
+
     return FLOORS_WITH_CHALLENGE_ROOMS[stage]
 end
 
+---Returns whether boss challenge rooms are allowed to spawn on the current floor.
+---@return boolean
 function TheGauntlet.Utility.CanBossChallengeRoomsSpawn()
     local level = game:GetLevel()
     local stage = level:GetStage()
@@ -28,6 +32,8 @@ function TheGauntlet.Utility.CanBossChallengeRoomsSpawn()
     return FLOORS_WITH_BOSS_CHALLENGE_ROOMS[stage]
 end
 
+---Returns whether any challenge rooms are allowed to spawn on the current floor.
+---@return boolean
 function TheGauntlet.Utility.CanChallengeRoomsSpawn()
     local level = game:GetLevel()
     local stage = level:GetStage()

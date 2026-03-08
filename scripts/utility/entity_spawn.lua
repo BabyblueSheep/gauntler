@@ -1,6 +1,6 @@
 --These functions all have the following purposes:
--- * Call Game():Spawn to avoid the bug where Isaac.Spawn can generate a seed of 0 and cause a crash (this should probably never happen, realistically speaking, but eh)
--- * Add some minor improvements to Game():Spawn relating to arguments (optional seed and reorganized arguments), since it is a little bit annoying
+-- * Call Game():Spawn to avoid the bug where Isaac.Spawn can generate a seed of 0 and cause a crash (this should probably never happen, realistically speaking, but better safe than sorry)
+-- * Use arguments more similar to Isaac.Spawn than Game():Spawn relating to arguments (optional seed and reorganized arguments) for parity
 -- * Avoid needing to cast to a specific type (call :ToX) every time an entity is spawned without checking for nil even if it is guaranteed to be a valid cast
 
 local game = Game()

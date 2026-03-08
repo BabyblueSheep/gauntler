@@ -1,6 +1,18 @@
 TheGauntlet.Utility.Callbacks = {
+    ---Called when finishing all waves of a challenge room.
+    ---
+    ---Parameters:
+    --- - [ChallengeRoomType](lua://ChallengeRoomType) - the type of the current challenge room;
+    ---
+    ---Optional Parameter:
+    --- - [ChallengeRoomType](lua://ChallengeRoomType) - the type of the current challenge room;
     POST_CHALLENGE_ROOM_TRIGGER_CLEARED = "TheGauntlet POST_CHALLENGE_ROOM_TRIGGER_CLEARED",
 
+    ---Called before Apollo refreshes its path to the boss room. Can be used to modify the list of rooms that grant a damage up.
+    ---
+    ---Returns:
+    --- - Return an [integer](lua://integer) to set the boss room to path towards.ItemConfig.CARDTYPE_SPECIAL_OBJECT.<br>
+    --- - Alternatively, return a [table](lua://table) in the form of an integer list to set a custom list of rooms. 
     PRE_APOLLO_REFRESH_PATH_TO_BOSS = "TheGauntlet PRE_APOLLO_REFRESH_PATH_TO_BOSS",
 }
 
@@ -31,7 +43,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             roomType = TheGauntlet.Utility.ChallengeRoomType.BOSS
         end
 
-        Isaac.RunCallback(TheGauntlet.Utility.Callbacks.POST_CHALLENGE_ROOM_TRIGGER_CLEARED, roomType)
+        Isaac.RunCallbackWithParam(TheGauntlet.Utility.Callbacks.POST_CHALLENGE_ROOM_TRIGGER_CLEARED, roomType, roomType)
     end
 
     roomSave.WasAmbushDone = room:IsAmbushDone()
