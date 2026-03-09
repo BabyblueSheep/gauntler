@@ -25,7 +25,7 @@ local function RecursiveSearchPath(level, currentRoomIndex, targetRoomIndex)
     if currentRoomDescriptor.SafeGridIndex == targetRoomIndex then
         if #shortestPathToBoss == 0 or #shortestPathToBoss > (#currentRoomStack + 1) then
             table.insert(currentRoomStack, currentRoomIndex)
-            shortestPathToBoss = TheGauntlet.Utility.CopyTable(currentRoomStack)
+            shortestPathToBoss = TheGauntlet.Utility.CopyTableShallow(currentRoomStack)
             table.remove(currentRoomStack, #currentRoomStack)
         end
         
@@ -106,7 +106,7 @@ function TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
         if TheGauntlet.Utility.IsInteger(returnValue) then
             table.insert(shortestPathToBoss, returnValue)
         end
-        floorSave.ApolloShortestPathToBoss = TheGauntlet.Utility.CopyTable(shortestPathToBoss)
+        floorSave.ApolloShortestPathToBoss = TheGauntlet.Utility.CopyTableShallow(shortestPathToBoss)
         return
     end
 
@@ -162,7 +162,7 @@ function TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
         end
     end
 
-    floorSave.ApolloShortestPathToBoss = TheGauntlet.Utility.CopyTable(shortestPathToBoss)
+    floorSave.ApolloShortestPathToBoss = TheGauntlet.Utility.CopyTableShallow(shortestPathToBoss)
 end
 
 function TheGauntlet.Items.Apollo.TryRefreshShortestPathToBoss()

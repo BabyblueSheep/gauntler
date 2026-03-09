@@ -33,7 +33,7 @@ function TheGauntlet.Utility.ShuffleList(list, rng)
 end
 
 ---Shuffles items in a list around.<br>
----Modifies the table inputted as the argument.
+---Modifies the table inputted as the argument.<br>
 ---https://gist.github.com/Uradamus/10323382
 ---@generic T
 ---@param list T[]
