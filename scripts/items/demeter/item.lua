@@ -1,21 +1,7 @@
 local SUMMER_NPC_DAMAGE_PER_TICK = 2
-local AUTUMN_NPC_SLOWNESS = 1
+local AUTUMN_NPC_SLOWNESS = 1 --Seems to have an upper cap? Since at 1 they're still very slow
 local SPRING_BOOGER_CHANCE = 0.25
 
-
-
-TheGauntlet.Items.Demeter = {}
-TheGauntlet.Items.Demeter.CollectibleType = Isaac.GetItemIdByName("Demeter")
-
-local NO_COLOR     = { 0.0, 0.0, 0.0, 0.0 }
-local WINTER_COLOR = { 0.2, 0.2, 1.0, 0.2 }
-local SPRING_COLOR = { 0.0, 1.0, 0.5, 0.1 }
-local SUMMER_COLOR = { 1.5, 1.0, 0.0, 0.3 }
-local AUTUMN_COLOR = { 1.0, 0.0, 0.5, 0.2 }
-
-local currentColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
-local targetColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
-local colorUpdateCounter = 0
 
 local SLOW_COLOR_OFFSET = 40 / 255
 local SLOW_COLOR = Color
@@ -24,21 +10,11 @@ local SLOW_COLOR = Color
     SLOW_COLOR_OFFSET, SLOW_COLOR_OFFSET, SLOW_COLOR_OFFSET
 )
 
-local function SetUpSeasonVisuals(season)
-    if season == TheGauntlet.Items.Demeter.Season.WINTER then
-        targetColor = TheGauntlet.Utility.CopyTableShallow(WINTER_COLOR)
-    elseif season == TheGauntlet.Items.Demeter.Season.SPRING then
-        targetColor = TheGauntlet.Utility.CopyTableShallow(SPRING_COLOR)
-    elseif season == TheGauntlet.Items.Demeter.Season.SUMMER then
-        targetColor = TheGauntlet.Utility.CopyTableShallow(SUMMER_COLOR)
-    elseif season == TheGauntlet.Items.Demeter.Season.AUTUMN then
-        targetColor = TheGauntlet.Utility.CopyTableShallow(AUTUMN_COLOR)
-    else
-        targetColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
-    end
 
-    colorUpdateCounter = 30
-end
+
+local game = Game()
+
+TheGauntlet.Items.Demeter.CollectibleType = Isaac.GetItemIdByName("Demeter")
 
 ---@enum Season
 TheGauntlet.Items.Demeter.Season = {
@@ -63,7 +39,7 @@ end
 ---@param value Season
 function TheGauntlet.Items.Demeter.SetSeason(value)
     TheGauntlet.SaveManager.GetRunSave().DemeterCurrentSeason = value
-    SetUpSeasonVisuals(TheGauntlet.SaveManager.GetRunSave().DemeterCurrentSeason)
+    TheGauntlet.Items.Demeter.RefreshSeasonVisuals(TheGauntlet.SaveManager.GetRunSave().DemeterCurrentSeason)
 end
 
 function TheGauntlet.Items.Demeter.IncrementSeason()
@@ -74,27 +50,8 @@ function TheGauntlet.Items.Demeter.IncrementSeason()
     runSave.DemeterCurrentSeason = runSave.DemeterCurrentSeason + 1
     runSave.DemeterCurrentSeason = runSave.DemeterCurrentSeason % TheGauntlet.Items.Demeter.Season.COUNT
 
-    SetUpSeasonVisuals(runSave.DemeterCurrentSeason)
+    TheGauntlet.Items.Demeter.RefreshSeasonVisuals(runSave.DemeterCurrentSeason)
 end
-
-TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderName)
-    if colorUpdateCounter > 0 then
-        currentColor[1] = TheGauntlet.Utility.Lerp(currentColor[1], targetColor[1], 0.05)
-        currentColor[2] = TheGauntlet.Utility.Lerp(currentColor[2], targetColor[2], 0.05)
-        currentColor[3] = TheGauntlet.Utility.Lerp(currentColor[3], targetColor[3], 0.05)
-        currentColor[4] = TheGauntlet.Utility.Lerp(currentColor[4], targetColor[4], 0.05)
-
-        colorUpdateCounter = colorUpdateCounter - 1
-    else
-        currentColor = TheGauntlet.Utility.CopyTableShallow(targetColor)
-    end
-
-    if shaderName ~= "TheGauntlet ScreenColorize" then return end
-
-    return {
-        ColorToChangeTo = currentColor
-    }
-end)
 
 ---@param npc EntityNPC
 TheGauntlet:AddPriorityCallback(ModCallbacks.MC_PRE_NPC_UPDATE, CallbackPriority.EARLY, function (_, npc)
@@ -132,7 +89,7 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_NEW_ROOM, function (_)
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Demeter.CollectibleType) then return end
 
-    local room = Game():GetRoom()
+    local room = game:GetRoom()
 
     if not room:IsFirstVisit() then return end
     
@@ -145,7 +102,7 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Demeter.CollectibleType) then return end
 
-    local room = Game():GetRoom()
+    local room = game:GetRoom()
 
     if not room:IsFirstVisit() then return end
 
@@ -155,12 +112,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     runSave.DemeterTempSavedSeason = nil
 
     TheGauntlet.Items.Demeter.IncrementSeason()
-end)
-
----@param isContinued boolean
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, isContinued)
-    currentColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
-    targetColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
 end)
 
 ---@param collectibleType CollectibleType

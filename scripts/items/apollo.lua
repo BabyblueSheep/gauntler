@@ -22,13 +22,17 @@ local function RecursiveSearchPath(level, currentRoomIndex, targetRoomIndex)
         return
     end
 
+    if currentRoomDescriptor.Data.Type == RoomType.ROOM_SECRET then
+        return
+    end
+
     if currentRoomDescriptor.SafeGridIndex == targetRoomIndex then
         if #shortestPathToBoss == 0 or #shortestPathToBoss > (#currentRoomStack + 1) then
             table.insert(currentRoomStack, currentRoomIndex)
             shortestPathToBoss = TheGauntlet.Utility.CopyTableShallow(currentRoomStack)
             table.remove(currentRoomStack, #currentRoomStack)
         end
-        
+
         return
     end
 
