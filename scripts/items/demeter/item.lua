@@ -32,16 +32,20 @@ TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.Defaul
     DemeterTempSavedSeason = nil,
 })
 
+---Returns the current Demeter season.
+---@return Season
 function TheGauntlet.Items.Demeter.GetSeason()
     return TheGauntlet.SaveManager.GetRunSave().DemeterCurrentSeason
 end
 
+---Sets the current Demeter season.
 ---@param value Season
 function TheGauntlet.Items.Demeter.SetSeason(value)
     TheGauntlet.SaveManager.GetRunSave().DemeterCurrentSeason = value
-    TheGauntlet.Items.Demeter.RefreshSeasonVisuals(TheGauntlet.SaveManager.GetRunSave().DemeterCurrentSeason)
+    TheGauntlet.Items.Demeter.RefreshSeasonVisuals()
 end
 
+---If Demeter is active, increments the season by one (winter -> spring -> summer -> autumn -> winter -> ...). Otherwise, does nothing
 function TheGauntlet.Items.Demeter.IncrementSeason()
     local runSave = TheGauntlet.SaveManager.GetRunSave()
 
@@ -50,7 +54,7 @@ function TheGauntlet.Items.Demeter.IncrementSeason()
     runSave.DemeterCurrentSeason = runSave.DemeterCurrentSeason + 1
     runSave.DemeterCurrentSeason = runSave.DemeterCurrentSeason % TheGauntlet.Items.Demeter.Season.COUNT
 
-    TheGauntlet.Items.Demeter.RefreshSeasonVisuals(runSave.DemeterCurrentSeason)
+    TheGauntlet.Items.Demeter.RefreshSeasonVisuals()
 end
 
 ---@param npc EntityNPC

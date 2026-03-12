@@ -129,7 +129,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
     end
 end)
 
-local beamSprite = Sprite("gfx/gauntlet/lightning_bolt.anm2", true)
+local beamSprite = Sprite("gfx/gauntlet/effects/lightning_bolt.anm2", true)
 beamSprite:Play("Idle", true)
 
 ---@type Beam

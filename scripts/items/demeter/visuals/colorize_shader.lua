@@ -8,7 +8,9 @@ local currentColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
 local targetColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
 local colorUpdateCounter = 0
 
-function TheGauntlet.Items.Demeter.RefreshSeasonVisuals(season)
+function TheGauntlet.Items.Demeter.RefreshSeasonVisuals()
+    local season = TheGauntlet.Items.Demeter.GetSeason()
+
     if season == TheGauntlet.Items.Demeter.Season.WINTER then
         targetColor = TheGauntlet.Utility.CopyTableShallow(WINTER_COLOR)
     elseif season == TheGauntlet.Items.Demeter.Season.SPRING then
