@@ -138,4 +138,4 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, functi
     if PlayerManager.AnyoneHasCollectible(collectibleType) then return end
 
     TheGauntlet.Items.Demeter.SetSeason(TheGauntlet.Items.Demeter.Season.NO_SEASON)
-end, TheGauntlet.Items.Apollo.CollectibleType)
+end, TheGauntlet.Items.Demeter.CollectibleType)
