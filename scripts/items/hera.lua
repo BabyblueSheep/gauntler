@@ -14,7 +14,8 @@ pregnantStatusEffectSprite:Play("Pregnant", true)
 
 StatusEffectLibrary.RegisterStatusEffect(
 	"TheGauntlet_HeraPregnant",
-	pregnantStatusEffectSprite
+	pregnantStatusEffectSprite,
+    nil, nil, true
 )
 
 ---@param entity Entity
@@ -22,7 +23,8 @@ function TheGauntlet.Items.Hera.CanEntityBeImpregnanted(entity)
     local returnValue = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.HERA_CAN_ENTITY_BE_IMPREGNANTED, entity)
     if type(returnValue) == "boolean" then return returnValue end
 
-    if not entity:IsActiveEnemy() then return false end
+    if entity.Type == EntityType.ENTITY_DUMMY then return false end
+    if not (entity:IsActiveEnemy(false) or entity:ToNPC().CanShutDoors) then return false end
     if entity.FrameCount > 0 then return false end
     if entity:IsBoss() then return false end
 
