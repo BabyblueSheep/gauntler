@@ -22,7 +22,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderNa
         end
     end
 
-    local waveAmplitude = TheGauntlet.Utility.Lerp(0, 0.002, summerFadeTimer)
+    local waveAmplitude = TheGauntlet.Utility.Lerp(0, 0.001, summerFadeTimer)
     local waveFrequency = 64--TheGauntlet.Utility.Lerp(0, 32, summerFadeTimer) Frequency doesn't change to avoid weirdly fast transitions
 
     local waveSpeed = TheGauntlet.Utility.Lerp(0, 0.01, summerFadeTimer)

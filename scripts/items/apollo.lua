@@ -51,7 +51,7 @@ end
 
 function TheGauntlet.Items.Apollo.RefreshShortestPathToBoss()
     local level = game:GetLevel()
-    
+
     local floorSave = TheGauntlet.SaveManager.GetFloorSave()
 
     shortestPathToBoss = {}
@@ -196,7 +196,7 @@ end
 
 local function GrantApolloDamage()
     TheGauntlet.Items.Apollo.TryRefreshShortestPathToBoss()
-    
+
     local isFollowingProphecy = TheGauntlet.Items.Apollo.IsOnShortestPathToBoss()
 
     for _, player in ipairs(PlayerManager.GetPlayers()) do

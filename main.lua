@@ -36,7 +36,9 @@ include("scripts.items.demeter.visuals.particle_engine")
 TheGauntlet.Items.Dionysus = {}
 include("scripts.items.dionysus.item")
 include("scripts.items.dionysus.shader")
-include("scripts.items.hades")
+TheGauntlet.Items.Hades = {}
+include("scripts.items.hades.item")
+include("scripts.items.hades.status_effect")
 include("scripts.items.hephaestus")
 include("scripts.items.hera")
 include("scripts.items.poseidon")
