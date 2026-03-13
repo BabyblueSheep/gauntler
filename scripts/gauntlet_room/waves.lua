@@ -1,16 +1,3 @@
-local sfxManager = SFXManager()
-local musicManager = MusicManager()
-
-local FAKE_PENTAGRAM_VARIANT = Isaac.GetEntityVariantByName("TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
-local FAKE_PENTAGRAM_SUBTYPE = Isaac.GetEntitySubTypeByName("TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
-
-TheGauntlet.GauntletRoom.ItemPool = Isaac.GetPoolIdByName("TheGauntlet gauntletRoom")
-
-TheGauntlet.GauntletRoom.ShadowSpellSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Shadow Spell")
-
-local TIME_BEFORE_DOORS_CLOSE = 10
-local TIME_BETWEEN_WAVES = 30 --TODO: figure out the actual time between waves for accuracy
-
 local WAVE_CONFIGURATIONS_NORMAL_MODE = {
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5 },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
@@ -26,6 +13,22 @@ local WAVE_CONFIGURATIONS_HARD_MODE = {
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 5,  MaxDifficulty = 5 },
 }
 
+local TIME_BEFORE_DOORS_CLOSE = 10
+
+
+
+local sfxManager = SFXManager()
+local musicManager = MusicManager()
+
+local FAKE_PENTAGRAM_VARIANT = Isaac.GetEntityVariantByName("TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
+local FAKE_PENTAGRAM_SUBTYPE = Isaac.GetEntitySubTypeByName("TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
+
+TheGauntlet.GauntletRoom.ItemPool = Isaac.GetPoolIdByName("TheGauntlet gauntletRoom")
+
+TheGauntlet.GauntletRoom.ShadowSpellSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Shadow Spell")
+
+local TIME_BETWEEN_WAVES = 30 --TODO: figure out the actual time between waves for accuracy
+
 local function OnFinishGauntletRoom()
     local room = Game():GetRoom()
 
@@ -38,7 +41,7 @@ local function OnFinishGauntletRoom()
         nil
     )
 
-    --This is where I would put Temporary Tattoo's effect, but it already spawns a chest (the intended effect) so it works out, lol
+    --This is where I would put Temporary Tattoo's effect, but it already spawns a chest (the intended effect) so it works out. lol
     room:TriggerClear(true)
 end
 
