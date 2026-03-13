@@ -124,4 +124,64 @@
       }
     ]]></fragment>
   </shader>
+  <shader name="TheGauntlet Heat Wave">
+    <parameters>
+      <param name="Timer" type="float"/>
+      <param name="Amplitude" type="float" />
+      <param name="Frequency" type="float" />
+    </parameters>
+    <vertex><![CDATA[
+      attribute vec3 Position;
+      attribute vec4 Color;
+      attribute vec2 TexCoord;
+      attribute vec4 RenderData;
+      attribute float Scale;
+      
+      uniform mat4 Transform;
+      
+      varying vec4 Color0;
+      varying vec2 TexCoord0;
+      varying vec4 RenderDataOut;
+      varying float ScaleOut;
+      
+      attribute float Timer;
+      attribute float Amplitude;
+      attribute float Frequency;
+      varying float Timer0;
+      varying float Amplitude0;
+      varying float Frequency0;
+      
+      void main(void) {
+          Color0 = Color;
+          TexCoord0 = TexCoord;
+          RenderDataOut = RenderData;
+          ScaleOut = Scale;
+          gl_Position = Transform * vec4(Position.xyz, 1.0);
+      
+          Timer0 = Timer;
+          Amplitude0 = Amplitude;
+          Frequency0 = Frequency;
+      }
+    ]]></vertex>
+    <fragment><![CDATA[
+      varying lowp vec4 Color0;
+      varying mediump vec2 TexCoord0;
+      varying lowp vec4 RenderDataOut;
+      varying lowp float ScaleOut;
+      
+      uniform sampler2D Texture0;
+      
+      varying lowp float Timer0;
+      varying lowp float Amplitude0;
+      varying lowp float Frequency0;
+      
+      void main(void) {
+          vec2 uv = TexCoord0;
+      
+          uv.x += cos(uv.y * Frequency0 + Timer0) * Amplitude0;
+      
+          gl_FragColor = Color0 * texture2D(Texture0, uv);
+      }
+    ]]></fragment>
+  </shader>
 </shaders>

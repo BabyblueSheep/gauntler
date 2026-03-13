@@ -31,6 +31,7 @@ include("scripts.items.athena")
 TheGauntlet.Items.Demeter = {}
 include("scripts.items.demeter.item")
 include("scripts.items.demeter.visuals.colorize_shader")
+include("scripts.items.demeter.visuals.heatwave_shader")
 include("scripts.items.demeter.visuals.particle_engine")
 include("scripts.items.dionysus")
 include("scripts.items.hades")
