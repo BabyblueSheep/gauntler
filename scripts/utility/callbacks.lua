@@ -11,9 +11,18 @@ TheGauntlet.Utility.Callbacks = {
     ---Called before Apollo refreshes its path to the boss room. Can be used to modify the list of rooms that grant a damage up.
     ---
     ---Returns:
-    --- - Return an [integer](lua://integer) to set the boss room to path towards.ItemConfig.CARDTYPE_SPECIAL_OBJECT.<br>
-    --- - Alternatively, return a [table](lua://table) in the form of an integer list to set a custom list of rooms. 
+    --- - Return an integer to set the boss room to path towards.ItemConfig.CARDTYPE_SPECIAL_OBJECT.<br>
+    --- - Alternatively, return a table in the form of an integer list to set a custom list of rooms. 
     PRE_APOLLO_REFRESH_PATH_TO_BOSS = "TheGauntlet PRE_APOLLO_REFRESH_PATH_TO_BOSS",
+
+    ---Called when Hera checks if an enemy can be impregnated. Can be used to force an enemy not to be impregnatable.
+    ---
+    ---Parameters:
+    --- - [Entity](lua://Entity) - the entity to check;
+    ---
+    ---Returns:
+    --- - Return a boolean to force the enemy to be impregnatable. Otherwise, return nil to use default checks.
+    HERA_CAN_ENTITY_BE_IMPREGNANTED = "TheGauntlet HERA_CAN_ENTITY_BE_IMPREGNANTED"
 }
 
 ---@enum ChallengeRoomType

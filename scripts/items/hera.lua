@@ -1,12 +1,13 @@
-TheGauntlet.Items.Hera = {}
-TheGauntlet.Items.Hera.CollectibleType = Isaac.GetItemIdByName("Hera")
-
-local PREGNANT_DURATION = 30 * 15
+local PREGNANT_STATUS_DURATION = 30 * 15
 
 local AMOUNT_OF_ENEMIES_TO_IMPREGNATE = 2
 
-local MINISAAC_MINIMUM_AMOUNT = 1
-local MINISAAC_MAXIMUM_AMOUNT = 2
+local SPAWNED_MINISAAC_MINIMUM_AMOUNT = 1
+local SPAWNED_MINISAAC_MAXIMUM_AMOUNT = 2
+
+
+TheGauntlet.Items.Hera = {}
+TheGauntlet.Items.Hera.CollectibleType = Isaac.GetItemIdByName("Hera")
 
 local pregnantStatusEffectSprite = Sprite("gfx/gauntlet/statuseffects.anm2", true)
 pregnantStatusEffectSprite:Play("Pregnant", true)
@@ -16,6 +17,18 @@ StatusEffectLibrary.RegisterStatusEffect(
 	pregnantStatusEffectSprite
 )
 
+---@param entity Entity
+function TheGauntlet.Items.Hera.CanEntityBeImpregnanted(entity)
+    local returnValue = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.HERA_CAN_ENTITY_BE_IMPREGNANTED, entity)
+    if type(returnValue) == "boolean" then return returnValue end
+
+    if not entity:IsActiveEnemy() then return false end
+    if entity.FrameCount > 0 then return false end
+    if entity:IsBoss() then return false end
+
+    return true
+end
+
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Hera.CollectibleType) then return end
 
@@ -24,13 +37,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     for _, entity in ipairs(Isaac.GetRoomEntities()) do
         if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == FamiliarVariant.MINISAAC then
             if entity:GetData().HeraTemporary then
-                entity:Kill()
+                entity:Remove()
                 goto continue
             end
         end
 
-        if not entity:IsActiveEnemy() then goto continue end
-        if entity.FrameCount > 0 then goto continue end
+        if TheGauntlet.Items.Hera.CanEntityBeImpregnanted(entity) == false then goto continue end
 
         table.insert(enemiesToImpregnante, entity)
 
@@ -50,7 +62,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
         (
             enemy,
             StatusEffectLibrary.StatusFlag.TheGauntlet_HeraPregnant,
-            PREGNANT_DURATION,
+            PREGNANT_STATUS_DURATION,
             EntityRef(nil)
         )
     end
@@ -67,19 +79,24 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
     end
 
     local rng = player:GetCollectibleRNG(TheGauntlet.Items.Hera.CollectibleType)
-    local minisaacAmount = rng:RandomInt(MINISAAC_MINIMUM_AMOUNT, MINISAAC_MAXIMUM_AMOUNT)
+    local minisaacAmount = rng:RandomInt(SPAWNED_MINISAAC_MINIMUM_AMOUNT, SPAWNED_MINISAAC_MAXIMUM_AMOUNT)
 
-    for i = 1, minisaacAmount do
-        local familiar = player:AddMinisaac(entity.Position)
-        familiar.Velocity = rng:RandomVector() * TheGauntlet.Utility.RandomFloat(0, 5, rng)
+    local isPersistent = entity:HasEntityFlags(EntityFlag.FLAG_PERSISTENT)
 
-        familiar:GetData().HeraTemporary = true
-        TheGauntlet.SaveManager.GetRunSave(familiar).HeraTemporary = true
-    end
-    
-    StatusEffectLibrary:RemoveStatusEffect(entity, StatusEffectLibrary.StatusFlag.TheGauntlet_HeraPregnant)
+    Isaac.CreateTimer(function ()
+        if entity:IsDead() then
+            for i = 1, minisaacAmount do
+                local familiar = player:AddMinisaac(entity.Position)
+                familiar.Velocity = rng:RandomVector() * TheGauntlet.Utility.RandomFloat(0, 5, rng)
+
+                familiar:GetData().HeraTemporary = true
+                TheGauntlet.SaveManager.GetRunSave(familiar).HeraTemporary = true
+            end
+        end
+    end, 1, 1, isPersistent)
 end)
 
+--Hack to make Hera Minisaacs not persist between exit-continuing
 ---@param familiar EntityFamiliar
 TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, function (_, familiar)
     if TheGauntlet.SaveManager.GetRunSave(familiar).HeraTemporary then
