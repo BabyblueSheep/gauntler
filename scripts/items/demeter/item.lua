@@ -29,7 +29,7 @@ TheGauntlet.Items.Demeter.Season = {
 
 TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.DefaultSaveKeys.GLOBAL, {
     DemeterCurrentSeason = TheGauntlet.Items.Demeter.Season.NO_SEASON,
-    DemeterTempSavedSeason = nil,
+    DemeterTempSavedSeason = TheGauntlet.Items.Demeter.Season.NO_SEASON,
 })
 
 ---Returns the current Demeter season.
@@ -65,9 +65,9 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_PRE_NPC_UPDATE, CallbackPriority
     if season == TheGauntlet.Items.Demeter.Season.WINTER then
         npc:AddIce(EntityRef(owner), 30)
     elseif season == TheGauntlet.Items.Demeter.Season.SUMMER then
-        npc:AddBurn(EntityRef(owner), 30, SUMMER_NPC_DAMAGE_PER_TICK)
+        npc:AddBurn(EntityRef(owner), 30, SUMMER_NPC_DAMAGE_PER_TICK, true)
     elseif season == TheGauntlet.Items.Demeter.Season.AUTUMN then
-        npc:AddSlowing(EntityRef(owner), 30, AUTUMN_NPC_SLOWNESS, SLOW_COLOR)
+        npc:AddSlowing(EntityRef(owner), 30, AUTUMN_NPC_SLOWNESS, SLOW_COLOR, true)
     end
 end)
 
@@ -93,14 +93,10 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_NEW_ROOM, function (_)
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Demeter.CollectibleType) then return end
 
-    local room = game:GetRoom()
-
-    if not room:IsFirstVisit() then return end
-    
     local runSave = TheGauntlet.SaveManager.GetRunSave()
 
     runSave.DemeterTempSavedSeason = runSave.DemeterCurrentSeason
-    runSave.DemeterCurrentSeason = nil
+    runSave.DemeterCurrentSeason = TheGauntlet.Items.Demeter.Season.NO_SEASON
 end)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
@@ -108,12 +104,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     local room = game:GetRoom()
 
-    if not room:IsFirstVisit() then return end
-
     local runSave = TheGauntlet.SaveManager.GetRunSave()
 
     runSave.DemeterCurrentSeason = runSave.DemeterTempSavedSeason
-    runSave.DemeterTempSavedSeason = nil
+    runSave.DemeterTempSavedSeason = TheGauntlet.Items.Demeter.Season.NO_SEASON
+
+    if not room:IsFirstVisit() then return end
 
     TheGauntlet.Items.Demeter.IncrementSeason()
 end)
