@@ -25,11 +25,10 @@ TheGauntlet.Items.Hades.CollectibleType = Isaac.GetItemIdByName("Hades")
 ---@param player EntityPlayer
 ---@return boolean
 function TheGauntlet.Items.Hades.ShouldProc(player)
-    --if not player:HasCollectible(TheGauntlet.Items.Hades.CollectibleType) then return false end
-    --local rng = player:GetCollectibleRNG(TheGauntlet.Items.Hades.CollectibleType)
+    if not player:HasCollectible(TheGauntlet.Items.Hades.CollectibleType) then return false end
+    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Hades.CollectibleType)
 
-    --return rng:RandomFloat() < CHANCE_TO_APPLY_SKULL
-    return true
+    return rng:RandomFloat() < CHANCE_TO_APPLY_SKULL
 end
 
 ---@param entity Entity

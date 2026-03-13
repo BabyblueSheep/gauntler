@@ -1,7 +1,7 @@
 TheGauntlet.Items.Hephaestus = {}
 TheGauntlet.Items.Hephaestus.CollectibleType = Isaac.GetItemIdByName("Hephaestus")
 
-TheGauntlet.Items.Hephaestus.GoldenPickups = {
+local possibleGoldenPickups = {
     {
         Type = EntityType.ENTITY_PICKUP,
         Variant = PickupVariant.PICKUP_BOMB,
@@ -40,6 +40,20 @@ TheGauntlet.Items.Hephaestus.GoldenPickups = {
     },
 }
 
+---Registers a golden pickup to be selected by Hephaestus.
+---@param type EntityType
+---@param variant integer
+---@param subtype integer
+---@param condition fun(): boolean The condition under which the pickup can spawn (for achievement-locked pickups). If it shouldn't have a condition, simply use a function that always returns true.
+function TheGauntlet.Items.Hephaestus.AddGoldenPickup(type, variant, subtype, condition)
+    table.insert(possibleGoldenPickups, {
+        Type = type,
+        Variant = variant,
+        SubType = subtype,
+        Condition = condition
+    })
+end
+
 ---@param collectibleType CollectibleType
 ---@param charge integer
 ---@param firstTime boolean
@@ -75,11 +89,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
 
     local spawnPosition = room:FindFreePickupSpawnPosition(room:GetCenterPos(), nil, true)
 
-    local rng = Isaac.GetPlayer(0):GetCollectibleRNG(TheGauntlet.Items.Hephaestus.CollectibleType)
+    local rng = Isaac.GetPlayer():GetCollectibleRNG(TheGauntlet.Items.Hephaestus.CollectibleType)
 
     local goldenPickupEntry = nil
     while goldenPickupEntry == nil do
-        local randomGoldenPickupEntry = TheGauntlet.Utility.RandomItemFromList(TheGauntlet.Items.Hephaestus.GoldenPickups, rng)
+        local randomGoldenPickupEntry = TheGauntlet.Utility.RandomItemFromList(possibleGoldenPickups, rng)
         if randomGoldenPickupEntry.Condition() then
             goldenPickupEntry = randomGoldenPickupEntry
         end
