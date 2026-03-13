@@ -1,3 +1,5 @@
+--TODO: finish this once sprites are available.
+
 TheGauntlet.Items.Artemis = {}
 TheGauntlet.Items.Artemis.CollectibleType = Isaac.GetItemIdByName("Artemis")
 

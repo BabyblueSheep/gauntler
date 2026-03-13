@@ -1,3 +1,9 @@
+local ENEMY_FLOW_SPEED = 5
+local PICKUP_FLOW_SPEED = 0.5
+
+
+
+local game = Game()
 local sfxManager = SFXManager()
 
 TheGauntlet.Items.Poseidon = {}
@@ -5,27 +11,32 @@ TheGauntlet.Items.Poseidon.CollectibleType = Isaac.GetItemIdByName("Poseidon")
 
 local FLOW_SOUND = Isaac.GetSoundIdByName("TheGauntlet Custom Water Flow")
 
+--An epsilon is used to force there to technically always be a current.
+--The reason is because there is no transition between flowing water and lack of flowing water.
 local EPSILON = 0.01
-
-local ENEMY_FLOW_SPEED = 5
-local PICKUP_FLOW_SPEED = 0.5
 
 local actualWaterCurrent = Vector.Zero
 local targetCurrent = Vector.Zero
 local fakeCurrentWaterCurrent = Vector.Zero
 
-local waterUpdates = 0
+local wasRoomEnteredWithPoseidon = false
+local framesLeftToUpdateVisualWater = 0
 local targetCurrentVolume = 0
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
-    if Game():GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
-    
-    local room = Game():GetRoom()
+    if game:GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
+
+    local room = game:GetRoom()
+
+    wasRoomEnteredWithPoseidon = false
 
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then return end
 
+    wasRoomEnteredWithPoseidon = true
+
     fakeCurrentWaterCurrent = Vector(EPSILON, EPSILON)
 
+    --TODO?: see if this can be put earlier to prevent flickers with default water.
     room:SetWaterAmount(1)
     room:SetWaterCurrent(Vector.Zero)
     targetCurrentVolume = 0
@@ -34,18 +45,18 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 end)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
-    if Game():GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
-    
-    local room = Game():GetRoom()
+    if game:GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
 
-    if waterUpdates > 0 then
-        waterUpdates = waterUpdates - 1
+    local room = game:GetRoom()
+
+    if framesLeftToUpdateVisualWater > 0 then
+        framesLeftToUpdateVisualWater = framesLeftToUpdateVisualWater - 1
 
         local waterAmount = room:GetWaterAmount()
         room:SetWaterAmount(TheGauntlet.Utility.Lerp(waterAmount, 1, 0.25))
     end
 
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then return end
+    if not wasRoomEnteredWithPoseidon then return end
 
     targetCurrent = Vector.Zero
 
@@ -57,6 +68,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
         ::continue::
     end
+
+    targetCurrent = targetCurrent:Normalized()
 
     for _, entity in ipairs(Isaac.GetRoomEntities()) do
         if entity.Mass >= 100 then goto continue end
@@ -91,11 +104,11 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_RENDER, function (_)
     if MenuManager.IsActive() then return end
 
-    if Game():GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
+    if game:GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
 
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then return end
+    if not wasRoomEnteredWithPoseidon then return end
 
-    local room = Game():GetRoom()
+    local room = game:GetRoom()
     actualWaterCurrent = room:GetWaterCurrent()
 
     fakeCurrentWaterCurrent = fakeCurrentWaterCurrent:Lerp(targetCurrent, 0.25)
@@ -106,11 +119,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_RENDER, function (_)
 end)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_RENDER, function (_)
-    if Game():GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
+    if game:GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
 
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then return end
+    if not wasRoomEnteredWithPoseidon then return end
 
-    local room = Game():GetRoom()
+    local room = game:GetRoom()
     room:SetWaterCurrent(actualWaterCurrent)
 end)
 
@@ -123,5 +136,5 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, collectibleType, charge, firstTime, slot, varData, player)
     if collectibleType ~= TheGauntlet.Items.Poseidon.CollectibleType then return end
 
-    waterUpdates = 15
+    framesLeftToUpdateVisualWater = 15
 end)

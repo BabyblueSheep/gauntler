@@ -1,3 +1,5 @@
+--TODO: finish this once sprites are available.
+
 local sfxManager = SFXManager()
 
 TheGauntlet.Items.Athena = {}
