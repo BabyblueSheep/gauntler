@@ -1,7 +1,7 @@
 local snowflakeGeneralRng = RNG()
 
 return function (topLeft, bottomRight)
-    local startTimer = snowflakeGeneralRng:RandomInt(60 * 3, 60 * 4)
+    local startTimer = snowflakeGeneralRng:RandomInt(60 * 4, 60 * 6)
         
     return {
         Type = TheGauntlet.Items.Demeter.GetSeason(),
@@ -16,7 +16,7 @@ return function (topLeft, bottomRight)
         Speed = Vector
         (
             TheGauntlet.Utility.RandomFloat(-0.2, 0.2, snowflakeGeneralRng),
-            TheGauntlet.Utility.RandomFloat(0, 3, snowflakeGeneralRng)
+            TheGauntlet.Utility.RandomFloat(0, 1, snowflakeGeneralRng)
         ),
         AccelerationX = TheGauntlet.Utility.RandomFloat(-0.01, 0.01, snowflakeGeneralRng),
 

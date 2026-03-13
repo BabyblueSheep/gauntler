@@ -1,3 +1,5 @@
+--To avoid potential lag with other mods, particles are not effect entities, and simply have logic within Lua
+
 local game = Game()
 
 ---@class ParticleInstance
