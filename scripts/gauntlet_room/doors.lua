@@ -1,9 +1,10 @@
+local game = Game()
 local sfxManager = SFXManager()
 
 ---@param door GridEntityDoor
 ---@return boolean
 local function DoesDoorLeadToGauntletRoom(door)
-    local targetRoom = Game():GetLevel():GetCurrentRoomDesc():GetNeighboringRooms()[door.Slot]
+    local targetRoom = game:GetLevel():GetCurrentRoomDesc():GetNeighboringRooms()[door.Slot]
     if targetRoom == nil then return false end
     return TheGauntlet.GauntletRoom.IsRoomGauntletRoom(targetRoom)
 end
@@ -11,14 +12,14 @@ end
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
-    local room = Game():GetRoom()
+    local room = game:GetRoom()
 
     for _, doorSlot in pairs(DoorSlot) do
         local door = room:GetDoor(doorSlot)
 
         if door == nil then goto continue end
 
-        local targetRoom = Game():GetLevel():GetCurrentRoomDesc():GetNeighboringRooms()[door.Slot]
+        local targetRoom = game:GetLevel():GetCurrentRoomDesc():GetNeighboringRooms()[door.Slot]
         if targetRoom == nil then goto continue end
         if targetRoom.Data.Type == RoomType.ROOM_SECRET or targetRoom.Data.Type == RoomType.ROOM_SUPERSECRET then goto continue end
         
@@ -40,10 +41,12 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_, door)
     if not DoesDoorLeadToGauntletRoom(door) then return end
     
-    local roomDescriptor = Game():GetLevel():GetCurrentRoomDesc()
+    local level = game:GetLevel()
+
+    local roomDescriptor = level:GetCurrentRoomDesc()
     if roomDescriptor.Data.Type == RoomType.ROOM_SECRET or roomDescriptor.Data.Type == RoomType.ROOM_SUPERSECRET then return end
 
-    local room = Game():GetRoom()
+    local room = game:GetRoom()
     local isClear = room:IsClear()
 
     local sprite = door:GetSprite()
@@ -60,6 +63,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_
     
     if not gridSave.Init then
         gridSave.FedHeart = false
+        --Doors to a Gauntlet room through red rooms are always unlocked (consistent with vanilla)
         if roomDescriptor.Flags & RoomDescriptor.FLAG_RED_ROOM == RoomDescriptor.FLAG_RED_ROOM then
             gridSave.FedHeart = true
         end
@@ -68,10 +72,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_
     end
 
     if not tempSave.Init then
-        tempSave.WasClear = room:IsClear()
-        tempSave.IsOpen = room:IsClear()
+        tempSave.WasClear = isClear
+        tempSave.IsOpen = isClear
 
-        local targetRoom = Game():GetLevel():GetCurrentRoomDesc():GetNeighboringRooms()[door.Slot]
+        --Entering a Gauntlet room makes it always open, even if the main entrance wasn't open (consistent with vanilla)
+        local targetRoom = level:GetCurrentRoomDesc():GetNeighboringRooms()[door.Slot]
         if targetRoom.VisitedCount > 0 then
             gridSave.FedHeart = true
         end
@@ -90,7 +95,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_
         if not gridSave.FedHeart then
             sprite:Play("KeyClosed", true)
         else
-            if forceOpen or room:IsClear() then
+            if forceOpen or isClear then
                 sprite:Play("Opened", true)
             else
                 sprite:Play("Close", true)
@@ -188,7 +193,6 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_ITEM, CallbackPriority.EARLY
         if door == nil then goto continue end
         if not DoesDoorLeadToGauntletRoom(door) then goto continue end
 
-        local gridSave = TheGauntlet.SaveManager.GetRoomSave(door:GetGridIndex())
         local tempSave = TheGauntlet.SaveManager.GetTempSave(door:GetGridIndex())
 
         tempSave.IsOpen = false
@@ -402,3 +406,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 end)
 
 --#endregion
+
+--Broken Padlock support would be nice, but I'm not sure if there's a way to get full parity with it (so that even stuff like Sulfuric Acid could open doors)
+--Mr. ME! support would be nice, but how would I even get started doing that???

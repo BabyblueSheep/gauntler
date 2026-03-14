@@ -17,6 +17,7 @@ local TIME_BEFORE_DOORS_CLOSE = 10
 
 
 
+local game = Game()
 local sfxManager = SFXManager()
 local musicManager = MusicManager()
 
@@ -27,10 +28,10 @@ TheGauntlet.GauntletRoom.ItemPool = Isaac.GetPoolIdByName("TheGauntlet gauntletR
 
 TheGauntlet.GauntletRoom.ShadowSpellSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Shadow Spell")
 
-local TIME_BETWEEN_WAVES = 30 --TODO: figure out the actual time between waves for accuracy
+local TIME_BETWEEN_WAVES = 30 --TODO: seems to be correct after verifying, but proper confirmation would be nice
 
 local function OnFinishGauntletRoom()
-    local room = Game():GetRoom()
+    local room = game:GetRoom()
 
     local collectibleSpawnPosition = room:FindFreePickupSpawnPosition(room:GetCenterPos())
 
@@ -76,19 +77,19 @@ end
 
 ---@param effect EntityEffect
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
-    if effect.SubType ~= FAKE_PENTAGRAM_SUBTYPE then return end
-
     local sprite = effect:GetSprite()
     if sprite:IsFinished() then
         local enemyData = effect:GetData().FakeAmbush
 
-        TheGauntlet.Utility.SpawnEntity
+        local entity = TheGauntlet.Utility.SpawnEntity
         (
             enemyData.Type, enemyData.Variant, enemyData.SubType,
             effect.Position, Vector.Zero,
             nil
         )
         effect:Remove()
+
+        entity:AddEntityFlags(EntityFlag.FLAG_AMBUSH)
 
         ---@diagnostic disable-next-line param-type-mismatch
         sfxManager:Play(872) --SoundEffect.SOUND_SUMMON_WAVE
@@ -100,12 +101,12 @@ end, FAKE_PENTAGRAM_VARIANT)
 ---@param maxDifficulty integer
 local function SpawnAmbush(type, minDifficulty, maxDifficulty)
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
-    local tempSave = TheGauntlet.SaveManager.GetTempSave()
-    local rng = RNG(tempSave.WaveSeed)
+    local rng = RNG(roomSave.WaveSeed)
+    roomSave.WaveSeed = rng:Next()
 
     local ambushWave = RoomConfig.GetRandomRoom
     (
-        rng:Next(),
+        roomSave.WaveSeed,
         true,
         Isaac.GetCurrentStageConfigId(), RoomType.ROOM_CHALLENGE, nil,
         nil, nil,
@@ -114,33 +115,48 @@ local function SpawnAmbush(type, minDifficulty, maxDifficulty)
         type
     )
 
+    local room = game:GetRoom()
+
     for i = 0, #ambushWave.Spawns - 1 do
         local enemySpawn = ambushWave.Spawns:Get(i)
         local enemySpawnEntry = enemySpawn:PickEntry(rng:RandomFloat())
 
-        local gridIndex = enemySpawn.X + 1 + (enemySpawn.Y + 1) * Game():GetRoom():GetGridWidth()
+        local gridIndex = enemySpawn.X + 1 + (enemySpawn.Y + 1) * room:GetGridWidth()
 
-        SpawnEnemyIndicator(enemySpawnEntry.Type, enemySpawnEntry.Variant, enemySpawnEntry.Subtype, Game():GetRoom():GetGridPosition(gridIndex))
+        SpawnEnemyIndicator(enemySpawnEntry.Type, enemySpawnEntry.Variant, enemySpawnEntry.Subtype, room:GetGridPosition(gridIndex))
     end
 end
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
-    local room = Game():GetRoom()
+    local room = game:GetRoom()
 
     room:SetItemPool(TheGauntlet.GauntletRoom.ItemPool)
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
+    local tempSave = TheGauntlet.SaveManager.GetTempSave()
+
+    if not tempSave.Init then
+        tempSave.WaveDelay = 0
+        tempSave.WaveNumber = 0
+
+        tempSave.ProperChallengeStartDelay = TIME_BEFORE_DOORS_CLOSE
+
+        tempSave.DidHostileEnemiesExist = false
+
+        tempSave.Init = true
+    end
 
     if not roomSave.Init then
         roomSave.TeleportSeed = room:GetAwardSeed()
+        roomSave.WaveSeed = room:GetAwardSeed()
 
         roomSave.Init = true
     end
 
     if room:IsAmbushDone() then
-        musicManager:Play(Music.MUSIC_BOSS_OVER, 0)
+        musicManager:Play(Music.MUSIC_BOSS_OVER, Options.MusicVolume)
         musicManager:UpdateVolume()
     end
 end)
@@ -148,24 +164,17 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
-    local room = Game():GetRoom()
+    local room = game:GetRoom()
 
     if room:IsAmbushDone() then return end
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
     local tempSave = TheGauntlet.SaveManager.GetTempSave()
 
-    if not tempSave.Init then
-        tempSave.WaveSeed = room:GetAwardSeed()
+    if not roomSave.Init then
+        roomSave.WaveSeed = room:GetAwardSeed()
 
-        tempSave.WaveDelay = 0
-        tempSave.WaveNumber = 0
-
-        tempSave.ProperChallengeStartDelay = TIME_BEFORE_DOORS_CLOSE
-
-        roomSave.DidHostileEnemiesExist = false
-
-        tempSave.Init = true
+        roomSave.Init = true
     end
 
     if tempSave.ProperChallengeStartDelay > 0 then
@@ -223,14 +232,14 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             room:SetClear(true)
             room:SetAmbushDone(true)
 
-            musicManager:Play(Music.MUSIC_JINGLE_CHALLENGE_OUTRO, 0)
+            musicManager:Play(Music.MUSIC_JINGLE_CHALLENGE_OUTRO, Options.MusicVolume)
             musicManager:UpdateVolume()
             musicManager:Queue(Music.MUSIC_BOSS_OVER)
 
             OnFinishGauntletRoom()
         else
             if musicManager:GetCurrentMusicID() ~= Music.MUSIC_CHALLENGE_FIGHT then
-                musicManager:Play(Music.MUSIC_CHALLENGE_FIGHT, 0)
+                musicManager:Play(Music.MUSIC_CHALLENGE_FIGHT, Options.MusicVolume)
                 musicManager:UpdateVolume()
             end
 

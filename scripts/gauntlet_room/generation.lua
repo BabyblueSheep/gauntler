@@ -1,11 +1,17 @@
 local game = Game()
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_, player)
-    local level = Game():GetLevel()
+    local level = game:GetLevel()
 
     local rng = RNG(level:GetDungeonPlacementSeed())
 
     if rng:RandomFloat() > TheGauntlet.GauntletRoom.GetGenerationChance() then return end
+
+    local isOnMines = (level:GetStage() == LevelStage.STAGE2_1 or level:GetStage() == LevelStage.STAGE2_2) and (level:GetStageType() == StageType.STAGETYPE_REPENTANCE or level:GetStageType() == StageType.STAGETYPE_REPENTANCE_B)
+    local subtypeToUse = TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_SUBTYPE
+    if isOnMines then
+        subtypeToUse = TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_MINES_SUBTYPE
+    end
 
     local entranceRoomConfigToPlace = RoomConfig.GetRandomRoom
     (
@@ -15,7 +21,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_, player)
         nil, nil,
         nil, nil,
         0,
-        TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_SUBTYPE,
+        subtypeToUse,
         0
     )
 

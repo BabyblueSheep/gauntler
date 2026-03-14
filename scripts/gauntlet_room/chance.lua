@@ -3,48 +3,46 @@ local game = Game()
 local GAUNTLET_ROOM_CHANCE_PER_COMPLETED_CHALLENGE_ROOM = 0.1
 local GAUNTLET_ROOM_CHANCE_PER_COMPLETED_BOSS_CHALLENGE_ROOM = 0.25
 
+TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.DefaultSaveKeys.GLOBAL, {
+    BossChallengeRoomsCompleted = 0,
+    ChallengeRoomsCompleted = 0,
+    GauntletRoomsCompleted = 0,
+
+    GauntletGenerationChance = 0,
+})
+
 ---@param challengeRoomType ChallengeRoomType
 TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.POST_CHALLENGE_ROOM_TRIGGER_CLEARED, function (_, challengeRoomType)
     local runSave = TheGauntlet.SaveManager.GetRunSave()
 
-    if runSave.BossChallengeRoomsCompleted == nil then
-        runSave.BossChallengeRoomsCompleted = 0
-    end
-    if runSave.ChallengeRoomsCompleted == nil then
-        runSave.ChallengeRoomsCompleted = 0
-    end
-    if runSave.GauntletRoomsCompleted == nil then
-        runSave.GauntletRoomsCompleted = 0
-    end
-
     if challengeRoomType == TheGauntlet.Utility.ChallengeRoomType.NORMAL then
-        runSave.ChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().ChallengeRoomsCompleted + 1
+        runSave.ChallengeRoomsCompleted = runSave.ChallengeRoomsCompleted + 1
     elseif challengeRoomType == TheGauntlet.Utility.ChallengeRoomType.BOSS then
-        runSave.BossChallengeRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().BossChallengeRoomsCompleted + 1
+        runSave.BossChallengeRoomsCompleted = runSave.BossChallengeRoomsCompleted + 1
     elseif challengeRoomType == TheGauntlet.Utility.ChallengeRoomType.GAUNTLET then
-        runSave.GauntletRoomsCompleted = TheGauntlet.SaveManager.GetRunSave().GauntletRoomsCompleted + 1
+        runSave.GauntletRoomsCompleted = runSave.GauntletRoomsCompleted + 1
     end
 
     TheGauntlet.GauntletRoom.RecomputeGenerationChance()
 end)
 
 function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
+    local runSave = TheGauntlet.SaveManager.GetRunSave()
+
     if game:IsGreedMode() then
-        TheGauntlet.SaveManager.GetRunSave().GauntletGenerationChance = 0
+        runSave.GauntletGenerationChance = 0
         return
     end
 
     if not TheGauntlet.Utility.CanChallengeRoomsSpawn() then
-        TheGauntlet.SaveManager.GetRunSave().GauntletGenerationChance = 0
+        runSave.GauntletGenerationChance = 0
         return
     end
-
-    local runSave = TheGauntlet.SaveManager.GetRunSave()
 
     local defaultChance = 0.01
 
     if runSave.GauntletRoomsCompleted > 0 then
-        TheGauntlet.SaveManager.GetRunSave().GauntletGenerationChance = defaultChance
+        runSave.GauntletGenerationChance = defaultChance
         return
     end
 
@@ -53,25 +51,13 @@ function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
 
     local totalChance = defaultChance + challengeRoomCompletionChance + bossChallengeRoomCompletionChance
 
-    TheGauntlet.SaveManager.GetRunSave().GauntletGenerationChance = totalChance
+    runSave.GauntletGenerationChance = totalChance
 end
 
 function TheGauntlet.GauntletRoom.GetGenerationChance()
     return TheGauntlet.SaveManager.GetRunSave().GauntletGenerationChance
 end
 
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
-    local runSave = TheGauntlet.SaveManager.GetRunSave()
-
-    if runSave.BossChallengeRoomsCompleted == nil then
-        runSave.BossChallengeRoomsCompleted = 0
-    end
-    if runSave.ChallengeRoomsCompleted == nil then
-        runSave.ChallengeRoomsCompleted = 0
-    end
-    if runSave.GauntletRoomsCompleted == nil then
-        runSave.GauntletRoomsCompleted = 0
-    end
-
+TheGauntlet:AddPriorityCallback(ModCallbacks.MC_POST_NEW_LEVEL, CallbackPriority.EARLY, function (_)
     TheGauntlet.GauntletRoom.RecomputeGenerationChance()
 end)

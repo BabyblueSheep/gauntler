@@ -1,0 +1,8 @@
+<data>
+    <version Name="The Gauntlet">
+		<roomtypes File="RoomTypesMod.xml" />
+    </version>
+    <version Name="Repentance+">
+        <version Name="The Gauntlet"/>
+    </version>
+</data>

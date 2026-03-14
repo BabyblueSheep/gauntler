@@ -14,7 +14,7 @@
 		maxhearts="2" hearts="2"
 		bombs="1" keys="1" coins="1"
 		quality="3"
-		tags="summonable offensive"
+		tags="summonable offensive tearsup"
 	/>
 
 	<passive id="3" 
@@ -42,14 +42,14 @@
 		name="Hera" description="Revenge of mother"
 		gfx="hera.png"
 		quality="3"
-		tags="summonable offensive"
+		tags="summonable offensive nogreed"
 	/>
 
 	<passive id="7" 
 		name="Ares" description="Challenge brings power"
 		gfx="ares.png"
 		quality="3"
-		tags="summonable offensive nocantrip lazarussharedglobal"
+		tags="summonable offensive nocantrip lazarussharedglobal nogreed"
 	/>
 	<null id="1" name="Ares Challenge Room Stats" damage="2" persistent="true" />
 	<null id="1" name="Ares Boss Challenge Room Stats" damage="3" persistent="true" />
@@ -65,7 +65,7 @@
 		name="Poseidon" description="Flood the masses"
 		gfx="poseidon.png"
 		quality="2"
-		tags="summonable offensive lazarussharedglobal"
+		tags="summonable lazarussharedglobal"
 	/>
 
 	<passive id="10" 
@@ -96,7 +96,7 @@
 		name="Athena" description="Shield-clad protection"
 		gfx="athena.png"
 		quality="3"
-		tags="summonable offensive"
+		tags="summonable"
 	/>
 	
 </items>

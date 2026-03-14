@@ -1,0 +1,9 @@
+<data>
+  <!--TODO: see if there's a way to do this without overwriting challenge room data for compatibility-->
+  <room Name="Challenge Room" Type="11" Icon="UI/roomicons/challenge.png" ShowInMenu="1">
+    <Gfx BGPrefix="Backgrounds/gauntlet_room" Subtype="(89, 90)">
+		<Entity ID="1000" Image="Backgrounds/rocks_gehenna.png" />
+	</Gfx>
+	<Gfx StageGfx="Sheol" />
+  </room>
+</data>

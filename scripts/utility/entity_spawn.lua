@@ -12,14 +12,12 @@ local game = Game()
 ---@param velocity Vector
 ---@param spawner Entity?
 ---@param seed integer?
----@return EntityBomb
+---@return Entity
 function TheGauntlet.Utility.SpawnEntity(type, variant, subType, position, velocity, spawner, seed)
     if seed == nil then
         seed = math.max(Random(), 1)
     end
 
-    ---@type EntityBomb
-    ---@diagnostic disable-next-line assign-type-mismatch
     return game:Spawn(type, variant, position, velocity, spawner, subType, seed)
 end
 
