@@ -1,7 +1,7 @@
 local NO_COLOR     = { 0.0, 0.0, 0.0, 0.0 }
 local WINTER_COLOR = { 0.8, 1.2, 1.5, 0.3 }
 local SPRING_COLOR = { 0.0, 1.5, 0.5, 0.1 }
-local SUMMER_COLOR = { 2.0, 2.0, 1.0, 0.3 }
+local SUMMER_COLOR = { 2.0, 1.5, 1.0, 0.3 }
 local AUTUMN_COLOR = { 1.5, 1.0, 1.0, 0.3 }
 
 local currentColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)

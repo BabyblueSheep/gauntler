@@ -25,7 +25,7 @@ return function (topLeft, bottomRight)
         Speed = Vector
         (
             TheGauntlet.Utility.RandomFloat(0, 0.5, leafGeneralRng) * speedDirection,
-            TheGauntlet.Utility.RandomFloat(0, 2, leafGeneralRng)
+            TheGauntlet.Utility.RandomFloat(0, 1.5, leafGeneralRng)
         ),
         AccelerationX = TheGauntlet.Utility.RandomFloat(0, 0.025, leafGeneralRng) * speedDirection,
 

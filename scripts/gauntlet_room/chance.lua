@@ -22,8 +22,6 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.POST_CHALLENGE_ROOM_TRIGGE
     elseif challengeRoomType == TheGauntlet.Utility.ChallengeRoomType.GAUNTLET then
         runSave.GauntletRoomsCompleted = runSave.GauntletRoomsCompleted + 1
     end
-
-    TheGauntlet.GauntletRoom.RecomputeGenerationChance()
 end)
 
 function TheGauntlet.GauntletRoom.RecomputeGenerationChance()

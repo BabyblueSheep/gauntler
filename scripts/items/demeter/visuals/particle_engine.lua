@@ -30,6 +30,21 @@ local particleRenderRoutines = {
     [TheGauntlet.Items.Demeter.Season.AUTUMN] = include("scripts.items.demeter.visuals.falling_leaf_render"),
 }
 
+local thinRoomShapes = {
+    [RoomShape.ROOMSHAPE_IV] = true,
+    [RoomShape.ROOMSHAPE_IIV] = true,
+}
+
+local wideRoomShapes = {
+    [RoomShape.ROOMSHAPE_2x1] = true,
+    [RoomShape.ROOMSHAPE_IIH] = true,
+    [RoomShape.ROOMSHAPE_2x2] = true,
+    [RoomShape.ROOMSHAPE_LTL] = true,
+    [RoomShape.ROOMSHAPE_LTR] = true,
+    [RoomShape.ROOMSHAPE_LBL] = true,
+    [RoomShape.ROOMSHAPE_LBR] = true,
+}
+
 ---@type ParticleInstance[]
 local particleInstances = {}
 
@@ -57,7 +72,14 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ROOM_RENDER_ENTITIES, function (_)
     timeUntilNextParticle = timeUntilNextParticle - 1
 
     if not isPaused and timeUntilNextParticle <= 0 then
-        timeUntilNextParticle = particleGeneralRng:RandomInt(5, 15)
+        local roomShape = room:GetRoomShape()
+        if thinRoomShapes[roomShape] then
+            timeUntilNextParticle = particleGeneralRng:RandomInt(15, 30)
+        elseif wideRoomShapes[roomShape] then
+            timeUntilNextParticle = particleGeneralRng:RandomInt(2, 5)
+        else
+            timeUntilNextParticle = particleGeneralRng:RandomInt(5, 15)
+        end
 
         table.insert(particleInstances, particleSpawnRoutines[season](topLeft, bottomRight)
     )
