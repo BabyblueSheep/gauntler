@@ -13,21 +13,21 @@ local game = Game()
 ---@field StartingTime integer
 
 local particleSpawnRoutines = {
-    [TheGauntlet.Items.Demeter.Season.WINTER] = include("scripts.items.demeter.visuals.snowflake_spawn"),
-    [TheGauntlet.Items.Demeter.Season.SPRING] = include("scripts.items.demeter.visuals.falling_leaf_spawn"),
-    [TheGauntlet.Items.Demeter.Season.AUTUMN] = include("scripts.items.demeter.visuals.falling_leaf_spawn"),
+    [TheGauntlet.Items.Demeter.Season.WINTER] = include("scripts.gauntlet.items.demeter.visuals.snowflake_spawn"),
+    [TheGauntlet.Items.Demeter.Season.SPRING] = include("scripts.gauntlet.items.demeter.visuals.falling_leaf_spawn"),
+    [TheGauntlet.Items.Demeter.Season.AUTUMN] = include("scripts.gauntlet.items.demeter.visuals.falling_leaf_spawn"),
 }
 
 local particleUpdateRoutines = {
-    [TheGauntlet.Items.Demeter.Season.WINTER] = include("scripts.items.demeter.visuals.snowflake_update"),
-    [TheGauntlet.Items.Demeter.Season.SPRING] = include("scripts.items.demeter.visuals.falling_leaf_update"),
-    [TheGauntlet.Items.Demeter.Season.AUTUMN] = include("scripts.items.demeter.visuals.falling_leaf_update"),
+    [TheGauntlet.Items.Demeter.Season.WINTER] = include("scripts.gauntlet.items.demeter.visuals.snowflake_update"),
+    [TheGauntlet.Items.Demeter.Season.SPRING] = include("scripts.gauntlet.items.demeter.visuals.falling_leaf_update"),
+    [TheGauntlet.Items.Demeter.Season.AUTUMN] = include("scripts.gauntlet.items.demeter.visuals.falling_leaf_update"),
 }
 
 local particleRenderRoutines = {
-    [TheGauntlet.Items.Demeter.Season.WINTER] = include("scripts.items.demeter.visuals.snowflake_render"),
-    [TheGauntlet.Items.Demeter.Season.SPRING] = include("scripts.items.demeter.visuals.falling_leaf_render"),
-    [TheGauntlet.Items.Demeter.Season.AUTUMN] = include("scripts.items.demeter.visuals.falling_leaf_render"),
+    [TheGauntlet.Items.Demeter.Season.WINTER] = include("scripts.gauntlet.items.demeter.visuals.snowflake_render"),
+    [TheGauntlet.Items.Demeter.Season.SPRING] = include("scripts.gauntlet.items.demeter.visuals.falling_leaf_render"),
+    [TheGauntlet.Items.Demeter.Season.AUTUMN] = include("scripts.gauntlet.items.demeter.visuals.falling_leaf_render"),
 }
 
 local thinRoomShapes = {

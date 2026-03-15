@@ -8,9 +8,9 @@ local activeItemBoltAmountSpecialCases = {
     [CollectibleType.COLLECTIBLE_ISAACS_TEARS] = 1
 }
 
-include("scripts.items.zeus.cases.notched_axe")
+include("scripts.gauntlet.items.zeus.cases.notched_axe")
 
-local boltAmountDefaultCase = include("scripts.items.zeus.cases.default")
+local boltAmountDefaultCase = include("scripts.gauntlet.items.zeus.cases.default")
 
 --If Isaac has no active items, always give a custom active one
 --To prevent said active being dropped when picking up another active, also give Schoolbag without the costume
