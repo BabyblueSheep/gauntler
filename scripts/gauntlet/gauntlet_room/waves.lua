@@ -164,8 +164,10 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
+    local level = game:GetLevel()
     local room = game:GetRoom()
 
+    if level:GetDimension() == Dimension.MIRROR then return end
     if room:IsAmbushDone() then return end
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
@@ -258,7 +260,12 @@ end)
 ---@param damageCooldown integer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
-    if Game():GetRoom():IsAmbushDone() then return end
+
+    local level = game:GetLevel()
+    local room = game:GetRoom()
+
+    if level:GetDimension() == Dimension.MIRROR then return end
+    if room:IsAmbushDone() then return end
 
     if damageFlags & DamageFlag.DAMAGE_FAKE == DamageFlag.DAMAGE_FAKE then return end
     if damageFlags & DamageFlag.DAMAGE_NO_PENALTIES == DamageFlag.DAMAGE_NO_PENALTIES then return end
@@ -272,7 +279,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     local teleportRNG = RNG(roomSave.TeleportSeed)
     roomSave.TeleportSeed = teleportRNG:Next()
 
-    local currentRoomDescriptor = Game():GetLevel():GetCurrentRoomDesc()
+    local currentRoomDescriptor = level:GetCurrentRoomDesc()
 
     local adjacentRooms = {}
     for _, neighborDescriptor in pairs(currentRoomDescriptor:GetNeighboringRooms()) do

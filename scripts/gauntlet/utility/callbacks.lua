@@ -8,6 +8,24 @@ TheGauntlet.Utility.Callbacks = {
     --- - [ChallengeRoomType](lua://ChallengeRoomType) - the type of the current challenge room;
     POST_CHALLENGE_ROOM_TRIGGER_CLEARED = "TheGauntlet POST_CHALLENGE_ROOM_TRIGGER_CLEARED",
 
+    ---Called before a Gauntlet room is placed on the floor. Can be used to change the room layout before placing it.
+    ---
+    ---Parameters:
+    --- - [integer](lua://integer) - the index the room will be located at;
+    --- - [RoomConfigRoom](lua://RoomConfigRoom) - the RoomConfig to place;
+    --- - [Dimension](lua://Dimension) - the dimension the room wiil be placed in;
+    ---
+    ---Returns:
+    --- - Return a [RoomConfigRoom](lua://RoomConfigRoom) to place a different room layout.
+    PRE_PLACE_GAUNTLET_ROOM = "TheGauntlet PRE_PLACE_GAUNTLET_ROOM",
+
+    ---Called after a Gauntlet room is placed on the floor.
+    ---
+    ---Parameters:
+    --- - [integer](lua://integer) - the index the room is located at;
+    --- - [integer](lua://integer) - the dimension the room was placed in;
+    POST_PLACE_GAUNTLET_ROOM = "TheGauntlet POST_PLACE_GAUNTLET_ROOM",
+
     ---Called before Apollo refreshes its path to the boss room. Can be used to modify the list of rooms that grant a damage up.
     ---
     ---Returns:

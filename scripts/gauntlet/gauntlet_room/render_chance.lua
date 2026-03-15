@@ -4,6 +4,7 @@
 
 local game = Game()
 local hud = Game():GetHUD()
+local persistentGameData = Isaac.GetPersistentGameData()
 
 local oldChanceToDisplay = 0
 local chanceToDisplay = 0
@@ -80,6 +81,11 @@ local function GetStatDisplayOffset(statNumber)
 
     --Duality removes one of the deal chance displays
     if PlayerManager.AnyoneHasCollectible(CollectibleType.COLLECTIBLE_DUALITY) and statNumber >= 7 then
+        statNumber = statNumber - 1
+    end
+
+    --If Planetarium's arent unlocked, account for the lack of Planetarium chance
+    if not persistentGameData:Unlocked(Achievement.PLANETARIUMS) and statNumber >= 8 then
         statNumber = statNumber - 1
     end
 
