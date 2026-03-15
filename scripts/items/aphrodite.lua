@@ -61,5 +61,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     poofBack.SpriteScale = poofFinalSpriteScale
     poofBack:GetSprite().Color = POOF_COLOR
 
-    sfxManager:Play(SoundEffect.SOUND_BLACK_POOF)
+    sfxManager:Play(SoundEffect.SOUND_KISS_LIPS1)
+    sfxManager:Play(SoundEffect.SOUND_BLACK_POOF, 0.75)
 end)
