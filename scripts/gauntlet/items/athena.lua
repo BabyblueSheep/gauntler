@@ -109,7 +109,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
             shieldSprite.Rotation = TheGauntlet.Utility.Lerp(-60, -120, TheGauntlet.Utility.InverseLerp(135, 225, correctedAngle))
             shieldEffect.FlipX = true
         end
-        local alpha = TheGauntlet.Utility.Lerp(1, 0.5, shieldData.RetractTimer)
+        local alpha = TheGauntlet.Utility.Lerp(1, 0.25, shieldData.RetractTimer)
         shieldSprite.Color = Color(1, 1, 1, alpha)
 
         if not shieldData.Disabled then

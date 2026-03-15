@@ -77,6 +77,8 @@ end
 
 ---@param effect EntityEffect
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
+    if effect.SubType ~= FAKE_PENTAGRAM_SUBTYPE then return end
+
     local sprite = effect:GetSprite()
     if sprite:IsFinished() then
         local enemyData = effect:GetData().FakeAmbush
