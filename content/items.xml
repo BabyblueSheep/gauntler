@@ -1,79 +1,77 @@
 <items gfxroot="gfx/gauntlet/items/" version="1" deathanm2="gfx/death_items.anm2">
 
 	<passive id="0" 
-		name="Hephaestus" description="Go for gold"
-		gfx="hephaestus.png"
-		quality="3" craftquality="4"
-		tags="offensive lazarussharedglobal"
-	/>
-	
-	<passive id="1" 
-		name="Dionysus" description="All stats up + you feel tipsy"
-		gfx="dionysus.png"
-		tears="0.5" damage="1" speed="0.3" range="1.25" luck="1"
-		maxhearts="2" hearts="2"
-		bombs="1" keys="1" coins="1"
-		quality="3"
-		tags="summonable offensive tearsup"
-	/>
-
-	<passive id="2" 
-		name="Artemis" description="Aim and fire"
-		gfx="artemis.png"
-		quality="2"
-		tags="summonable offensive"
-	/>
-
-	<passive id="3" 
 		name="Zeus" description="Shocking actives"
 		gfx="zeus.png"
 		quality="3"
 		tags="offensive"
 	/>
-	<active id="4" 
+	<active id="1" 
 		name=" Zeus " description="Shocking actives"
 		gfx="zeus.png"
 		maxcharges="4" initcharge="0"
 		quality="3"
 		tags="noeden" hidden="true"
 	/>
-
-	<passive id="5" 
+	
+	<passive id="2" 
 		name="Hera" description="Revenge of mother"
 		gfx="hera.png"
 		quality="3"
 		tags="summonable offensive nogreed"
 	/>
-
-	<passive id="6" 
-		name="Ares" description="Challenge brings power"
-		gfx="ares.png"
-		quality="3"
-		tags="summonable offensive nocantrip lazarussharedglobal nogreed"
-	/>
-	<null id="1" name="Ares Challenge Room Stats" damage="2" persistent="true" />
-	<null id="1" name="Ares Boss Challenge Room Stats" damage="3" persistent="true" />
-
-	<passive id="7" 
-		name="Aphrodite" description="Love conquers all"
-		gfx="aphrodite.png"
-		quality="2"
-		tags="summonable nolostbr"
-	/>
-
-	<passive id="8" 
+	
+	<passive id="3" 
 		name="Poseidon" description="Flood the masses"
 		gfx="poseidon.png"
 		quality="2"
 		tags="summonable lazarussharedglobal"
 	/>
-
-	<passive id="9" 
+	
+	<passive id="4" 
+		name="Hades" description="Fall and rise"
+		gfx="hades.png"
+		quality="3"
+		tags="summonable offensive"
+	/>
+	
+	<passive id="5" 
 		name="Demeter" description="Time waits for none"
 		gfx="demeter.png"
 		quality="3"
 		tags="summonable offensive lazarussharedglobal"
 	/>
+	
+	<passive id="6" 
+		name="Athena" description="Shield-clad protection"
+		gfx="athena.png"
+		quality="3"
+		tags="summonable"
+	/>
+	
+	<passive id="7" 
+		name="Ares" description="Challenge brings power"
+		gfx="ares.png"
+		quality="3"
+		tags="summonable offensive nocantrip lazarussharedglobal nogreed"
+	/>
+	<null id="0" name="Ares Challenge Room Stats" damage="2" persistent="true" />
+	<null id="1" name="Ares Boss Challenge Room Stats" damage="3" persistent="true" />
+	
+	<passive id="8" 
+		name="Aphrodite" description="Love conquers all"
+		gfx="aphrodite.png"
+		quality="2"
+		tags="summonable nolostbr"
+	/>
+	
+	<passive id="9" 
+		name="Hephaestus" description="Go for gold"
+		gfx="hephaestus.png"
+		quality="3" craftquality="4"
+		tags="offensive lazarussharedglobal"
+	/>
+	
 
 	<passive id="10" 
 		name="Apollo" description="Gift of prophecy"
@@ -82,21 +80,24 @@
 		tags="summonable offensive lazarussharedglobal"
 	/>
 	<!-- These null items probably don't have to be persistent, as they only "last" for a room, but a bug is making me keep them here -->
-	<null id="3" name="Apollo On Path Stats" damage="2" persistent="true" />
-	<null id="4" name="Apollo Off Path Stats" damagemult="0.8" persistent="true" />
-
+	<null id="2" name="Apollo On Path Stats" damage="2" persistent="true" />
+	<null id="3" name="Apollo Off Path Stats" damagemult="0.8" persistent="true" />
+	
 	<passive id="11" 
-		name="Hades" description="Fall and rise"
-		gfx="hades.png"
-		quality="3"
+		name="Artemis" description="Aim and fire"
+		gfx="artemis.png"
+		quality="2"
 		tags="summonable offensive"
 	/>
-
+	
 	<passive id="12" 
-		name="Athena" description="Shield-clad protection"
-		gfx="athena.png"
+		name="Dionysus" description="All stats up + you feel tipsy"
+		gfx="dionysus.png"
+		tears="0.5" damage="1" speed="0.3" range="1.25" luck="1"
+		maxhearts="2" hearts="2"
+		bombs="1" keys="1" coins="1"
 		quality="3"
-		tags="summonable"
+		tags="summonable offensive tearsup"
 	/>
 	
 </items>
