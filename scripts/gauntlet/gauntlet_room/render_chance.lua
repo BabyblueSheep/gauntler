@@ -79,6 +79,11 @@ local function GetStatDisplayOffset(statNumber)
         hudOffset = hudOffset + Vector(0, 2)
     end
 
+    local shiftBecauseOfExtraIcon = game:IsHardMode() or game:IsGreedMode() or game.Challenge > 0 or game:AchievementUnlocksDisallowed()
+    if shiftBecauseOfExtraIcon then
+        hudOffset = hudOffset + Vector(0, 16)
+    end
+
     --Duality removes one of the deal chance displays
     if PlayerManager.AnyoneHasCollectible(CollectibleType.COLLECTIBLE_DUALITY) and statNumber >= 7 then
         statNumber = statNumber - 1
