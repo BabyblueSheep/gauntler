@@ -1,3 +1,8 @@
+local CHANCE_TO_STRIKE_ENEMY = 0.75
+local BOLT_DAMAGE = 20
+
+
+
 local sfxManager = SFXManager()
 
 TheGauntlet.Items.Zeus.LightningBoltVariant = Isaac.GetEntityVariantByName("TheGauntlet Zeus Lightning Bolt")
@@ -16,14 +21,24 @@ end
 
 ---@enum ZeusBoltTargetType
 TheGauntlet.Items.Zeus.TargetType = {
-    RANDOM = 0,
+    RANDOM_TYPE = -1,
+    RANDOM_POSITION = 0,
     ENEMY = 1,
 }
 
 ---@param targetType ZeusBoltTargetType
 ---@param source Entity
-function TheGauntlet.Items.Zeus.ScheduleLightningBolt(targetType, source)
-    table.insert(scheduledLightningBolts, {TargetType = targetType, Source = source})
+---@param rng RNG
+function TheGauntlet.Items.Zeus.ScheduleLightningBolt(targetType, source, rng)
+    if targetType == TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE then
+        if rng:RandomFloat() < CHANCE_TO_STRIKE_ENEMY then
+            targetType = TheGauntlet.Items.Zeus.TargetType.ENEMY
+        else
+            targetType = TheGauntlet.Items.Zeus.TargetType.RANDOM_POSITION
+        end
+    end
+
+    table.insert(scheduledLightningBolts, { TargetType = targetType, Source = source, RNG = rng })
 end
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
@@ -44,7 +59,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             local targetPosition = Vector.Zero
 
             if bolt.TargetType == TheGauntlet.Items.Zeus.TargetType.ENEMY and #enemyPositions > 0 then
-                targetPosition = TheGauntlet.Utility.RandomItemFromList(enemyPositions, bolt.Source:GetCollectibleRNG(TheGauntlet.Items.Zeus.CollectibleType))
+                targetPosition = TheGauntlet.Utility.RandomItemFromList(enemyPositions, bolt.RNG)
             else
                 targetPosition = Game():GetRoom():GetRandomPosition(10)
             end
@@ -75,7 +90,7 @@ function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source)
 
     sfxManager:Play(TheGauntlet.Items.Zeus.ThunderZapSoundEffect, 1, 2, false, math.random() * 0.4 + 0.8)
 
-    Game():BombExplosionEffects(position, 100, TearFlags.TEAR_JACOBS, Color.Default, bolt, 0.5)
+    Game():BombExplosionEffects(position, BOLT_DAMAGE, TearFlags.TEAR_JACOBS, Color.Default, bolt, 0.5)
 end
 
 local POINT_AMOUNT = 24

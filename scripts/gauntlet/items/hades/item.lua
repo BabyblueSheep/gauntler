@@ -32,18 +32,6 @@ function TheGauntlet.Items.Hades.ShouldProc(player)
 end
 
 ---@param entity Entity
----@param source EntityRef
-function TheGauntlet.Items.Hades.InflictStatusEffect(entity, source)
-    StatusEffectLibrary:AddStatusEffect
-    (
-        entity,
-        StatusEffectLibrary.StatusFlag.TheGauntlet_HadesSkull,
-        SKULL_STATUS_DURATION,
-        source
-    )
-end
-
----@param entity Entity
 ---@param damage number
 ---@param damageFlags DamageFlag
 ---@param source EntityRef
@@ -63,7 +51,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     local player = TheGauntlet.Utility.GetPlayerFromEntity(source.Entity.SpawnerEntity, true)
     if player == nil then return end
 
-    TheGauntlet.Items.Hades.InflictStatusEffect(entity, EntityRef(player))
+    TheGauntlet.Items.Hades.InflictStatusEffect(entity, SKULL_STATUS_DURATION, EntityRef(player))
 end)
 
 ---@param entity Entity
@@ -88,7 +76,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     if not TheGauntlet.Items.Hades.ShouldProc(player) then return end
 
-    TheGauntlet.Items.Hades.InflictStatusEffect(entity, EntityRef(player))
+    TheGauntlet.Items.Hades.InflictStatusEffect(entity, SKULL_STATUS_DURATION, EntityRef(player))
 end)
 
 ---@param entity Entity
@@ -143,7 +131,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     if not TheGauntlet.Items.Hades.ShouldProc(player) then return end
 
-    TheGauntlet.Items.Hades.InflictStatusEffect(entity, EntityRef(player))
+    TheGauntlet.Items.Hades.InflictStatusEffect(entity, SKULL_STATUS_DURATION, EntityRef(player))
 end)
 
 --#region Tears

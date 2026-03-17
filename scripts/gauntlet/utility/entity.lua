@@ -33,3 +33,8 @@ function TheGauntlet.Utility.GetPlayerFromEntity(entity, tearCopyingFamiliarsOnl
 
     return nil
 end
+
+TheGauntlet.Utility.LocustState = {
+    IDLE = 0,
+    CHARGING = -1,
+}

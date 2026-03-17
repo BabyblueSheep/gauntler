@@ -1,3 +1,37 @@
 <locusts gfxroot="gfx/familiar/locusts/">
+	<color name="default" />
+	<color name="fly_red" r="255" g="0" b="0" or="50" og="0" ob="0"/>
+	<color name="fly_lightred" r="215" g="75" b="75" or="50" og="10" ob="10"/>
+	<color name="fly_green" r="0" g="255" b="0" or="0" og="0" ob="0"/>
+	<color name="fly_blue" r="0" g="0" b="255" or="0" og="0" ob="10"/>
+	<color name="fly_brown" r="80" g="50" b="30" or="25" og="12" ob="10"/>
+	<color name="fly_yellow" r="241" g="179" b="12" or="0" og="0" ob="0"/>
+	<color name="fly_gold" r="202" g="178" b="0" or="150" og="150" ob="-255"/>
+	<color name="fly_magnet" r="219" g="204" b="94" or="0" og="0" ob="0"/>
+	<color name="fly_orange" r="255" g="115" b="0" or="100" og="60" ob="0"/>
+	<color name="fly_black" r="1" g="1" b="1"/>
+	<color name="fly_grey" r="120" g="120" b="120" or="10" og="10" ob="10"/>
+	<color name="fly_darkred" r="255" g="0" b="0"/>
+	<color name="fly_purple" r="126" g="12" b="174" or="50" og="-255" ob="50"/>
+	<color name="fly_darkpurple" r="126" g="12" b="174" or="0" og="-150" ob="0"/>
+	<color name="fly_pink" r="255" g="84" b="148" or="50" og="-255" ob="10"/>
+	<color name="fly_cyan" r="12" g="217" b="241" or="0" og="20" ob="50"/>
+	<color name="fly_lightblue" r="122" g="242" b="238" or="0" og="20" ob="50"/>
+	<color name="fly_white" r="255" g="255" b="255" or="150" og="150" ob="150"/>
+	<color name="fly_gas" r="0" g="155" b="0" or="0" og="0" ob="0"/>
+	<color name="fly_fart" r="184" g="191" b="134" or="24" og="24" ob="24"/>
 
+
+
+    <locust id="0" tearFlags="55" gfx="anm2=gauntlet/locust_olympian_zap.anm2" />
+    <locust id="1" tearFlags="55" gfx="anm2=gauntlet/locust_olympian_zap.anm2" />
+
+    <locust id="2" gfx="anm2=gauntlet/locust_olympian_fat.anm2" />
+    <locust id="2" scale="0.5" count="2" gfx="anm2=gauntlet/locust_olympian.anm2" />
+
+    <locust id="3" tearFlags="1" gfx="anm2=gauntlet/locust_olympian_drip.anm2" color="1-fly_cyan" />
+
+	<locust id="4" gfx="anm2=gauntlet/locust_olympian_glow.anm2" color="1-fly_black" />
+
+	<locust id="5" tearFlags="22" procChance="0.25" tearFlags2="65" procChance2="1" tearFlags3="3" procChance3="0.25" gfx="anm2=gauntlet/locust_olympian_fire_season.anm2" />
 </locusts>

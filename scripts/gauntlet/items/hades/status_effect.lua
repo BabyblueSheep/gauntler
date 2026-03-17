@@ -8,6 +8,19 @@ StatusEffectLibrary.RegisterStatusEffect(
 )
 
 ---@param entity Entity
+---@param source EntityRef
+---@param duration integer
+function TheGauntlet.Items.Hades.InflictStatusEffect(entity, duration, source)
+    StatusEffectLibrary:AddStatusEffect
+    (
+        entity,
+        StatusEffectLibrary.StatusFlag.TheGauntlet_HadesSkull,
+        duration,
+        source
+    )
+end
+
+---@param entity Entity
 ---@param killSource EntityRef
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, killSource)
     if not StatusEffectLibrary:HasStatusEffect(entity, StatusEffectLibrary.StatusFlag.TheGauntlet_HadesSkull) then return end

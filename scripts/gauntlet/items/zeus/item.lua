@@ -1,8 +1,6 @@
 TheGauntlet.Items.Zeus.CollectibleType = Isaac.GetItemIdByName("Zeus")
 TheGauntlet.Items.Zeus.CollectibleTypeActive = Isaac.GetItemIdByName(" Zeus ")
 
-local CHANCE_TO_STRIKE_ENEMY = 0.75
-
 local activeItemBoltAmountSpecialCases = {
     [CollectibleType.COLLECTIBLE_NOTCHED_AXE] = 0,
     [CollectibleType.COLLECTIBLE_ISAACS_TEARS] = 1
@@ -131,14 +129,7 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_ITEM, CallbackPriority.EARLY
         end
 
         for i = 1, boltAmount do
-            local targetType = 0
-            if rng:RandomFloat() < CHANCE_TO_STRIKE_ENEMY then
-                targetType = TheGauntlet.Items.Zeus.TargetType.ENEMY
-            else
-                targetType = TheGauntlet.Items.Zeus.TargetType.RANDOM
-            end
-
-            TheGauntlet.Items.Zeus.ScheduleLightningBolt(targetType, player)
+            TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE, player, rng)
         end
     end, 1, 1, false)
 end)

@@ -17,7 +17,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE, function (_, entity)
         local boltAmount = 8
 
         for i = 1, boltAmount do
-            TheGauntlet.Items.Zeus.ScheduleLightningBolt(Game():GetRoom():GetRandomPosition(10), player)
+            TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE, player, player:GetCollectibleRNG(TheGauntlet.Items.Zeus.CollectibleType))
         end
     end
 end)
