@@ -47,6 +47,7 @@ include("scripts.gauntlet.items.zeus.item")
 include("scripts.gauntlet.items.zeus.lightning_bolt")
 
 include("scripts.gauntlet.items.locusts.demeter")
+include("scripts.gauntlet.items.locusts.dionysus")
 include("scripts.gauntlet.items.locusts.hades")
 include("scripts.gauntlet.items.locusts.poseidon")
 include("scripts.gauntlet.items.locusts.zeus")

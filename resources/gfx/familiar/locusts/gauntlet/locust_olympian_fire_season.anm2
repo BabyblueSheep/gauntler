@@ -7,7 +7,7 @@
         </Spritesheets>
         <Layers>
             <Layer Id="0" Name="locust_olympian" SpritesheetId="0"/>
-            <Layer Id="1" Name="drip" SpritesheetId="1"/>
+            <Layer Id="1" Name="flame" SpritesheetId="1"/>
         </Layers>
         <Nulls/>
         <Events/>
