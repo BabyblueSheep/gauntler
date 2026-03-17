@@ -1,40 +1,57 @@
---TODO: finish this once sprites are available.
+local ARROW_DAMAGE_MULTIPLIER = 1.5
+local ARROW_SHOT_SPEED_MULTIPLIER = 1.5
+
+local TIME_BETWEEN_ARROW_DIRECTION_CHANGE = 30 * 5
+local MINIMUM_VALID_ANGLE_DIFFERENCE = 0.9 --Smaller = less strict. Used for unlocked rotation.
+
+
 
 TheGauntlet.Items.Artemis = {}
 TheGauntlet.Items.Artemis.CollectibleType = Isaac.GetItemIdByName("Artemis")
-
-local TIME_BETWEEN_ARROW_DIRECTION_CHANGE = 30 * 5
-local MINIMUM_VALID_ANGLE_DIFFERENCE = 0.9
-
-local ARROW_DAMAGE_MULTIPLIER = 1.5
-local ARROW_SHOT_SPEED_MULTIPLIER = 1.5
 
 local PIERCING_TEAR_VARIANTS = {
     [TearVariant.BLUE] = TearVariant.CUPID_BLUE,
     [TearVariant.BLOOD] = TearVariant.CUPID_BLOOD
 }
 
+---@param player EntityPlayer
+---@return Vector
+function TheGauntlet.Items.Artemis.GetCurrentDirection(player)
+    local data = player:GetData().GauntletArtemis
+    return data and data.Direction or Vector.Zero
+end
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player)
     if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end
 
     local rng = player:GetCollectibleRNG(TheGauntlet.Items.Artemis.CollectibleType)
+    local randomDirection = TheGauntlet.Utility.RandomCardinalVector(rng)
 
     local data = player:GetData()
     if data.GauntletArtemis == nil then
         data.GauntletArtemis = {
             TimeLeft = TIME_BETWEEN_ARROW_DIRECTION_CHANGE,
-            Direction =  TheGauntlet.Utility.RandomCardinalVector(rng)
+            Direction = randomDirection,
+            PreviousDirection = randomDirection
         }
     end
 
     data.GauntletArtemis.TimeLeft = data.GauntletArtemis.TimeLeft - 1
     if data.GauntletArtemis.TimeLeft <= 0 then
         data.GauntletArtemis.TimeLeft = TIME_BETWEEN_ARROW_DIRECTION_CHANGE
+        data.GauntletArtemis.PreviousDirection = data.GauntletArtemis.Direction
         data.GauntletArtemis.Direction = TheGauntlet.Utility.RandomCardinalVector(rng)
     end
 end)
+
+---@param player EntityPlayer
+---@param collectibleType CollectibleType
+---@param removeFromPlayerForm boolean
+---@param wisp boolean
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, function (_, player, collectibleType, removeFromPlayerForm, wisp)
+    player:GetData().GauntletArtemis = nil
+end, TheGauntlet.Items.Artemis.CollectibleType)
 
 ---@param tear EntityTear
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, function (_, tear)
@@ -102,27 +119,31 @@ TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, function (_, p
     if angleDifference > MINIMUM_VALID_ANGLE_DIFFERENCE then
         tearParams.TearFlags = tearParams.TearFlags | TearFlags.TEAR_PIERCING
         tearParams.TearDamage = tearParams.TearDamage * ARROW_DAMAGE_MULTIPLIER
-        
+
         if PIERCING_TEAR_VARIANTS[tearParams.TearVariant] ~= nil then
             tearParams.TearVariant = PIERCING_TEAR_VARIANTS[tearParams.TearVariant]
         end
     end
 end)
 
-local ANGLE_TO_ARROW = {
-    [0] = "/\\",
-    [90] = ">",
-    [180] = "\\/",
-    [270] = "<",
-}
+local arrowSprite, t = Sprite("gfx/gauntlet/effects/artemis_arrow.anm2", true)
+arrowSprite:Play("Left")
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_RENDER, function (_, player)
     local data = player:GetData()
     if data.GauntletArtemis == nil then return end
-    ---@type Vector
-    local direction = data.GauntletArtemis.Direction
 
-    local drawPosition = Isaac.WorldToScreen(player.Position)
-    Isaac.RenderText(ANGLE_TO_ARROW[math.floor(direction:GetAngleDegrees() + 90)], drawPosition.X, drawPosition.Y - 50, 1, 1, 1, 255)
+    local angle = (data.GauntletArtemis.Direction:GetAngleDegrees() + 90) * math.pi / 180
+    local previousAngle = (data.GauntletArtemis.PreviousDirection:GetAngleDegrees() + 90) * math.pi / 180
+
+    local rotationProgress = TheGauntlet.Utility.InverseLerp(TIME_BETWEEN_ARROW_DIRECTION_CHANGE, TIME_BETWEEN_ARROW_DIRECTION_CHANGE - 15, data.GauntletArtemis.TimeLeft)
+
+    local easedRotationProgress = 1 - (1 - rotationProgress)^3 --Ease Out Cubic
+
+    local renderAngle = TheGauntlet.Utility.LerpAngle(previousAngle, angle, easedRotationProgress) * 180 / math.pi
+
+    local drawPosition = Isaac.WorldToScreen(player.Position + Vector(0.5, -60))
+    arrowSprite.Rotation = renderAngle
+    arrowSprite:Render(drawPosition)
 end)

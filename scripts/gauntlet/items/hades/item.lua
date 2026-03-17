@@ -61,18 +61,19 @@ end)
 ---@param damageCooldown integer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
     if not source.Entity then return end
-
-    local player = TheGauntlet.Utility.GetPlayerFromEntity(source.Entity, true)
-    if not player then
-        player = TheGauntlet.Utility.GetPlayerFromEntity(source.Entity.SpawnerEntity, true)
-    end
-
-    if not player then return end
-
     local shouldApplyLaser = damageFlags & DamageFlag.DAMAGE_LASER == DamageFlag.DAMAGE_LASER
     local shouldApplyKnife = source.Type == EntityType.ENTITY_KNIFE and (source.Variant == KnifeVariant.MOMS_KNIFE or source.Variant == KnifeVariant.SUMPTORIUM)
 
     if not (shouldApplyKnife or shouldApplyLaser) then return end
+
+    local player
+    if shouldApplyLaser then
+        player = TheGauntlet.Utility.GetPlayerFromEntity(source.Entity, true)
+    elseif shouldApplyKnife then
+        player = TheGauntlet.Utility.GetPlayerFromEntity(source.Entity.SpawnerEntity, true)
+    end
+
+    if not player then return end
 
     if not TheGauntlet.Items.Hades.ShouldProc(player) then return end
 

@@ -43,6 +43,26 @@ function TheGauntlet.Utility.InverseLerp(a, b, t, clamp)
     return result
 end
 
+---Returns the difference between 2 angles.
+---@param a number
+---@param b number
+---@return number
+function TheGauntlet.Utility.AngleDifference(a, b)
+    local difference = math.fmod(b - a, math.pi * 2)
+    return math.fmod(2.0 * difference, math.pi * 2) - difference;
+end
+
+---Does linear interpolation between a and b, based on the t.<br>
+---Treats a and b as angles, meaning interpolation can happen in reverse if the angle difference is closer in that way.
+---https://github.com/godotengine/godot/blob/29d2c7ece514127cc449ce37994ef4b369a3a9c6/core/math/math_funcs.h#L490
+---@param a number
+---@param b number
+---@param t number
+---@return number
+function TheGauntlet.Utility.LerpAngle(a, b, t)
+    return a + TheGauntlet.Utility.AngleDifference(a, b) * t
+end
+
 local CARDINAL_DIRECTIONS = {
     Vector(1, 0),
     Vector(-1, 0),
