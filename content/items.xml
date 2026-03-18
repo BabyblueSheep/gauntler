@@ -79,6 +79,7 @@
 		quality="3"
 		tags="baby summonable monstermanual"
 	/>
+	<null id="2" name="Apollo Multishot" cooldown="300" persistent="true" />
 	
 	<passive id="11" 
 		name="Artemis" description="Aim and fire"

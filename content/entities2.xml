@@ -3,6 +3,7 @@
 	<entity id="1000" variant="2051" subtype="1" name="TheGauntlet Zeus Lightning Bolt" anm2path="1000.043_poop explosion.anm2"/>
 	<entity id="1000" variant="2051" subtype="2" name="TheGauntlet Athena Aegis" anm2path="gauntlet/effects/aegis.anm2"/>
 
-	<entity id="3" variant="2049" subtype="0" name="TheGauntlet Apollo Baby" anm2path="gauntlet/familiars/apollo_baby.anm2"
+	<entity id="3" variant="2049" subtype="0" name="TheGauntlet Apollo Baby" anm2path="gauntlet/familiars/apollo baby.anm2"
+			shadowSize="8" numGridCollisionPoints="12" collisionMass="3" collisionRadius="13" friction="1"
 			tags="cansacrifice" customtags="" />
 </entities>

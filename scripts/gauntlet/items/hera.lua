@@ -6,6 +6,9 @@ local SPAWNED_MINISAAC_MINIMUM_AMOUNT = 1
 local SPAWNED_MINISAAC_MAXIMUM_AMOUNT = 2
 
 
+
+local game = Game()
+
 TheGauntlet.Items.Hera = {}
 TheGauntlet.Items.Hera.CollectibleType = Isaac.GetItemIdByName("Hera")
 
@@ -53,7 +56,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     if #enemiesToImpregnante == 0 then return end
 
-    local rng = RNG(Game():GetRoom():GetSpawnSeed())
+    local rng = RNG(game:GetRoom():GetSpawnSeed())
     TheGauntlet.Utility.ShuffleListInPlace(enemiesToImpregnante, rng)
 
     local amountOfEnemiesToImpregnante = math.min(#enemiesToImpregnante, AMOUNT_OF_ENEMIES_TO_IMPREGNATE)
