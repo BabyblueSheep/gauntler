@@ -3,6 +3,8 @@ TheGauntlet = RegisterMod("The Gauntlet", 1)
 TheGauntlet.SaveManager = include("scripts.gauntlet.library.save_manager")
 include("scripts.gauntlet.library.status_effect_library")
 
+include("scripts.gauntlet.library.dssmenucore")
+
 TheGauntlet.Utility = {}
 include("scripts.gauntlet.utility.callbacks")
 include("scripts.gauntlet.utility.challenge_rooms")
