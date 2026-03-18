@@ -4,7 +4,7 @@
 		name="Zeus" description="Shocking actives"
 		gfx="zeus.png"
 		quality="3"
-		tags="offensive"
+		tags="offensive lazarussharedglobal"
 	/>
 	<active id="1" 
 		name=" Zeus " description="Shocking actives"
@@ -73,15 +73,12 @@
 	/>
 	
 
-	<passive id="10" 
+	<familiar id="10" 
 		name="Apollo" description="Gift of prophecy"
 		gfx="apollo.png"
 		quality="3"
-		tags="summonable offensive lazarussharedglobal"
+		tags="baby summonable monstermanual"
 	/>
-	<!-- These null items probably don't have to be persistent, as they only "last" for a room, but a bug is making me keep them here -->
-	<null id="2" name="Apollo On Path Stats" damage="2" persistent="true" />
-	<null id="3" name="Apollo Off Path Stats" damagemult="0.8" persistent="true" />
 	
 	<passive id="11" 
 		name="Artemis" description="Aim and fire"

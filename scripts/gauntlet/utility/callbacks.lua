@@ -26,13 +26,6 @@ TheGauntlet.Utility.Callbacks = {
     --- - [integer](lua://integer) - the dimension the room was placed in;
     POST_PLACE_GAUNTLET_ROOM = "TheGauntlet POST_PLACE_GAUNTLET_ROOM",
 
-    ---Called before Apollo refreshes its path to the boss room. Can be used to modify the list of rooms that grant a damage up.
-    ---
-    ---Returns:
-    --- - Return an integer to set the boss room to path towards.ItemConfig.CARDTYPE_SPECIAL_OBJECT.<br>
-    --- - Alternatively, return a table in the form of an integer list to set a custom list of rooms. 
-    PRE_APOLLO_REFRESH_PATH_TO_BOSS = "TheGauntlet PRE_APOLLO_REFRESH_PATH_TO_BOSS",
-
     ---Called when Hera checks if an enemy can be impregnated. Can be used to force an enemy not to be impregnatable.
     ---
     ---Parameters:
