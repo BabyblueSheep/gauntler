@@ -3,7 +3,7 @@ TheGauntlet = RegisterMod("The Gauntlet", 1)
 TheGauntlet.SaveManager = include("scripts.gauntlet.library.save_manager")
 include("scripts.gauntlet.library.status_effect_library")
 
-include("scripts.gauntlet.library.dssmenucore")
+include("scripts.gauntlet.library.dead_sea_scrolls_integration")
 
 TheGauntlet.Utility = {}
 include("scripts.gauntlet.utility.callbacks")
