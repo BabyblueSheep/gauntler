@@ -3,7 +3,15 @@ local DRUNK_SLIPPERINESS = 0.75
 
 
 
+local game = Game()
+
 TheGauntlet.Items.Dionysus.CollectibleType = Isaac.GetItemIdByName("Dionysus")
+
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
+    if TheGauntlet.Settings.RemoveDionysus() then
+        game:GetItemPool():AddRoomBlacklist(TheGauntlet.Items.Dionysus.CollectibleType)
+    end
+end)
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function (_, player)

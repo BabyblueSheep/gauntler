@@ -113,35 +113,36 @@ local menu = {
         tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
 
         buttons = {
+            { str = "gameplay", fsize = 3, nosel = true },
+            { str = "", fsize=1, nosel=true },
+
             {
-                str = "demeter visuals", fsize = 2,
-                choices = { "enabled", "only tint", "only particles", "disabled" },
-                setting = 1,
-                variable = "TheGauntlet_DemeterVisuals",
-                tooltip = {strset = {"configures", "visuals for", "demeter"}},
+                str = "remove dionysus", fsize = 2,
+                choices = { "enabled", "disabled" },
+                setting = 2,
+                variable = "TheGauntlet_RemoveDionysus",
+                tooltip = {strset = {"removes", "dionysus from", "the pool", "", "use if it", "strains", "your eyes"}},
 
                 load = function ()
-                    local value = 4
-
-                    if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint ~= false then
-                        value = value - 2
+                    if TheGauntlet.SaveManager.GetSettingsSave().RemoveDionysus ~= true then
+                        return 2
                     end
-                    if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles ~= false then
-                        value = value - 1
-                    end
-
-                    return value
+                    return 1
                 end,
                 store = function (value)
                     value = value
 
-                    TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint = value <= 2
-                    TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles = value % 2 == 1
+                    TheGauntlet.SaveManager.GetSettingsSave().RemoveDionysus = value == 1
                 end
             },
+
+            { str = "", fsize=3, nosel=true },
+            { str = "visuals", fsize = 3, nosel = true },
+            { str = "", fsize=1, nosel=true },
+
             {
                 str = "demeter visuals", fsize = 2,
-                choices = { "enabled", "disabled" },
+                choices = { "all enabled", "only tint", "only particles", "disabled" },
                 setting = 1,
                 variable = "TheGauntlet_DemeterVisuals",
                 tooltip = {strset = {"configures", "visuals for", "demeter"}},
@@ -203,6 +204,16 @@ TheGauntlet.Settings = {
             return true
         end
         return TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles
+    end,
+
+    RemoveDionysus = function ()
+        if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
+            return true
+        end
+        if TheGauntlet.SaveManager.GetSettingsSave().RemoveDionysus == nil then
+            return false
+        end
+        return TheGauntlet.SaveManager.GetSettingsSave().RemoveDionysus
     end,
 }
 
