@@ -94,43 +94,73 @@ local menu = {
     },
 
     menuSettings = {
-        deadSeaScrollsIntegration.hudOffsetButton,
-        deadSeaScrollsIntegration.gamepadToggleButton,
-        deadSeaScrollsIntegration.menuKeybindButton,
-        deadSeaScrollsIntegration.menuHintButton,
-        deadSeaScrollsIntegration.menuBuzzerButton,
-        deadSeaScrollsIntegration.paletteButton
+        title = 'menu settings',
+        tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
+    
+        buttons = {
+            deadSeaScrollsIntegration.hudOffsetButton,
+            deadSeaScrollsIntegration.gamepadToggleButton,
+            deadSeaScrollsIntegration.menuKeybindButton,
+            deadSeaScrollsIntegration.menuHintButton,
+            deadSeaScrollsIntegration.menuBuzzerButton,
+            deadSeaScrollsIntegration.paletteButton
+        },
     },
 
     modSettings = {
-        {
-            str = "demeter visuals", fsize = 2,
-            choices = { "enabled", "only tint", "only particles", "disabled" },
-            setting = 1,
-            variable = "TheGauntlet_DemeterVisuals",
-            tooltip = {strset = {"configures", "visuals of", "demeter"}},
+        title = 'mod settings',
+        tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
 
-            load = function ()
-                local value = 4
+        buttons = {
+            {
+                str = "demeter visuals", fsize = 2,
+                choices = { "enabled", "only tint", "only particles", "disabled" },
+                setting = 1,
+                variable = "TheGauntlet_DemeterVisuals",
+                tooltip = {strset = {"configures", "visuals for", "demeter"}},
 
-                if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint == false then
-                    value = value & 2
+                load = function ()
+                    local value = 4
+
+                    if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint ~= false then
+                        value = value - 2
+                    end
+                    if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles ~= false then
+                        value = value - 1
+                    end
+
+                    return value
+                end,
+                store = function (value)
+                    value = value
+
+                    TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint = value <= 2
+                    TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles = value % 2 == 1
                 end
-                if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles == false then
-                    value = value & 1
-                end
-
-                print(value)
-                return value + 1
-            end,
-            store = function (value)
-                value = value - 1
-
-                TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint = value & 1 == 1
-                TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles = value & 2 == 2
-            end
+            }
         },
     }
+}
+
+TheGauntlet.Settings = {
+    EnableDemeterTint = function ()
+        if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
+            return true
+        end
+        if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint == nil then
+            return true
+        end
+        return TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint
+    end,
+    EnableDemeterParticles = function ()
+        if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
+            return true
+        end
+        if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles == nil then
+            return true
+        end
+        return TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles
+    end,
 }
 
 local directoryKey = {

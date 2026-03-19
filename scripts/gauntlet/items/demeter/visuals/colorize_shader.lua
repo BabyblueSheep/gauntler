@@ -46,6 +46,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderNa
 
     if shaderName ~= "TheGauntlet ScreenColorize" then return end
 
+    if not TheGauntlet.Settings.EnableDemeterTint() then
+        return {
+            ColorToChangeTo = NO_COLOR
+        }
+    end
+
     return {
         ColorToChangeTo = currentColor
     }

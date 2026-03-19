@@ -1,13 +1,13 @@
-<sounds root="sfx/gauntlet/">
+<sounds root="sfx/">
 	<sound name="TheGauntlet Shadow Spell">
-		<sample weight="1" path="shadow spell.wav" /> <!-- https://freesound.org/people/EminYILDIRIM/sounds/559088/ -->
+		<sample weight="1" path="gauntlet/shadow spell.wav" /> <!-- https://freesound.org/people/EminYILDIRIM/sounds/559088/ -->
 	</sound>
 	<sound name="TheGauntlet Thunder Zap">
-		<sample weight="1" path="thunder zap 1.wav" /> <!-- https://www.weloveindies.com/en/sounds-for-games -->
-		<sample weight="1" path="thunder zap 2.wav" />
+		<sample weight="1" path="gauntlet/thunder zap 1.wav" /> <!-- https://www.weloveindies.com/en/sounds-for-games -->
+		<sample weight="1" path="gauntlet/thunder zap 2.wav" />
 	</sound>
 	<sound name="TheGauntlet Custom Water Flow">
-		<sample weight="1" path="water_flow_large.wav" />
+		<sample weight="1" path="gauntlet/water_flow_large.wav" />
 	</sound>
 
 	<sound name="deadseascrolls_pop">

@@ -61,6 +61,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ROOM_RENDER_ENTITIES, function (_)
     if season == TheGauntlet.Items.Demeter.Season.NO_SEASON then return end
     if season == TheGauntlet.Items.Demeter.Season.SUMMER then return end
 
+    if TheGauntlet.Settings.EnableDemeterParticles() == false then
+        particleInstances = {}
+        return
+    end
+
     local room = game:GetRoom()
 
     local isPaused = game:IsPaused()
