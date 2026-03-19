@@ -76,11 +76,11 @@ local deadSeaScrollsIntegration = deadSeaScrollsCore.init(modName, menuProvider)
 
 local menu = {
     main = {
-        title = 'the gauntlet',
+        title = "the gauntlet",
         tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
 
         buttons = {
-            { str = "mod settings", dest = "modSettings"},
+            { str = "mod settings", dest = "modSettings" },
             deadSeaScrollsIntegration.changelogsButton,
             {
                 str = "menu settings",
@@ -89,12 +89,13 @@ local menu = {
                     return not DeadSeaScrollsMenu.CanOpenGlobalMenu()
                 end
             },
-            { str = 'close', action = 'resume' },
+            { str = "credits", dest = "credits" },
+            { str = "close", action = "resume" },
         },
     },
 
     menuSettings = {
-        title = 'menu settings',
+        title = "menu settings",
         tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
     
         buttons = {
@@ -108,7 +109,7 @@ local menu = {
     },
 
     modSettings = {
-        title = 'mod settings',
+        title = "mod settings",
         tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
 
         buttons = {
@@ -139,6 +140,22 @@ local menu = {
                 end
             }
         },
+
+        credits = {
+            title = "credits",
+            tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
+
+            buttons = {
+                { str = 'doodledude', fsize = 1,
+                  tooltip = {strset = {"lead spriter"}}},
+                { str = 'babybluesheep', fsize = 1,
+                  tooltip = {strset = {"lead coder"}}},
+                { str = 'poyo', fsize = 1,
+                  tooltip = {strset = {"spriter"}}},
+                { str = 'conboi', fsize = 1,
+                  tooltip = {strset = {"ideas"}}},
+            }
+        }
     }
 }
 
@@ -173,7 +190,7 @@ local directoryKey = {
     Path = {},
 }
 
-DeadSeaScrollsMenu.AddMenu("The Gauntlet Menu", {
+DeadSeaScrollsMenu.AddMenu("The Gauntlet", {
     Run = deadSeaScrollsIntegration.runMenu,
     Open = deadSeaScrollsIntegration.openMenu,
     Close = deadSeaScrollsIntegration.closeMenu,
