@@ -140,21 +140,21 @@ local menu = {
                 end
             }
         },
+    },
 
-        credits = {
-            title = "credits",
-            tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
+    credits = {
+        title = "credits",
+        tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
 
-            buttons = {
-                { str = 'doodledude', fsize = 1,
-                  tooltip = {strset = {"lead spriter"}}},
-                { str = 'babybluesheep', fsize = 1,
-                  tooltip = {strset = {"lead coder"}}},
-                { str = 'poyo', fsize = 1,
-                  tooltip = {strset = {"spriter"}}},
-                { str = 'conboi', fsize = 1,
-                  tooltip = {strset = {"ideas"}}},
-            }
+        buttons = {
+            { str = 'doodledude', fsize = 2,
+                tooltip = {strset = {"lead spriter", "concepts"}}},
+            { str = 'babybluesheep', fsize = 2,
+                tooltip = {strset = {"lead coder"}}},
+            { str = 'poyo', fsize = 2,
+                tooltip = {strset = {"backdrop spriter"}}},
+            { str = 'conboi', fsize = 2,
+                tooltip = {strset = {"ideas"}}},
         }
     }
 }
