@@ -138,7 +138,33 @@ local menu = {
                     TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint = value <= 2
                     TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles = value % 2 == 1
                 end
-            }
+            },
+            {
+                str = "demeter visuals", fsize = 2,
+                choices = { "enabled", "disabled" },
+                setting = 1,
+                variable = "TheGauntlet_DemeterVisuals",
+                tooltip = {strset = {"configures", "visuals for", "demeter"}},
+
+                load = function ()
+                    local value = 4
+
+                    if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint ~= false then
+                        value = value - 2
+                    end
+                    if TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles ~= false then
+                        value = value - 1
+                    end
+
+                    return value
+                end,
+                store = function (value)
+                    value = value
+
+                    TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint = value <= 2
+                    TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles = value % 2 == 1
+                end
+            },
         },
     },
 
