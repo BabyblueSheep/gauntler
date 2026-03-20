@@ -80,8 +80,8 @@ local menu = {
         tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
 
         buttons = {
-            { str = "mod settings", dest = "modSettings" },
             deadSeaScrollsIntegration.changelogsButton,
+            { str = "mod settings", dest = "modSettings" },
             {
                 str = "menu settings",
                 dest = "menuSettings",
@@ -232,13 +232,15 @@ local menu = {
         tooltip = deadSeaScrollsIntegration.menuOpenToolTip,
 
         buttons = {
-            { str = 'doodledude', fsize = 2,
-                tooltip = {strset = {"lead spriter", "concepts"}}},
-            { str = 'babybluesheep', fsize = 2,
+            { str = "doodledude", fsize = 2,
+                tooltip = {strset = {"lead spriter", "", "concepts"}}},
+            { str = "babybluesheep", fsize = 2,
                 tooltip = {strset = {"lead coder"}}},
-            { str = 'poyo', fsize = 2,
-                tooltip = {strset = {"backdrop spriter"}}},
-            { str = 'conboi', fsize = 2,
+            { str = "poyo", fsize = 2,
+                tooltip = {strset = {"backdrop", "spriter"}}},
+            { str = "conboi", fsize = 2,
+                tooltip = {strset = {"ideas"}}},
+            { str = "vinny p", fsize = 2,
                 tooltip = {strset = {"ideas"}}},
         }
     }
@@ -306,7 +308,7 @@ TheGauntlet.Settings = {
 
 local directoryKey = {
     Item = menu.main,
-    Main = 'main',
+    Main = "main",
     Idle = false,
     MaskAlpha = 1,
     Settings = {},
