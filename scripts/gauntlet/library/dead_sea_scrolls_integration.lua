@@ -160,10 +160,68 @@ local menu = {
                     return value
                 end,
                 store = function (value)
-                    value = value
-
                     TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterTint = value <= 2
                     TheGauntlet.SaveManager.GetSettingsSave().EnableDemeterParticles = value % 2 == 1
+                end
+            },
+            {
+                str = "chance y-offset", fsize = 2,
+                slider = true,
+                increment = 1, max = 8,
+                setting = 3,
+                variable = "TheGauntlet_ChanceOffsetY",
+                tooltip = {strset = { "adjust the", "position of", "the gauntlet", "room spawn", "chance" }},
+
+                load = function ()
+                    if TheGauntlet.SaveManager.GetSettingsSave().ChanceOffsetY == nil then
+                        return 3
+                    end
+                    return TheGauntlet.SaveManager.GetSettingsSave().ChanceOffsetY + 3
+                end,
+                store = function (value)
+                    TheGauntlet.SaveManager.GetSettingsSave().ChanceOffsetY = value - 3
+                end
+            },
+            {
+                str = "chance x-offset", fsize = 2,
+                slider = true,
+                increment = 1, max = 4,
+                setting = 2,
+                variable = "TheGauntlet_ChanceOffsetX",
+                tooltip = {strset = { "adjust the", "position of", "the gauntlet", "room spawn", "chance" }},
+
+                load = function ()
+                    if TheGauntlet.SaveManager.GetSettingsSave().ChanceOffsetX == nil then
+                        return 2
+                    end
+                    return TheGauntlet.SaveManager.GetSettingsSave().ChanceOffsetX + 2
+                end,
+                store = function (value)
+                    TheGauntlet.SaveManager.GetSettingsSave().ChanceOffsetX = value - 2
+                end
+            },
+
+            { str = "", fsize=3, nosel=true },
+            { str = "debug", fsize = 3, nosel = true },
+            { str = "", fsize=1, nosel=true },
+
+            {
+                str = "force gauntlet spawn", fsize = 2,
+                choices = { "enabled", "disabled" },
+                setting = 2,
+                variable = "TheGauntlet_ForceGauntletSpawn",
+                tooltip = {strset = {"forces gauntlet", "rooms to", "always spawn", "", "useful for", "showcasing or", "testing"}},
+
+                load = function ()
+                    if TheGauntlet.SaveManager.GetSettingsSave().ForceGauntletSpawn ~= true then
+                        return 2
+                    end
+                    return 1
+                end,
+                store = function (value)
+                    value = value
+
+                    TheGauntlet.SaveManager.GetSettingsSave().ForceGauntletSpawn = value == 1
                 end
             },
         },
@@ -208,13 +266,42 @@ TheGauntlet.Settings = {
 
     RemoveDionysus = function ()
         if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
-            return true
+            return false
         end
         if TheGauntlet.SaveManager.GetSettingsSave().RemoveDionysus == nil then
             return false
         end
         return TheGauntlet.SaveManager.GetSettingsSave().RemoveDionysus
     end,
+
+    ChanceOffsetX = function ()
+        if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
+            return 0
+        end
+        if TheGauntlet.SaveManager.GetSettingsSave().ChanceOffsetX == nil then
+            return 0
+        end
+        return TheGauntlet.SaveManager.GetSettingsSave().ChanceOffsetX
+    end,
+    ChanceOffsetY = function ()
+        if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
+            return 0
+        end
+        if TheGauntlet.SaveManager.GetSettingsSave().ChanceOffsetY == nil then
+            return 0
+        end
+        return TheGauntlet.SaveManager.GetSettingsSave().ChanceOffsetY
+    end,
+
+    ForceGauntletSpawn = function ()
+        if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
+            return false
+        end
+        if TheGauntlet.SaveManager.GetSettingsSave().ForceGauntletSpawn == nil then
+            return false
+        end
+        return TheGauntlet.SaveManager.GetSettingsSave().ForceGauntletSpawn
+    end
 }
 
 local directoryKey = {

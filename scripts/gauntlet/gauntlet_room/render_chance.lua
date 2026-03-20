@@ -84,13 +84,13 @@ local function GetStatDisplayOffset(statNumber)
         hudOffset = hudOffset + Vector(0, 16)
     end
 
-    --Duality removes one of the deal chance displays
-    if PlayerManager.AnyoneHasCollectible(CollectibleType.COLLECTIBLE_DUALITY) and statNumber >= 7 then
+    --If Planetarium's arent unlocked, account for the lack of Planetarium chance
+    if not persistentGameData:Unlocked(Achievement.PLANETARIUMS) and statNumber >= 8 then
         statNumber = statNumber - 1
     end
 
-    --If Planetarium's arent unlocked, account for the lack of Planetarium chance
-    if not persistentGameData:Unlocked(Achievement.PLANETARIUMS) and statNumber >= 8 then
+    --Duality removes one of the deal chance displays
+    if PlayerManager.AnyoneHasCollectible(CollectibleType.COLLECTIBLE_DUALITY) and statNumber >= 7 then
         statNumber = statNumber - 1
     end
 
@@ -134,7 +134,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_HUD_RENDER, function (_)
     if game:GetSeeds():HasSeedEffect(SeedEffect.SEED_NO_HUD) then return end
     if room:GetType() == RoomType.ROOM_DUNGEON and level:GetStage() == LevelStage.STAGE8 then return end --Beast room (stats aren't rendered there)
 
-    local hudOffset = GetStatDisplayOffset(9)
+    local hudOffset = GetStatDisplayOffset(9 + TheGauntlet.Settings.ChanceOffsetY())
+
+    hudOffset.X = hudOffset.X + TheGauntlet.Settings.ChanceOffsetX() * 32 --Subjective offsetting, might chance
 
     hudStatSprite:Render(hudOffset)
 

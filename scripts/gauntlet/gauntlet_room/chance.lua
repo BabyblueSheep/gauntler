@@ -53,6 +53,9 @@ function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
 end
 
 function TheGauntlet.GauntletRoom.GetGenerationChance()
+    if TheGauntlet.Settings.ForceGauntletSpawn() then
+        return 1
+    end
     return TheGauntlet.SaveManager.GetRunSave().GauntletGenerationChance
 end
 
