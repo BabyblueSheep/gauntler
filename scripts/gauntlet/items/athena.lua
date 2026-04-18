@@ -1,4 +1,12 @@
---TODO: finish this once sprites are available.
+local SHIELD_AMOUNT = 5
+local SHIELD_ROTATION_SPEED = 3
+
+local SHIELD_HITBOX_SIZE = 18
+
+local SHIELD_RETRACT_TIME = 10
+local SHIELD_DISABLE_TIME = 30 * 15
+
+
 
 local sfxManager = SFXManager()
 
@@ -7,14 +15,6 @@ TheGauntlet.Items.Athena.CollectibleType = Isaac.GetItemIdByName("Athena")
 
 TheGauntlet.Items.Athena.AegisVariant = Isaac.GetEntityVariantByName("TheGauntlet Athena Aegis")
 TheGauntlet.Items.Athena.AegisSubtype = Isaac.GetEntitySubTypeByName("TheGauntlet Athena Aegis")
-
-local SHIELD_AMOUNT = 5
-local SHIELD_ROTATION_SPEED = 3
-
-local SHIELD_HITBOX_SIZE = 18
-
-local SHIELD_RETRACT_TIME = 10
-local SHIELD_DISABLE_TIME = 30 * 15
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
@@ -130,7 +130,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                 if #collidingEnemies > 0 then
                     local enemy = collidingEnemies[1]:ToNPC()
                     if enemy ~= nil and enemy:IsActiveEnemy() then
-                        enemy:AddKnockback(EntityRef(player), direction * 10, 10, true)
+                        enemy.Velocity = Vector.Zero
+                        enemy:AddKnockback(EntityRef(player), direction * 10, 15, true)
 
                         sfxManager:Play(907) --SoundEffect.SOUND_RIB_DEFLECT
 

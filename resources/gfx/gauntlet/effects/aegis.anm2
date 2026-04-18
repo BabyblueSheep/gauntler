@@ -2,7 +2,7 @@
     <Info CreatedBy="robot" CreatedOn="3/7/2014 1:07:07 PM" Fps="30" Version="103"/>
     <Content>
         <Spritesheets>
-            <Spritesheet Id="0" Path="effect_243_trinityshield.png"/>
+            <Spritesheet Id="0" Path="aegis.png"/>
         </Spritesheets>
         <Layers>
             <Layer Id="0" Name="body" SpritesheetId="0"/>
