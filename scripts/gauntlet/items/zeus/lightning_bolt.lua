@@ -1,16 +1,17 @@
 local CHANCE_TO_STRIKE_ENEMY = 0.75
 local BOLT_DAMAGE = 20
 
+local CHANCE_TO_GIVE_PIP_ON_KILL = 0.1
+
 
 
 local sfxManager = SFXManager()
+local generalRNG = RNG() --I don't think this is the best idea, but mehhhh
 
 TheGauntlet.Items.Zeus.LightningBoltVariant = Isaac.GetEntityVariantByName("TheGauntlet Zeus Lightning Bolt")
 TheGauntlet.Items.Zeus.LightningBoltSubType = Isaac.GetEntitySubTypeByName("TheGauntlet Zeus Lightning Bolt")
 
 TheGauntlet.Items.Zeus.ThunderZapSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Thunder Zap")
-
-local CHANCE_TO_GIVE_PIP_ON_KILL = 0.1
 
 local scheduledLightningBolts = {}
 local currentLightningBoltDelay = 0
@@ -26,19 +27,19 @@ TheGauntlet.Items.Zeus.TargetType = {
     ENEMY = 1,
 }
 
+---Schedules a lightning bolt to spawn in the room.
 ---@param targetType ZeusBoltTargetType
 ---@param source Entity
----@param rng RNG
-function TheGauntlet.Items.Zeus.ScheduleLightningBolt(targetType, source, rng)
+function TheGauntlet.Items.Zeus.ScheduleLightningBolt(targetType, source)
     if targetType == TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE then
-        if rng:RandomFloat() < CHANCE_TO_STRIKE_ENEMY then
+        if generalRNG:RandomFloat() < CHANCE_TO_STRIKE_ENEMY then
             targetType = TheGauntlet.Items.Zeus.TargetType.ENEMY
         else
             targetType = TheGauntlet.Items.Zeus.TargetType.RANDOM_POSITION
         end
     end
 
-    table.insert(scheduledLightningBolts, { TargetType = targetType, Source = source, RNG = rng })
+    table.insert(scheduledLightningBolts, { TargetType = targetType, Source = source })
 end
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
@@ -59,7 +60,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             local targetPosition = Vector.Zero
 
             if bolt.TargetType == TheGauntlet.Items.Zeus.TargetType.ENEMY and #enemyPositions > 0 then
-                targetPosition = TheGauntlet.Utility.RandomItemFromList(enemyPositions, bolt.RNG)
+                targetPosition = TheGauntlet.Utility.RandomItemFromList(enemyPositions, generalRNG)
             else
                 targetPosition = Game():GetRoom():GetRandomPosition(10)
             end
@@ -67,6 +68,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             TheGauntlet.Items.Zeus.SpawnLightningBolt(targetPosition, bolt.Source)
 
             currentLightningBoltDelay = 0
+
         end
     else
         currentLightningBoltDelay = 9999 --Make a lightning bolt instantly strike if it's the first one after no bolts
@@ -77,6 +79,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     scheduledLightningBolts = {}
 end)
 
+---Creates a lightning bolt at a given position.
 ---@param position Vector
 ---@param source? Entity
 function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source)
@@ -90,7 +93,12 @@ function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source)
 
     sfxManager:Play(TheGauntlet.Items.Zeus.ThunderZapSoundEffect, 1, 2, false, math.random() * 0.4 + 0.8)
 
-    Game():BombExplosionEffects(position, BOLT_DAMAGE, TearFlags.TEAR_JACOBS, Color.Default, bolt, 0.5)
+    local tearFlags = TearFlags.TEAR_JACOBS
+    if source ~= nil and source:ToPlayer() ~= nil and source:ToPlayer():HasCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL_PASSIVE) then
+        tearFlags = tearFlags | TearFlags.TEAR_BURN
+    end
+
+    Game():BombExplosionEffects(position, BOLT_DAMAGE, tearFlags, Color.Default, bolt, 0.5)
 end
 
 local POINT_AMOUNT = 24

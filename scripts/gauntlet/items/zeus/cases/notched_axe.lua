@@ -1,3 +1,7 @@
+TheGauntlet.Items.Zeus.RegisterBoltAmountForItem(CollectibleType.COLLECTIBLE_NOTCHED_AXE, function (configItem, player, slot)
+    return 0
+end)
+
 ---@param entity Entity
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE, function (_, entity)
     if entity.Type ~= EntityType.ENTITY_KNIFE then return end
@@ -11,13 +15,13 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE, function (_, entity)
 
     if not player:HasCollectible(TheGauntlet.Items.Zeus.CollectibleType) then return end
 
-    if player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) ~= CollectibleType.COLLECTIBLE_NOTCHED_AXE then return end
+    Isaac.CreateTimer(function ()
+        if string.sub(player:GetSprite():GetAnimation(), 1, 6) == "Pickup" then return end
 
-    if player:GetActiveCharge(ActiveSlot.SLOT_PRIMARY) == 0 then
         local boltAmount = 8
 
         for i = 1, boltAmount do
-            TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE, player, player:GetCollectibleRNG(TheGauntlet.Items.Zeus.CollectibleType))
+            TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE, player)
         end
-    end
+    end, 1, 1, false)
 end)

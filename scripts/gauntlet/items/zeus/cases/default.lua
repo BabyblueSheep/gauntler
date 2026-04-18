@@ -1,8 +1,8 @@
----@param collectibleType CollectibleType
 ---@param configItem ItemConfigItem
 ---@param player EntityPlayer
 ---@param slot ActiveSlot
-return function (collectibleType, configItem, player, slot)
+---@return integer
+return function (configItem, player, slot)
     local playerSave = TheGauntlet.SaveManager.GetRunSave(player)
 
     if player:GetActiveItem(slot) == 0 then return 16 end

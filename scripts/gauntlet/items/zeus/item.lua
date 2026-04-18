@@ -2,11 +2,15 @@ TheGauntlet.Items.Zeus.CollectibleType = Isaac.GetItemIdByName("Zeus")
 TheGauntlet.Items.Zeus.CollectibleTypeActive = Isaac.GetItemIdByName(" Zeus ")
 
 local activeItemBoltAmountSpecialCases = {
-    [CollectibleType.COLLECTIBLE_NOTCHED_AXE] = 0,
-    [CollectibleType.COLLECTIBLE_ISAACS_TEARS] = 1
+    --[CollectibleType.COLLECTIBLE_NOTCHED_AXE] = function(configItem, player, slot) return 0 end,
+    --[CollectibleType.COLLECTIBLE_ISAACS_TEARS] = 1
 }
 
-include("scripts.gauntlet.items.zeus.cases.notched_axe")
+---@param collectibleType integer
+---@param number fun(configItem: ItemConfigItem, player: EntityPlayer, slot: ActiveSlot): integer
+function TheGauntlet.Items.Zeus.RegisterBoltAmountForItem(collectibleType, number)
+    activeItemBoltAmountSpecialCases[collectibleType] = number
+end
 
 local boltAmountDefaultCase = include("scripts.gauntlet.items.zeus.cases.default")
 
@@ -121,15 +125,34 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_ITEM, CallbackPriority.EARLY
     local playerSave = TheGauntlet.SaveManager.GetRunSave(player)
     playerSave.PreviousChargeAmount = player:GetActiveCharge(slot)
     playerSave.PreviousTotalChargeAmount = player:GetTotalActiveCharge(slot)
-    
+
     Isaac.CreateTimer(function ()
-        boltAmount = boltAmountDefaultCase(collectibleType, itemConfig, player, slot)
+        boltAmount = boltAmountDefaultCase(itemConfig, player, slot)
         if activeItemBoltAmountSpecialCases[collectibleType] ~= nil then
-            boltAmount = activeItemBoltAmountSpecialCases[collectibleType]
+            boltAmount = activeItemBoltAmountSpecialCases[collectibleType](itemConfig, player, slot)
         end
 
         for i = 1, boltAmount do
-            TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE, player, rng)
+            TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE, player)
         end
     end, 1, 1, false)
+end)
+
+---@param entity Entity
+---@param damage number
+---@param damageFlags DamageFlag
+---@param source EntityRef
+---@param damageCooldown integer
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
+    if entity.Type ~= EntityType.ENTITY_FAMILIAR then return end
+    if entity.Variant ~= FamiliarVariant.WISP then return end
+
+    if not entity:HasMortalDamage() then return end
+
+    local player = entity:ToFamiliar().Player
+
+    if not player:HasCollectible(TheGauntlet.Items.Zeus.CollectibleType) then return end
+    if not player:HasCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES) then return end --So that wisps from other sources (i.e. Jar of Wisps) don't spawn bolts on death
+
+    TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE, player)
 end)
