@@ -1,8 +1,8 @@
 local SKULL_STATUS_DURATION = 30 * 5
-local CHANCE_TO_APPLY_SKULL = 0.05
+local CHANCE_TO_APPLY_SKULL = 10.05
 
 
-local TEAR_BONE_COLOR = Color(0.2, 0.2, 0.2, 1)
+local TEAR_BONE_COLOR = Color(1.0, 1.0, 1.0, 1.0)
 local TEAR_VARIANTS_THAT_CANNOT_BE_BONED = {
     [TearVariant.FETUS] = true,
     [TearVariant.BALLOON] = true,
@@ -10,12 +10,17 @@ local TEAR_VARIANTS_THAT_CANNOT_BE_BONED = {
     [TearVariant.BALLOON_BRIMSTONE] = true,
 }
 
-local BOMB_BONE_COLOR = Color(0.2, 0.2, 0.2, 1)
+local BOMB_BONE_COLOR = Color
+(
+    1.0, 1.0, 1.0, 1.0,
+    0.15, 0.15, 0.15,
+    1.0, 1.0, 1.0, 1.0
+)
 
 local AQUARIUS_CREEP_COLOR = Color
 (
     0, 0, 0, 1,
-    0.1, 0.1, 0.1
+    0.8, 0.8, 0.8
 )
 
 

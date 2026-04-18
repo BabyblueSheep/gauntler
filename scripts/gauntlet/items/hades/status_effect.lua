@@ -4,7 +4,12 @@ hadesSkullStatusEffectSprite:Play("HadesSkull", true)
 StatusEffectLibrary.RegisterStatusEffect(
 	"TheGauntlet_HadesSkull",
 	hadesSkullStatusEffectSprite,
-    Color(0.3, 0.3, 0.3, 1.0)
+    Color
+    (
+        1.0, 1.0, 1.0, 1.0,
+        0.15, 0.15, 0.15,
+        1.0, 1.0, 1.0, 0.5
+    )
 )
 
 ---@param entity Entity
@@ -33,7 +38,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
         if entity:IsDead() then
             local bony = TheGauntlet.Utility.SpawnNPC
             (
-                EntityType.ENTITY_BLACK_BONY, 0, 0,
+                EntityType.ENTITY_BONY, 0, 0,
                 entity.Position, Vector.Zero,
                 nil
             )
