@@ -74,6 +74,8 @@ local weaponsThatDontHaveSpread = {
     [WeaponType.WEAPON_MONSTROS_LUNGS] = true,
     [WeaponType.WEAPON_LUDOVICO_TECHNIQUE] = true,
     [WeaponType.WEAPON_ROCKETS] = true,
+    [WeaponType.WEAPON_UMBILICAL_WHIP] = true,
+    [WeaponType.WEAPON_URN_OF_SOULS] = true,
 }
 
 ---@param player EntityPlayer
@@ -85,7 +87,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_MULTI_SHOT_PARAMS, function (_,
         multiShotParams:SetNumLanesPerEye(multiShotParams:GetNumLanesPerEye() + 2)
 
         if not weaponsThatDontHaveSpread[weaponType] then
-            multiShotParams:SetSpreadAngle(weaponType, multiShotParams:GetSpreadAngle(weaponType) + 30)
+            multiShotParams:SetSpreadAngle(weaponType, multiShotParams:GetSpreadAngle(weaponType) + 15)
         end
     end
 end)

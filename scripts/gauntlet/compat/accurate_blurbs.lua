@@ -1,6 +1,6 @@
 local itemDescriptions = {
     [TheGauntlet.Items.Aphrodite.CollectibleType] = "Charm enemy when hurt",
-    [TheGauntlet.Items.Apollo.CollectibleType] = "DMG up if going to boss + DMG down if not",
+    [TheGauntlet.Items.Apollo.CollectibleType] = "Musical blocking buddy",
     [TheGauntlet.Items.Ares.CollectibleType] = "More challenge rooms + DMG up on challenge clear",
     [TheGauntlet.Items.Artemis.CollectibleType] = "(DMG up + piercing) when shooting aligned with arrowhead",
     [TheGauntlet.Items.Athena.CollectibleType] = "5 reflective shield orbitals",
