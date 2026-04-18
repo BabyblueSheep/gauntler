@@ -1,7 +1,8 @@
-local SUMMER_NPC_DAMAGE_PER_TICK = 2
-local AUTUMN_NPC_SLOWNESS = 1 --Seems to have an upper cap? Since at 1 they're still very slow
-local SPRING_BOOGER_CHANCE = 0.25
-
+TheGauntlet.Items.Demeter.Constants = {
+    SUMMER_NPC_DAMAGE_PER_TICK = 2,
+    AUTUMN_NPC_SLOWNESS = 1, --Seems to have an upper cap? Since at 1 they're still very slow
+    SPRING_BOOGER_CHANCE = 25,
+}
 
 local SLOW_COLOR_OFFSET = 40 / 255
 local SLOW_COLOR = Color

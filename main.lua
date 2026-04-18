@@ -65,6 +65,7 @@ include("scripts.gauntlet.items.locusts.poseidon")
 include("scripts.gauntlet.items.locusts.zeus")
 
 include("scripts.gauntlet.compat.accurate_blurbs")
+include("scripts.gauntlet.compat.eid")
 include("scripts.gauntlet.compat.minimapi")
 
 TheGauntlet.SaveManager.Init(TheGauntlet)

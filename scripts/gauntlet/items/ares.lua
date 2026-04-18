@@ -1,6 +1,9 @@
+TheGauntlet.Items.Ares = {}
+
+
+
 local game = Game()
 
-TheGauntlet.Items.Ares = {}
 TheGauntlet.Items.Ares.CollectibleType = Isaac.GetItemIdByName("Ares")
 TheGauntlet.Items.Ares.CollectibleTypeNullChallenge = Isaac.GetNullItemIdByName("Ares Challenge Room Stats")
 TheGauntlet.Items.Ares.CollectibleTypeNullBossChallenge = Isaac.GetNullItemIdByName("Ares Boss Challenge Room Stats")

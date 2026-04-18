@@ -1,11 +1,15 @@
-local CHANCE_TO_GIVE_BOOST = 0.15
+TheGauntlet.Items.Apollo = {}
+
+TheGauntlet.Items.Apollo.Constants =
+{
+    CHANCE_TO_GIVE_BOOST = 0.15,
+}
 
 
 
 local itemConfig = Isaac.GetItemConfig()
 local sfxManager = SFXManager()
 
-TheGauntlet.Items.Apollo = {}
 TheGauntlet.Items.Apollo.CollectibleType = Isaac.GetItemIdByName("Apollo")
 TheGauntlet.Items.Apollo.CollectibleTypeMultishot = Isaac.GetNullItemIdByName("Apollo Multishot")
 TheGauntlet.Items.Apollo.FamiliarVariant = Isaac.GetEntityVariantByName("TheGauntlet Apollo Baby")
@@ -61,7 +65,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FAMILIAR_COLLISION, function (_, fa
     if sprite:IsPlaying("Hit") then return end
     if familiar.Player:GetEffects():HasNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeMultishot) then return end
 
-    if familiar:GetDropRNG():RandomFloat() < CHANCE_TO_GIVE_BOOST then
+    if familiar:GetDropRNG():RandomFloat() < TheGauntlet.Items.Apollo.Constants.CHANCE_TO_GIVE_BOOST then
         sprite:Play("Hit", true)
 
         sfxManager:Play(SoundEffect.SOUND_THUMBSUP)

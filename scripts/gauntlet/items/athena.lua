@@ -1,16 +1,20 @@
-local SHIELD_AMOUNT = 5
-local SHIELD_ROTATION_SPEED = 3
+TheGauntlet.Items.Athena = {}
 
-local SHIELD_HITBOX_SIZE = 18
+TheGauntlet.Items.Athena.Constants = {
+    SHIELD_AMOUNT = 5,
+    SHIELD_ROTATION_SPEED = 3,
 
-local SHIELD_RETRACT_TIME = 10
-local SHIELD_DISABLE_TIME = 30 * 15
+    SHIELD_HITBOX_SIZE = 18,
+
+    SHIELD_RETRACT_TIME = 10,
+    SHIELD_DISABLE_TIME_SECONDS = 15,
+}
+TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME = TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME_SECONDS * 30
 
 
 
 local sfxManager = SFXManager()
 
-TheGauntlet.Items.Athena = {}
 TheGauntlet.Items.Athena.CollectibleType = Isaac.GetItemIdByName("Athena")
 
 TheGauntlet.Items.Athena.AegisVariant = Isaac.GetEntityVariantByName("TheGauntlet Athena Aegis")
@@ -22,7 +26,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
 
     local data = player:GetData()
 
-    for i = 1, SHIELD_AMOUNT do
+    for i = 1, TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT do
         ---@type EntityEffect
         local shieldEffect = data["AthenaShield"..tostring(i)]
 
@@ -51,7 +55,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
     end
     data.AthenaRotationTimer = data.AthenaRotationTimer + 1
 
-    for i = 1, SHIELD_AMOUNT do
+    for i = 1, TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT do
         ---@type EntityEffect
         local shieldEffect = data["AthenaShield"..tostring(i)]
 
@@ -77,7 +81,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
             shieldData.Unretracting = false
         end
 
-        local direction = Vector.FromAngle(data.AthenaRotationTimer * SHIELD_ROTATION_SPEED + i / SHIELD_AMOUNT * 360)
+        local direction = Vector.FromAngle(data.AthenaRotationTimer * TheGauntlet.Items.Athena.Constants.SHIELD_ROTATION_SPEED + i / TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT * 360)
         local distanceFromPlayer = TheGauntlet.Utility.Lerp(40, 20, shieldData.EasedRetractTimer)
         shieldEffect.Position = player.Position + direction * distanceFromPlayer
         shieldEffect.Velocity = Vector.Zero
@@ -114,7 +118,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
 
         if not shieldData.Disabled then
             local reflected = false
-            local collidingProjectiles = Isaac.FindInRadius(shieldEffect.Position, SHIELD_HITBOX_SIZE, EntityPartition.BULLET)
+            local collidingProjectiles = Isaac.FindInRadius(shieldEffect.Position, TheGauntlet.Items.Athena.Constants.SHIELD_HITBOX_SIZE, EntityPartition.BULLET)
             if #collidingProjectiles > 0 then
                 local projectile = collidingProjectiles[1]:ToProjectile()
                 if projectile ~= nil then
@@ -126,7 +130,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                     reflected = true
                 end
             else
-                local collidingEnemies = Isaac.FindInRadius(shieldEffect.Position, SHIELD_HITBOX_SIZE, EntityPartition.ENEMY)
+                local collidingEnemies = Isaac.FindInRadius(shieldEffect.Position, TheGauntlet.Items.Athena.Constants.SHIELD_HITBOX_SIZE, EntityPartition.ENEMY)
                 if #collidingEnemies > 0 then
                     local enemy = collidingEnemies[1]:ToNPC()
                     if enemy ~= nil and enemy:IsActiveEnemy() then
@@ -149,7 +153,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
 
         if shieldData.Disabled then
             if shieldData.Retracting then
-                shieldData.RetractTimer = shieldData.RetractTimer + 1 / SHIELD_RETRACT_TIME
+                shieldData.RetractTimer = shieldData.RetractTimer + 1 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME
                 if shieldData.RetractTimer > 1 then
                     shieldData.RetractTimer = 1
                     shieldData.Retracting = false
@@ -157,7 +161,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                 end
                 shieldData.EasedRetractTimer = 1.0 - (1.0 - shieldData.RetractTimer)^3
             elseif shieldData.Unretracting then
-                shieldData.RetractTimer = shieldData.RetractTimer - 1 / SHIELD_RETRACT_TIME
+                shieldData.RetractTimer = shieldData.RetractTimer - 1 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME
                 if shieldData.RetractTimer < 0 then
                     shieldData.RetractTimer = 0
                     shieldData.Unretracting = false
@@ -165,7 +169,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                 end
                 shieldData.EasedRetractTimer = shieldData.RetractTimer^3
             else
-                shieldData.DisabledTimer = shieldData.DisabledTimer + 1 / SHIELD_DISABLE_TIME
+                shieldData.DisabledTimer = shieldData.DisabledTimer + 1 / TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME
                 if shieldData.DisabledTimer > 1 then
                     shieldData.Unretracting = true
                 end

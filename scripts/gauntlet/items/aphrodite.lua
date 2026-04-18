@@ -1,6 +1,9 @@
+TheGauntlet.Items.Aphrodite = {}
+
+
+
 local sfxManager = SFXManager()
 
-TheGauntlet.Items.Aphrodite = {}
 TheGauntlet.Items.Aphrodite.CollectibleType = Isaac.GetItemIdByName("Aphrodite")
 
 ---@param entity Entity

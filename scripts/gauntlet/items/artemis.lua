@@ -1,12 +1,15 @@
-local ARROW_DAMAGE_MULTIPLIER = 1.5
-local ARROW_SHOT_SPEED_MULTIPLIER = 1.5
-
-local TIME_BETWEEN_ARROW_DIRECTION_CHANGE = 30 * 5
-local MINIMUM_VALID_ANGLE_DIFFERENCE = 0.9 --Smaller = less strict. Used for unlocked rotation.
-
-
-
 TheGauntlet.Items.Artemis = {}
+
+TheGauntlet.Items.Artemis.Constants = {
+    ARROW_DAMAGE_MULTIPLIER = 1.5,
+    ARROW_SHOT_SPEED_MULTIPLIER = 1.5,
+
+    TIME_BETWEEN_ARROW_DIRECTION_CHANGE = 30 * 5,
+    MINIMUM_VALID_ANGLE_DIFFERENCE = 0.9, --Smaller = less strict. Used for unlocked rotation.
+}
+
+
+
 TheGauntlet.Items.Artemis.CollectibleType = Isaac.GetItemIdByName("Artemis")
 
 local PIERCING_TEAR_VARIANTS = {
@@ -31,7 +34,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player
     local data = player:GetData()
     if data.GauntletArtemis == nil then
         data.GauntletArtemis = {
-            TimeLeft = TIME_BETWEEN_ARROW_DIRECTION_CHANGE,
+            TimeLeft = TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE,
             Direction = randomDirection,
             PreviousDirection = randomDirection
         }
@@ -39,7 +42,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player
 
     data.GauntletArtemis.TimeLeft = data.GauntletArtemis.TimeLeft - 1
     if data.GauntletArtemis.TimeLeft <= 0 then
-        data.GauntletArtemis.TimeLeft = TIME_BETWEEN_ARROW_DIRECTION_CHANGE
+        data.GauntletArtemis.TimeLeft = TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE
         data.GauntletArtemis.PreviousDirection = data.GauntletArtemis.Direction
         data.GauntletArtemis.Direction = TheGauntlet.Utility.RandomCardinalVector(rng)
     end
@@ -68,8 +71,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, function (_, tear)
     local arrowDirection = data.GauntletArtemis.Direction
 
     local angleDifference = tearDirection:Dot(arrowDirection)
-    if angleDifference > MINIMUM_VALID_ANGLE_DIFFERENCE then
-        tear.Velocity = tear.Velocity * ARROW_SHOT_SPEED_MULTIPLIER
+    if angleDifference > TheGauntlet.Items.Artemis.Constants.MINIMUM_VALID_ANGLE_DIFFERENCE then
+        tear.Velocity = tear.Velocity * TheGauntlet.Items.Artemis.Constants.ARROW_SHOT_SPEED_MULTIPLIER
                 
         --[[if PIERCING_TEAR_VARIANTS[tear.Variant] then
             tear:ChangeVariant(PIERCING_TEAR_VARIANTS[tear.Variant])
@@ -92,8 +95,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_BOMB, function (_, bomb)
     local arrowDirection = data.GauntletArtemis.Direction
 
     local angleDifference = tearDirection:Dot(arrowDirection)
-    if angleDifference > MINIMUM_VALID_ANGLE_DIFFERENCE then
-        bomb.Velocity = bomb.Velocity * ARROW_SHOT_SPEED_MULTIPLIER
+    if angleDifference > TheGauntlet.Items.Artemis.Constants.MINIMUM_VALID_ANGLE_DIFFERENCE then
+        bomb.Velocity = bomb.Velocity * TheGauntlet.Items.Artemis.Constants.ARROW_SHOT_SPEED_MULTIPLIER
     end
 end)
 
@@ -116,9 +119,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, function (_, p
     local arrowDirection = data.GauntletArtemis.Direction
 
     local angleDifference = tearDirection:Dot(arrowDirection)
-    if angleDifference > MINIMUM_VALID_ANGLE_DIFFERENCE then
+    if angleDifference > TheGauntlet.Items.Artemis.Constants.MINIMUM_VALID_ANGLE_DIFFERENCE then
         tearParams.TearFlags = tearParams.TearFlags | TearFlags.TEAR_PIERCING
-        tearParams.TearDamage = tearParams.TearDamage * ARROW_DAMAGE_MULTIPLIER
+        tearParams.TearDamage = tearParams.TearDamage * TheGauntlet.Items.Artemis.Constants.ARROW_DAMAGE_MULTIPLIER
 
         if PIERCING_TEAR_VARIANTS[tearParams.TearVariant] ~= nil then
             tearParams.TearVariant = PIERCING_TEAR_VARIANTS[tearParams.TearVariant]
@@ -137,7 +140,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_RENDER, function (_, player)
     local angle = (data.GauntletArtemis.Direction:GetAngleDegrees() + 90) * math.pi / 180
     local previousAngle = (data.GauntletArtemis.PreviousDirection:GetAngleDegrees() + 90) * math.pi / 180
 
-    local rotationProgress = TheGauntlet.Utility.InverseLerp(TIME_BETWEEN_ARROW_DIRECTION_CHANGE, TIME_BETWEEN_ARROW_DIRECTION_CHANGE - 15, data.GauntletArtemis.TimeLeft)
+    local rotationProgress = TheGauntlet.Utility.InverseLerp(TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE, TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE - 15, data.GauntletArtemis.TimeLeft)
 
     local easedRotationProgress = 1 - (1 - rotationProgress)^3 --Ease Out Cubic
 
