@@ -80,9 +80,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
         if entity:IsEnemy() then
             if entity:IsFlying() then goto continue end
 
-            entity:AddVelocity(targetCurrent * TheGauntlet.Items.Poseidon.ENEMY_FLOW_SPEED / entity.Mass)
+            entity:AddVelocity(targetCurrent * TheGauntlet.Items.Poseidon.Constants.ENEMY_FLOW_SPEED / entity.Mass)
         elseif entity.Type == EntityType.ENTITY_PICKUP then
-            entity:AddVelocity(targetCurrent * TheGauntlet.Items.Poseidon.PICKUP_FLOW_SPEED)
+            entity:AddVelocity(targetCurrent * TheGauntlet.Items.Poseidon.Constants.PICKUP_FLOW_SPEED)
         end
 
         ::continue::

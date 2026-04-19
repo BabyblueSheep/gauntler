@@ -152,7 +152,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
 
         if shieldData.Disabled then
             if shieldData.Retracting then
-                shieldData.RetractTimer = shieldData.RetractTimer + 30 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES
+                shieldData.RetractTimer = shieldData.RetractTimer + 1 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES
                 if shieldData.RetractTimer > 1 then
                     shieldData.RetractTimer = 1
                     shieldData.Retracting = false
@@ -160,7 +160,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                 end
                 shieldData.EasedRetractTimer = 1.0 - (1.0 - shieldData.RetractTimer)^3
             elseif shieldData.Unretracting then
-                shieldData.RetractTimer = shieldData.RetractTimer - 30 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES
+                shieldData.RetractTimer = shieldData.RetractTimer - 1 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES
                 if shieldData.RetractTimer < 0 then
                     shieldData.RetractTimer = 0
                     shieldData.Unretracting = false

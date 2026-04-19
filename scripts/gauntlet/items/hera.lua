@@ -70,7 +70,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
         (
             enemy,
             StatusEffectLibrary.StatusFlag.TheGauntlet_HeraPregnant,
-            TheGauntlet.Items.Hera.Constants.PREGNANT_STATUS_DURATION,
+            TheGauntlet.Items.Hera.Constants.PREGNANT_STATUS_DURATION_FRAMES,
             EntityRef(nil)
         )
     end
