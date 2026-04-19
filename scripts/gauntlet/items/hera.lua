@@ -1,15 +1,18 @@
-local PREGNANT_STATUS_DURATION = 30 * 15
+TheGauntlet.Items.Hera = {}
 
-local AMOUNT_OF_ENEMIES_TO_IMPREGNATE = 2
+TheGauntlet.Items.Hera.Constants = {
+    PREGNANT_STATUS_DURATION_FRAMES = 30 * 15,
 
-local SPAWNED_MINISAAC_MINIMUM_AMOUNT = 1
-local SPAWNED_MINISAAC_MAXIMUM_AMOUNT = 2
+    AMOUNT_OF_ENEMIES_TO_IMPREGNATE = 2,
+
+    SPAWNED_MINISAAC_MINIMUM_AMOUNT = 1,
+    SPAWNED_MINISAAC_MAXIMUM_AMOUNT = 2,
+}
 
 
 
 local game = Game()
 
-TheGauntlet.Items.Hera = {}
 TheGauntlet.Items.Hera.CollectibleType = Isaac.GetItemIdByName("Hera")
 
 local pregnantStatusEffectSprite = Sprite("gfx/gauntlet/statuseffects.anm2", true)
@@ -59,7 +62,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     local rng = RNG(game:GetRoom():GetSpawnSeed())
     TheGauntlet.Utility.ShuffleListInPlace(enemiesToImpregnante, rng)
 
-    local amountOfEnemiesToImpregnante = math.min(#enemiesToImpregnante, AMOUNT_OF_ENEMIES_TO_IMPREGNATE)
+    local amountOfEnemiesToImpregnante = math.min(#enemiesToImpregnante, TheGauntlet.Items.Hera.Constants.AMOUNT_OF_ENEMIES_TO_IMPREGNATE)
     for i = 1, amountOfEnemiesToImpregnante do
         local enemy = enemiesToImpregnante[i]
         
@@ -67,7 +70,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
         (
             enemy,
             StatusEffectLibrary.StatusFlag.TheGauntlet_HeraPregnant,
-            PREGNANT_STATUS_DURATION,
+            TheGauntlet.Items.Hera.Constants.PREGNANT_STATUS_DURATION,
             EntityRef(nil)
         )
     end
@@ -84,7 +87,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
     end
 
     local rng = player:GetCollectibleRNG(TheGauntlet.Items.Hera.CollectibleType)
-    local minisaacAmount = rng:RandomInt(SPAWNED_MINISAAC_MINIMUM_AMOUNT, SPAWNED_MINISAAC_MAXIMUM_AMOUNT)
+    local minisaacAmount = rng:RandomInt(TheGauntlet.Items.Hera.Constants.SPAWNED_MINISAAC_MINIMUM_AMOUNT, TheGauntlet.Items.Hera.Constants.SPAWNED_MINISAAC_MAXIMUM_AMOUNT)
 
     local isPersistent = entity:HasEntityFlags(EntityFlag.FLAG_PERSISTENT)
 

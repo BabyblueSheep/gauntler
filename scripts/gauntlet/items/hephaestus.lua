@@ -1,4 +1,7 @@
 TheGauntlet.Items.Hephaestus = {}
+
+
+
 TheGauntlet.Items.Hephaestus.CollectibleType = Isaac.GetItemIdByName("Hephaestus")
 
 local possibleGoldenPickups = {

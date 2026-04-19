@@ -2,7 +2,7 @@ TheGauntlet.Items.Apollo = {}
 
 TheGauntlet.Items.Apollo.Constants =
 {
-    CHANCE_TO_GIVE_BOOST = 0.15,
+    CHANCE_TO_GIVE_BOOST = 15,
 }
 
 
@@ -65,7 +65,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FAMILIAR_COLLISION, function (_, fa
     if sprite:IsPlaying("Hit") then return end
     if familiar.Player:GetEffects():HasNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeMultishot) then return end
 
-    if familiar:GetDropRNG():RandomFloat() < TheGauntlet.Items.Apollo.Constants.CHANCE_TO_GIVE_BOOST then
+    if familiar:GetDropRNG():RandomFloat() < (TheGauntlet.Items.Apollo.Constants.CHANCE_TO_GIVE_BOOST / 100) then
         sprite:Play("Hit", true)
 
         sfxManager:Play(SoundEffect.SOUND_THUMBSUP)

@@ -1,12 +1,15 @@
-local ENEMY_FLOW_SPEED = 5
-local PICKUP_FLOW_SPEED = 0.5
+TheGauntlet.Items.Poseidon = {}
+
+TheGauntlet.Items.Poseidon.Constants = {
+    ENEMY_FLOW_SPEED = 5,
+    PICKUP_FLOW_SPEED = 0.5,
+}
 
 
 
 local game = Game()
 local sfxManager = SFXManager()
 
-TheGauntlet.Items.Poseidon = {}
 TheGauntlet.Items.Poseidon.CollectibleType = Isaac.GetItemIdByName("Poseidon")
 
 local FLOW_SOUND = Isaac.GetSoundIdByName("TheGauntlet Custom Water Flow")
@@ -77,9 +80,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
         if entity:IsEnemy() then
             if entity:IsFlying() then goto continue end
 
-            entity:AddVelocity(targetCurrent * ENEMY_FLOW_SPEED / entity.Mass)
+            entity:AddVelocity(targetCurrent * TheGauntlet.Items.Poseidon.ENEMY_FLOW_SPEED / entity.Mass)
         elseif entity.Type == EntityType.ENTITY_PICKUP then
-            entity:AddVelocity(targetCurrent * PICKUP_FLOW_SPEED)
+            entity:AddVelocity(targetCurrent * TheGauntlet.Items.Poseidon.PICKUP_FLOW_SPEED)
         end
 
         ::continue::

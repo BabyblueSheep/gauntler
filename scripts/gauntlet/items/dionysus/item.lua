@@ -1,5 +1,7 @@
-local DRUNK_DURATION_ON_HIT = 30 * 6
-local DRUNK_SLIPPERINESS = 0.75
+TheGauntlet.Items.Dionysus.Constants = {
+    DRUNK_DURATION_ON_HIT_FRAMES = 30 * 6,
+    DRUNK_SLIPPERINESS = 0.75,
+}
 
 
 
@@ -28,7 +30,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player
     if data.TheGauntletDionysusDrunkMovementTimer > 0 then
         data.TheGauntletDionysusDrunkMovementTimer = data.TheGauntletDionysusDrunkMovementTimer - 1
 
-        player.Velocity = TheGauntlet.Utility.Lerp(player.Velocity, data.TheGauntletDionysusPreviousVelocity, DRUNK_SLIPPERINESS)
+        player.Velocity = TheGauntlet.Utility.Lerp(player.Velocity, data.TheGauntletDionysusPreviousVelocity, TheGauntlet.Items.Dionysus.Constants.DRUNK_SLIPPERINESS)
     end
 
     data.TheGauntletDionysusPreviousVelocity = player.Velocity
@@ -46,6 +48,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     if not player:HasCollectible(TheGauntlet.Items.Dionysus.CollectibleType) then return end
 
     local data = player:GetData()
-    data.TheGauntletDionysusDrunkMovementTimer = DRUNK_DURATION_ON_HIT
+    data.TheGauntletDionysusDrunkMovementTimer = TheGauntlet.Items.Dionysus.Constants.DRUNK_DURATION_ON_HIT_FRAMES
     data.TheGauntletDionysusPreviousVelocity = player.Velocity
 end)

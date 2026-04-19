@@ -66,9 +66,9 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_PRE_NPC_UPDATE, CallbackPriority
     if season == TheGauntlet.Items.Demeter.Season.WINTER then
         npc:AddIce(EntityRef(owner), 30)
     elseif season == TheGauntlet.Items.Demeter.Season.SUMMER then
-        npc:AddBurn(EntityRef(owner), 30, SUMMER_NPC_DAMAGE_PER_TICK, true)
+        npc:AddBurn(EntityRef(owner), 30, TheGauntlet.Items.Demeter.Constants.SUMMER_NPC_DAMAGE_PER_TICK, true)
     elseif season == TheGauntlet.Items.Demeter.Season.AUTUMN then
-        npc:AddSlowing(EntityRef(owner), 30, AUTUMN_NPC_SLOWNESS, SLOW_COLOR, true)
+        npc:AddSlowing(EntityRef(owner), 30, TheGauntlet.Items.Demeter.Constants.AUTUMN_NPC_SLOWNESS, SLOW_COLOR, true)
     end
 end)
 
@@ -82,7 +82,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, function (_, p
     local rng = player:GetCollectibleRNG(TheGauntlet.Items.Demeter.CollectibleType)
 
     if TheGauntlet.Items.Demeter.GetSeason() == TheGauntlet.Items.Demeter.Season.SPRING then
-        if rng:RandomFloat() < SPRING_BOOGER_CHANCE then
+        if rng:RandomFloat() < TheGauntlet.Items.Demeter.Constants.SPRING_BOOGER_CHANCE then
             tearParams.TearFlags = tearParams.TearFlags | TearFlags.TEAR_BOOGER
             tearParams.TearVariant = TearVariant.BOOGER
         end

@@ -1,7 +1,9 @@
-local CHANCE_TO_STRIKE_ENEMY = 0.75
-local BOLT_DAMAGE = 20
+TheGauntlet.Items.Zeus.Constants = {
+    CHANCE_TO_STRIKE_ENEMY = 0.75,
+    BOLT_DAMAGE = 20,
 
-local CHANCE_TO_GIVE_PIP_ON_KILL = 0.1
+    CHANCE_TO_GIVE_PIP_ON_KILL = 10,
+}
 
 
 
@@ -32,7 +34,7 @@ TheGauntlet.Items.Zeus.TargetType = {
 ---@param source Entity
 function TheGauntlet.Items.Zeus.ScheduleLightningBolt(targetType, source)
     if targetType == TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE then
-        if generalRNG:RandomFloat() < CHANCE_TO_STRIKE_ENEMY then
+        if generalRNG:RandomFloat() < TheGauntlet.Items.Zeus.CHANCE_TO_STRIKE_ENEMY then
             targetType = TheGauntlet.Items.Zeus.TargetType.ENEMY
         else
             targetType = TheGauntlet.Items.Zeus.TargetType.RANDOM_POSITION
@@ -98,7 +100,7 @@ function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source)
         tearFlags = tearFlags | TearFlags.TEAR_BURN
     end
 
-    Game():BombExplosionEffects(position, BOLT_DAMAGE, tearFlags, Color.Default, bolt, 0.5)
+    Game():BombExplosionEffects(position, TheGauntlet.Items.Zeus.BOLT_DAMAGE, tearFlags, Color.Default, bolt, 0.5)
 end
 
 local POINT_AMOUNT = 24
@@ -214,7 +216,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
 
     local rng = player:GetCollectibleRNG(TheGauntlet.Items.Zeus.CollectibleType)
     
-    if rng:RandomFloat() < CHANCE_TO_GIVE_PIP_ON_KILL then
+    if rng:RandomFloat() < (TheGauntlet.Items.Zeus.CHANCE_TO_GIVE_PIP_ON_KILL / 100) then
         player:AddActiveCharge(1)
     end
 end)

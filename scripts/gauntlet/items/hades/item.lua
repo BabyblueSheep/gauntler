@@ -1,5 +1,7 @@
-local SKULL_STATUS_DURATION = 30 * 5
-local CHANCE_TO_APPLY_SKULL = 10.05
+TheGauntlet.Items.Hades.Constants = {
+    SKULL_STATUS_DURATION = 30 * 5,
+    CHANCE_TO_APPLY_SKULL = 5,
+}
 
 
 local TEAR_BONE_COLOR = Color(1.0, 1.0, 1.0, 1.0)
@@ -33,7 +35,7 @@ function TheGauntlet.Items.Hades.ShouldProc(player)
     if not player:HasCollectible(TheGauntlet.Items.Hades.CollectibleType) then return false end
     local rng = player:GetCollectibleRNG(TheGauntlet.Items.Hades.CollectibleType)
 
-    return rng:RandomFloat() < CHANCE_TO_APPLY_SKULL
+    return rng:RandomFloat() < (TheGauntlet.Items.Hades.Constants.CHANCE_TO_APPLY_SKULL / 100)
 end
 
 ---@param entity Entity
@@ -56,7 +58,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     local player = TheGauntlet.Utility.GetPlayerFromEntity(source.Entity.SpawnerEntity, true)
     if player == nil then return end
 
-    TheGauntlet.Items.Hades.InflictStatusEffect(entity, SKULL_STATUS_DURATION, EntityRef(player))
+    TheGauntlet.Items.Hades.InflictStatusEffect(entity, TheGauntlet.Items.Hades.Constants.SKULL_STATUS_DURATION, EntityRef(player))
 end)
 
 ---@param entity Entity
@@ -82,7 +84,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     if not TheGauntlet.Items.Hades.ShouldProc(player) then return end
 
-    TheGauntlet.Items.Hades.InflictStatusEffect(entity, SKULL_STATUS_DURATION, EntityRef(player))
+    TheGauntlet.Items.Hades.InflictStatusEffect(entity, TheGauntlet.Items.Hades.Constants.SKULL_STATUS_DURATION, EntityRef(player))
 end)
 
 ---@param entity Entity
@@ -137,7 +139,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     if not TheGauntlet.Items.Hades.ShouldProc(player) then return end
 
-    TheGauntlet.Items.Hades.InflictStatusEffect(entity, SKULL_STATUS_DURATION, EntityRef(player))
+    TheGauntlet.Items.Hades.InflictStatusEffect(entity, TheGauntlet.Items.Hades.Constants.SKULL_STATUS_DURATION, EntityRef(player))
 end)
 
 --#region Tears

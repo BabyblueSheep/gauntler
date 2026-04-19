@@ -6,10 +6,9 @@ TheGauntlet.Items.Athena.Constants = {
 
     SHIELD_HITBOX_SIZE = 18,
 
-    SHIELD_RETRACT_TIME = 10,
-    SHIELD_DISABLE_TIME_SECONDS = 15,
+    SHIELD_RETRACT_TIME_FRAMES = 10,
+    SHIELD_DISABLE_TIME_FRAMES = 15 * 30,
 }
-TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME = TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME_SECONDS * 30
 
 
 
@@ -153,7 +152,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
 
         if shieldData.Disabled then
             if shieldData.Retracting then
-                shieldData.RetractTimer = shieldData.RetractTimer + 1 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME
+                shieldData.RetractTimer = shieldData.RetractTimer + 30 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES
                 if shieldData.RetractTimer > 1 then
                     shieldData.RetractTimer = 1
                     shieldData.Retracting = false
@@ -161,7 +160,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                 end
                 shieldData.EasedRetractTimer = 1.0 - (1.0 - shieldData.RetractTimer)^3
             elseif shieldData.Unretracting then
-                shieldData.RetractTimer = shieldData.RetractTimer - 1 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME
+                shieldData.RetractTimer = shieldData.RetractTimer - 30 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES
                 if shieldData.RetractTimer < 0 then
                     shieldData.RetractTimer = 0
                     shieldData.Unretracting = false
@@ -169,7 +168,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                 end
                 shieldData.EasedRetractTimer = shieldData.RetractTimer^3
             else
-                shieldData.DisabledTimer = shieldData.DisabledTimer + 1 / TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME
+                shieldData.DisabledTimer = shieldData.DisabledTimer + 1 / TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME_FRAMES
                 if shieldData.DisabledTimer > 1 then
                     shieldData.Unretracting = true
                 end

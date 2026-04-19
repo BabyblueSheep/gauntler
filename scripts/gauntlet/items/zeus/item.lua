@@ -1,10 +1,7 @@
 TheGauntlet.Items.Zeus.CollectibleType = Isaac.GetItemIdByName("Zeus")
 TheGauntlet.Items.Zeus.CollectibleTypeActive = Isaac.GetItemIdByName(" Zeus ")
 
-local activeItemBoltAmountSpecialCases = {
-    --[CollectibleType.COLLECTIBLE_NOTCHED_AXE] = function(configItem, player, slot) return 0 end,
-    --[CollectibleType.COLLECTIBLE_ISAACS_TEARS] = 1
-}
+local activeItemBoltAmountSpecialCases = {}
 
 ---@param collectibleType integer
 ---@param number fun(configItem: ItemConfigItem, player: EntityPlayer, slot: ActiveSlot): integer
