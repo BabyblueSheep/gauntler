@@ -92,7 +92,7 @@
 		name="Dionysus" description="All stats up + you feel tipsy"
 		gfx="dionysus.png"
 		tears="0.5" damage="1" speed="0.3" range="1.25" luck="1"
-		maxhearts="2" hearts="2"
+		maxhearts="2" hearts="4"
 		bombs="1" keys="1" coins="1"
 		quality="3"
 		tags="summonable offensive tearsup"

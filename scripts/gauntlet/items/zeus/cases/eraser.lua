@@ -15,7 +15,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_TEAR_COLLISION, function (_, tear, 
 
     if not game:IsErased(collider) then return end
 
-    local boltAmount = 10
+    local boltAmount = 12
 
     for i = 1, boltAmount do
         TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE, player)

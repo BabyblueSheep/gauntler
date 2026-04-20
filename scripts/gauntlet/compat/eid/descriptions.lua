@@ -1,29 +1,12 @@
 if EID == nil then return end
 
 
-EID:setModIndicatorName("The Gauntlet")
-
-local eidIcons = Sprite()
-eidIcons:Load("gfx/gauntlet/ui/eid_inline_icons.anm2", true)
-
-EID:addIcon("GauntletDemeterWinter", "Demeter", 0, 9, 9, -1, 0, eidIcons)
-EID:addIcon("GauntletDemeterSpring", "Demeter", 1, 7, 9, -1, 0, eidIcons)
-EID:addIcon("GauntletDemeterSummer", "Demeter", 2, 9, 9, -1, 0, eidIcons)
-EID:addIcon("GauntletDemeterAutumn", "Demeter", 3, 7, 9, -1, 0, eidIcons)
-
-EID:addIcon("GauntletHadesStatusEffect", "StatusEffects", 0, 9, 9, -1, 0, eidIcons)
-EID:addIcon("GauntletHeraStatusEffect", "StatusEffects", 1, 8, 8, -1, 0, eidIcons)
 
 ---@param number number
 ---@return string
 local function NumberToPresentableNumber(number)
-    ---@diagnostic disable-next-line: cast-local-type
-    number = tonumber(string.format("%.2f", number))
-    if math.tointeger(number) == number then
-    ---@diagnostic disable-next-line: cast-local-type
-        number = math.tointeger(number)
-    end
-    return tostring(number)
+    local value = string.format("%.2f", tostring(number)):gsub("%.?0+$", "")
+    return value
 end
 
 local apolloMultishotCooldownSeconds = NumberToPresentableNumber(tonumber(XMLData.GetEntryByName(XMLNode.NULLITEM, "Apollo Multishot").cooldown) / 30)
@@ -40,7 +23,6 @@ local dionysusLuck = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").luck
 
 local dionysusDrunkTimeSeconds = NumberToPresentableNumber(TheGauntlet.Items.Dionysus.Constants.DRUNK_DURATION_ON_HIT_FRAMES / 30)
 
-local zeusChargeAmount = XMLData.GetEntryByName(XMLNode.ITEM, " Zeus ").maxcharges
 
 
 local collectibleDescriptions = {
@@ -145,20 +127,71 @@ local collectibleDescriptions = {
     [TheGauntlet.Items.Zeus.CollectibleType] = {
         ["en_us"] = {
             "Zeus",
-            string.format("Spawns %s lightning bolts that have a %s%% chance to add 1 charge to the active item#", zeusChargeAmount, TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL) ..
+            string.format("Spawns lightning bolts that have a %s%% chance to add 1 charge to the active item#", TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL) ..
             "Can be combined with a second active item to spawn lightning bolts, with the amount scaling with the item's charge"
         }
     }
 }
 
+local conditionalSynergyDescriptions = {
+    ["Zeus + Book of Virtues"] = {
+        ["en_us"] = "Wisps spawn a lightning bolt when destroyed"
+    },
+
+    ["Zeus + Book of Belial"] = {
+        ["en_us"] = "Lightning bolts burn enemies and leaves a fire behind"
+    }
+
+
+}
+
 EID.descriptions["en_us"].ConditionalDescs["Gauntlet Hephaestus if no Golden then only Trinket"] = { "golden trinket", "trinket" }
 
 local zeusDescriptions = {
-    ["en_us"] = {
-        ["Default"] = "Spawns %s lightning bolts when used",
-        ["Default One"] = "Spawns %s lightning bolt when used"
+    ["Default"] = {
+        ["en_us"] = "Spawns %s lightning bolts when used"
     },
+    ["Default One"] = {
+        ["en_us"] = "Spawns %s lightning bolt when used"
+    },
+
+    [CollectibleType.COLLECTIBLE_BERSERK] = {
+        ["en_us"] = "Spawns a lightning bolt every two seconds while active",
+    },
+    [CollectibleType.COLLECTIBLE_BREATH_OF_LIFE] = {
+        ["en_us"] = "Spawns a lightning bolt after emptying the chargebar and every second while active",
+    },
+    [CollectibleType.COLLECTIBLE_ERASER] = {
+        ["en_us"] = "Spawns 12 lightning bolts when erasing an enemy",
+    },
+    [CollectibleType.COLLECTIBLE_GENESIS] = {
+        ["en_us"] = "Spawns 0 lightning bolts when used",
+    },
+    [CollectibleType.COLLECTIBLE_ISAACS_TEARS] = {
+        ["en_us"] ="Spawns 1 lightning bolt when used",
+    },
+    [CollectibleType.COLLECTIBLE_MAMA_MEGA] = {
+        ["en_us"] = "Spawns 6 lightning bolt when used and on room entry",
+    },
+    [CollectibleType.COLLECTIBLE_NOTCHED_AXE] = {
+        ["en_us"] = "Spawns 8 lightning bolt when running out of charge",
+    },
+    [CollectibleType.COLLECTIBLE_BLUE_BOX] = {
+        ["en_us"] = "Spawns lightning bolts, with the amount scaling with the current floor number",
+    },
+    [CollectibleType.COLLECTIBLE_SPIN_TO_WIN] = {
+        ["en_us"] = "Spawns 0 lightning bolts when used",
+    }
 }
+
+local miscDescriptions = {
+    ["Temporary Tattoo"] = {
+        ["en_us"] = "#{{Chest}} Clearing a {{GauntletGauntletRoomMap}} Gauntlet Room spawns a chest"
+    }
+}
+
+
+
 
 
 local itemsThatAreThrowable = {
@@ -175,11 +208,31 @@ local itemsThatAreThrowable = {
     [CollectibleType.COLLECTIBLE_DECAP_ATTACK] = true,
 }
 
+---@param collectibleType integer
+function TheGauntlet.Items.EID.RegisterItemThrowable(collectibleType)
+    itemsThatAreThrowable[collectibleType] = true
+end
+
+---@param collectibleType integer
+---@param language string
+---@param description string
+function TheGauntlet.Items.EID.RegisterZeusDescription(collectibleType, language, description)
+    if zeusDescriptions[language] == nil then
+        zeusDescriptions[language] = {}
+    end
+
+    zeusDescriptions[language][collectibleType] = description
+end
+
 
 
 ---@param collectibleType integer
 local function DefaultZeusBoltAmount(collectibleType)
     local configItem = Isaac.GetItemConfig():GetCollectible(collectibleType)
+
+    if configItem.Type ~= ItemType.ITEM_ACTIVE then
+        return nil
+    end
 
     if EID.ItemData[collectibleType] ~= nil and EID.ItemData[collectibleType].SingleUseInfo == true then
         return 16
@@ -207,9 +260,59 @@ for itemID, table in pairs(collectibleDescriptions) do
 end
 
 
+for language, description in pairs(conditionalSynergyDescriptions["Zeus + Book of Virtues"]) do
+    EID:addSynergyCondition(CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES, TheGauntlet.Items.Zeus.CollectibleType, description, nil, language)
+end
+
+for language, description in pairs(conditionalSynergyDescriptions["Zeus + Book of Belial"]) do
+    EID:addBookOfBelialBuffsCondition(TheGauntlet.Items.Zeus.CollectibleType, description, nil, nil, language)
+end
+
+
+
 EID:AddConditional(TheGauntlet.Items.Hephaestus.CollectibleType, function ()
     return not Isaac.GetPersistentGameData():Unlocked(Achievement.GOLDEN_TRINKET)
 end, "Gauntlet Hephaestus if no Golden then only Trinket")
+
+
+EID:addDescriptionModifier("Zeus Active is Zeus Passive", function (descObj)
+    if descObj.ObjType ~= EntityType.ENTITY_PICKUP then return false end
+    if descObj.ObjVariant ~= PickupVariant.PICKUP_COLLECTIBLE then return false end
+    if descObj.ObjSubType ~= TheGauntlet.Items.Zeus.CollectibleTypeActive then return false end
+
+    return true
+end, function (descObj)
+    return EID:getDescriptionObj(descObj.ObjType, descObj.ObjVariant, TheGauntlet.Items.Zeus.CollectibleType, descObj.Entity)
+end, 1)
+
+---@param collectibleType integer
+---@param iconType integer
+local function AppendZeusBoltDescription(descObj, collectibleType, iconType)
+    local descriptionTableToUse = zeusDescriptions[collectibleType]
+    local descriptionToUse = ""
+
+    if descriptionTableToUse == nil then
+        local boltAmount = DefaultZeusBoltAmount(collectibleType)
+
+        if boltAmount == nil then
+            return
+        end
+
+        local originalDescriptionToUse = zeusDescriptions["Default"][EID:getLanguage()] or zeusDescriptions["Default"]["en_us"]
+        if boltAmount == 1 then
+            originalDescriptionToUse =zeusDescriptions["Default One"][EID:getLanguage()] or zeusDescriptions["Default One"]["en_us"]
+        end
+
+        descriptionToUse = "#"..string.format(originalDescriptionToUse, boltAmount)
+    else
+        descriptionToUse = descriptionTableToUse[EID:getLanguage()] or descriptionTableToUse["en_us"]
+        descriptionToUse = "#"..descriptionToUse
+    end
+
+    descriptionToUse = descriptionToUse:gsub("#", "#{{Collectible"..iconType.."}} {{ColorLightYellow}}")
+
+    EID:appendToDescription(descObj, descriptionToUse)
+end
 
 EID:addDescriptionModifier("Gauntlet Zeus Bolt Amount When Zeus", function (descObj)
     if descObj.ObjType ~= EntityType.ENTITY_PICKUP then return false end
@@ -218,29 +321,53 @@ EID:addDescriptionModifier("Gauntlet Zeus Bolt Amount When Zeus", function (desc
 
     return true
 end, function (descObj)
-    --if EID.InsideItemReminder then return descObj end
+    if EID.InsideItemReminder then return descObj end
+
+    local hasInsertedZeusOnItsOwn = false
 
     for _, player in ipairs(PlayerManager.GetPlayers()) do
         local activeItemType = player:GetActiveItem()
 
-        if activeItemType > 0 then
-            local languageTable = zeusDescriptions[EID:getLanguage()] or zeusDescriptions["en_us"]
+        if activeItemType == 0 then
+            activeItemType = TheGauntlet.Items.Zeus.CollectibleType
 
-            local descriptionToUse = languageTable[activeItemType]
-            if descriptionToUse == nil then
-                local boltAmount = DefaultZeusBoltAmount(activeItemType)
-
-                local originalDescriptionToUse = languageTable["Default"]
-                if boltAmount == 1 then
-                    originalDescriptionToUse = languageTable["Default One"]
-                end
-
-                descriptionToUse = "#{{Collectible"..activeItemType.."}} {{ColorLightYellow}}"..string.format(originalDescriptionToUse, boltAmount)
+            if hasInsertedZeusOnItsOwn then
+                goto continue
             end
-
-            EID:appendToDescription(descObj, descriptionToUse)
         end
+
+        AppendZeusBoltDescription(descObj, activeItemType, activeItemType)
+
+        if activeItemType == TheGauntlet.Items.Zeus.CollectibleType then
+            hasInsertedZeusOnItsOwn = true
+        end
+
+        ::continue::
     end
+
+    return descObj
+end)
+
+EID:addDescriptionModifier("Gauntlet Zeus Bolt Amount When Active", function (descObj)
+    if descObj.ObjType ~= EntityType.ENTITY_PICKUP then return false end
+    if descObj.ObjVariant ~= PickupVariant.PICKUP_COLLECTIBLE then return false end
+
+    return PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Zeus.CollectibleType)
+end, function (descObj)
+    AppendZeusBoltDescription(descObj, descObj.ObjSubType, TheGauntlet.Items.Zeus.CollectibleType)
+
+    return descObj
+end)
+
+EID:addDescriptionModifier("Gauntlet Temporary Tattoo change", function (descObj)
+    if descObj.ObjType ~= EntityType.ENTITY_PICKUP then return false end
+    if descObj.ObjVariant ~= PickupVariant.PICKUP_TRINKET then return false end
+    if descObj.ObjSubType ~= TrinketType.TRINKET_TEMPORARY_TATTOO then return false end
+
+    return true
+end, function (descObj)
+    local description = miscDescriptions["Temporary Tattoo"][EID:getLanguage()] or miscDescriptions["Temporary Tattoo"]["en_us"]
+    EID:appendToDescription(descObj, description)
 
     return descObj
 end)

@@ -65,7 +65,10 @@ include("scripts.gauntlet.items.locusts.poseidon")
 include("scripts.gauntlet.items.locusts.zeus")
 
 include("scripts.gauntlet.compat.accurate_blurbs")
-include("scripts.gauntlet.compat.eid")
+TheGauntlet.Items.EID = {}
+include("scripts.gauntlet.compat.eid.main")
+include("scripts.gauntlet.compat.eid.data")
+include("scripts.gauntlet.compat.eid.descriptions")
 include("scripts.gauntlet.compat.minimapi")
 
 TheGauntlet.SaveManager.Init(TheGauntlet)

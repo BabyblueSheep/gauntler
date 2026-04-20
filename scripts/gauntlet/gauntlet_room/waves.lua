@@ -24,7 +24,7 @@ local musicManager = MusicManager()
 local FAKE_PENTAGRAM_VARIANT = Isaac.GetEntityVariantByName("TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
 local FAKE_PENTAGRAM_SUBTYPE = Isaac.GetEntitySubTypeByName("TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
 
-TheGauntlet.GauntletRoom.ItemPool = Isaac.GetPoolIdByName("TheGauntlet gauntletRoom")
+TheGauntlet.GauntletRoom.ITEM_POOL_ID = Isaac.GetPoolIdByName("TheGauntlet gauntletRoom")
 
 TheGauntlet.GauntletRoom.ShadowSpellSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Shadow Spell")
 
@@ -134,7 +134,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     local room = game:GetRoom()
 
-    room:SetItemPool(TheGauntlet.GauntletRoom.ItemPool)
+    room:SetItemPool(TheGauntlet.GauntletRoom.ITEM_POOL_ID)
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
     local tempSave = TheGauntlet.SaveManager.GetTempSave()
