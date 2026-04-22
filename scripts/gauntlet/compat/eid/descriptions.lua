@@ -14,6 +14,120 @@ local apolloMultishotCooldownSeconds = NumberToPresentableNumber(tonumber(XMLDat
 local aresChallengeRoomDamage = XMLData.GetEntryByName(XMLNode.NULLITEM, "Ares Challenge Room Stats").damage
 local aresBossChallengeRoomDamage = XMLData.GetEntryByName(XMLNode.NULLITEM, "Ares Boss Challenge Room Stats").damage
 
+local dionysusHealthContainer = math.tointeger(XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").maxhearts) // 2
+local dionysusHealthHeal = math.tointeger(XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").hearts) // 2 - dionysusHealthContainer
+local dionysusSpeed = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").speed
+local dionysusTears = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").tears
+local dionysusDamage = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").damage
+local dionysusRange = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").range
+local dionysusLuck = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").luck
+local dionysusDrunkTimeSeconds = NumberToPresentableNumber(TheGauntlet.Items.Dionysus.Constants.DRUNK_DURATION_ON_HIT_FRAMES / 30)
+
+
+
+local function RegisterLanguageKeys(language, localizationItems)
+    local collectibleTranslationItems = {
+        {
+            TheGauntlet.Items.Aphrodite.CollectibleType, "aphrodite",
+            { apolloMultishotCooldownSeconds }
+        },
+        {
+            TheGauntlet.Items.Apollo.CollectibleType, "apollo",
+            { }
+        },
+        {
+            TheGauntlet.Items.Ares.CollectibleType, "ares",
+            { aresChallengeRoomDamage, aresBossChallengeRoomDamage }
+        },
+        {
+            TheGauntlet.Items.Artemis.CollectibleType, "artemis",
+            { TheGauntlet.Items.Artemis.Constants.ARROW_DAMAGE_MULTIPLIER }
+        },
+        {
+            TheGauntlet.Items.Athena.CollectibleType, "athena",
+            { TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT, TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME_SECONDS }
+        },
+        {
+            TheGauntlet.Items.Demeter.CollectibleType, "demeter",
+            { TheGauntlet.Items.Demeter.Constants.SPRING_BOOGER_CHANCE }
+        },
+        {
+            TheGauntlet.Items.Dionysus.CollectibleType, "dionysus",
+            { dionysusHealthContainer, dionysusHealthHeal, dionysusSpeed, dionysusTears, dionysusDamage, dionysusRange, dionysusLuck, dionysusDrunkTimeSeconds }
+        },
+        {
+            TheGauntlet.Items.Hades.CollectibleType, "hades",
+            { TheGauntlet.Items.Hades.Constants.CHANCE_TO_APPLY_SKULL }
+        },
+        {
+            TheGauntlet.Items.Hephaestus.CollectibleType, "hephaestus",
+            { }
+        },
+        {
+            TheGauntlet.Items.Hera.CollectibleType, "hera",
+            { TheGauntlet.Items.Hera.Constants.AMOUNT_OF_ENEMIES_TO_IMPREGNATE, TheGauntlet.Items.Hera.Constants.SPAWNED_MINISAAC_MINIMUM_AMOUNT, TheGauntlet.Items.Hera.Constants.SPAWNED_MINISAAC_MAXIMUM_AMOUNT }
+        },
+        {
+            TheGauntlet.Items.Poseidon.CollectibleType, "poseidon",
+            { }
+        },
+        {
+            TheGauntlet.Items.Zeus.CollectibleType, "zeus",
+            { TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL }
+        },
+    }
+
+    for _, item in ipairs(collectibleTranslationItems) do
+        local collectibleType = item[1]
+        local localizationKeyName = item[2]
+        local placeholderValues = item[3]
+
+        local collectibleName = localizationItems["item."..localizationKeyName..".name"]
+        local collectibleDescription = localizationItems["item."..localizationKeyName..".description"]
+
+        for placeholderNumber, placeholderValue in ipairs(placeholderValues) do
+            collectibleDescription = string.gsub(collectibleDescription, "%["..tostring(placeholderNumber).."%]", placeholderValue)
+        end
+
+        EID:addCollectible(collectibleType, collectibleDescription, collectibleName, language)
+    end
+
+
+    EID.descriptions["en_us"].ConditionalDescs["Gauntlet Hephaestus if no Golden then only Trinket"] = { localizationItems["item.hephaestus.description.without_golden_trinket"] }
+    
+    EID:addSynergyCondition(CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES, TheGauntlet.Items.Zeus.CollectibleType, localizationItems["item.zeus.description.book_of_virtues"] , nil, language)
+    EID:addBookOfBelialBuffsCondition(TheGauntlet.Items.Zeus.CollectibleType, localizationItems["item.zeus.description.judas_birthright"] , nil, nil, language)
+
+end
+
+
+
+RegisterLanguageKeys("en_us", include("scripts.gauntlet.compat.eid.descriptions.en_us"))
+
+EID:addDescriptionModifier("Zeus Active is Zeus Passive", function (descObj)
+    if descObj.ObjType ~= EntityType.ENTITY_PICKUP then return false end
+    if descObj.ObjVariant ~= PickupVariant.PICKUP_COLLECTIBLE then return false end
+    if descObj.ObjSubType ~= TheGauntlet.Items.Zeus.CollectibleTypeActive then return false end
+
+    return true
+end, function (descObj)
+    return EID:getDescriptionObj(descObj.ObjType, descObj.ObjVariant, TheGauntlet.Items.Zeus.CollectibleType, descObj.Entity)
+end, 1)
+
+--[[
+
+---@param number number
+---@return string
+local function NumberToPresentableNumber(number)
+    local value = string.format("%.2f", tostring(number)):gsub("%.?0+$", "")
+    return value
+end
+
+local apolloMultishotCooldownSeconds = NumberToPresentableNumber(tonumber(XMLData.GetEntryByName(XMLNode.NULLITEM, "Apollo Multishot").cooldown) / 30)
+
+local aresChallengeRoomDamage = XMLData.GetEntryByName(XMLNode.NULLITEM, "Ares Challenge Room Stats").damage
+local aresBossChallengeRoomDamage = XMLData.GetEntryByName(XMLNode.NULLITEM, "Ares Boss Challenge Room Stats").damage
+
 local dionysusHealth = math.tointeger(XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").maxhearts) // 2
 local dionysusSpeed = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").speed
 local dionysusTears = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").tears
@@ -371,3 +485,4 @@ end, function (descObj)
 
     return descObj
 end)
+]]

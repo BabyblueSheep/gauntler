@@ -37,12 +37,13 @@ return {
     ["item.dionysus.name"] = "Dionysus",
     ["item.dionysus.description"] =
         "↑ {{Heart}} +[1] Health#"..
-        "↑ {{Speed}} +[2] Speed#"..
-        "↑ {{Tears}} +[3] Tears#"..
-        "↑ {{Damage}} +[4] Damage#"..
-        "↑ {{Range}} +[5] Range#"..
-        "↑ {{Luck}} +[6] Luck#"..
-        "{{Timer}} Taking damage makes Isaac's movement slippery and distorts the screen for [7] seconds",
+        "{{HealingRed}} Heals [2] heart#"..
+        "↑ {{Speed}} +[3] Speed#"..
+        "↑ {{Tears}} +[4] Tears#"..
+        "↑ {{Damage}} +[5] Damage#"..
+        "↑ {{Range}} +[6] Range#"..
+        "↑ {{Luck}} +[7] Luck#"..
+        "{{Timer}} Taking damage makes Isaac's movement slippery and distorts the screen for [8] seconds",
 
     ["item.hades.name"] = "Hades",
     ["item.hades.description"] =
@@ -53,5 +54,25 @@ return {
     ["item.hephaestus.description"] =
         "{{Trinket}} Spawns 1 random golden trinket#"..
         "Entering a new floor spawns a random golden pickup",
-    
+    ["item.hephaestus.description.without_golden_trinket"] =
+        "{{Trinket}} Spawns 1 random trinket#"..
+        "Entering a new floor spawns a random golden pickup",
+
+    ["item.hera.name"] = "Hera",
+    ["item.hera.description"] =
+        "{{GauntletHeraStatusEffect}} Entering a room inflicts Pregnant on [1] enemies#"..
+        "Killing a Pregnant enemy spawns [2]-[3] Minisaacs",
+
+    ["item.poseidon.name"] = "Poseidon",
+    ["item.poseidon.description"] =
+        "All rooms are flooded#"..
+        "Holding the fire buttons causes water to flow in the direction held, pushing enemies and consumables back",
+
+    ["item.zeus.name"] = "Zeus",
+    ["item.zeus.description"] =
+        "Spawns lightning bolts that have a [1]% chance to add 1 charge to the active item#"..
+        "Can be combined with a second active item to spawn lightning bolts, with the amount scaling with the item's charge#"..
+        "{{Battery}} Fully recharges and overcharges the active item on pickup, and overcharges all future active items",
+    ["item.zeus.description.book_of_virtues"] = "Wisps spawn a lightning bolt when destroyed",
+    ["item.zeus.description.judas_birthright"] = "Lightning bolts burn enemies and leaves a fire behind",
 }

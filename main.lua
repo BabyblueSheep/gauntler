@@ -64,8 +64,9 @@ include("scripts.gauntlet.items.locusts.hades")
 include("scripts.gauntlet.items.locusts.poseidon")
 include("scripts.gauntlet.items.locusts.zeus")
 
+TheGauntlet.Compat = {}
 include("scripts.gauntlet.compat.accurate_blurbs")
-TheGauntlet.Items.EID = {}
+TheGauntlet.Compat.EID = {}
 include("scripts.gauntlet.compat.eid.main")
 include("scripts.gauntlet.compat.eid.data")
 include("scripts.gauntlet.compat.eid.descriptions")
