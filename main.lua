@@ -46,6 +46,7 @@ include("scripts.gauntlet.items.hephaestus")
 include("scripts.gauntlet.items.hera")
 include("scripts.gauntlet.items.poseidon")
 TheGauntlet.Items.Zeus = {}
+TheGauntlet.Items.Zeus.Constants = {}
 include("scripts.gauntlet.items.zeus.item")
 include("scripts.gauntlet.items.zeus.lightning_bolt")
 include("scripts.gauntlet.items.zeus.cases.berserk")

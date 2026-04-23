@@ -1,9 +1,6 @@
-TheGauntlet.Items.Zeus.Constants = {
-    CHANCE_TO_STRIKE_ENEMY = 0.75,
-    BOLT_DAMAGE = 20,
-
-    CHANCE_TO_GIVE_PIP_ON_KILL = 10,
-}
+TheGauntlet.Items.Zeus.Constants.CHANCE_TO_STRIKE_ENEMY = 0.75
+TheGauntlet.Items.Zeus.Constants.BOLT_DAMAGE = 20
+TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL = 10
 
 
 

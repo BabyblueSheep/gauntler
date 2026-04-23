@@ -1,3 +1,7 @@
+TheGauntlet.Items.Zeus.Constants.MAMA_MEGA_BOLT_AMOUNT = 6
+
+
+
 local game = Game()
 
 TheGauntlet.Items.Zeus.RegisterBoltAmountForItem(CollectibleType.COLLECTIBLE_MAMA_MEGA, function (configItem, player, slot)

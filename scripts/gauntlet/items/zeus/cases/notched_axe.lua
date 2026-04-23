@@ -1,3 +1,7 @@
+TheGauntlet.Items.Zeus.Constants.NOTCHED_AXE_BOLT_AMOUNT = 8
+
+
+
 TheGauntlet.Items.Zeus.RegisterBoltAmountForItem(CollectibleType.COLLECTIBLE_NOTCHED_AXE, function (configItem, player, slot)
     return 0
 end)
@@ -18,9 +22,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE, function (_, entity)
     Isaac.CreateTimer(function ()
         if string.sub(player:GetSprite():GetAnimation(), 1, 6) == "Pickup" then return end
 
-        local boltAmount = 8
-
-        for i = 1, boltAmount do
+        for i = 1, TheGauntlet.Items.Zeus.Constants.NOTCHED_AXE_BOLT_AMOUNT do
             TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE, player)
         end
     end, 1, 1, false)

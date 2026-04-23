@@ -76,8 +76,12 @@ return {
     ["item.zeus.description.book_of_virtues"] = "Wisps spawn a lightning bolt when destroyed",
     ["item.zeus.description.judas_birthright"] = "Lightning bolts burn enemies and leaves a fire behind",
 
-    ["item.zeus.description.bolt_spawn_default"] = "Spawns [1] lightning bolts when use",
-    ["item.zeus.description.bolt_spawn_default_one"] = "Spawns [1] lightning bolt when use",
+    ["item.zeus.description.bolt_spawn.default"] = "Spawns [1] lightning bolts when use",
+    ["item.zeus.description.bolt_spawn.default_one"] = "Spawns [1] lightning bolt when use",
 
-
+    ["item.zeus.description.bolt_spawn.berserk"] = "Spawns a lightning bolt every [1] seconds while active",
+    ["item.zeus.description.bolt_spawn.eraser"] = "Spawns [1] lightning bolts when erasing an enemy",
+    ["item.zeus.description.bolt_spawn.mama_mega"] = "Spawns [1] lightning bolt when used and on room entry",
+    ["item.zeus.description.bolt_spawn.notched_axe"] = "Spawns [1] lightning bolt when running out of charge",
+    ["item.zeus.description.bolt_spawn.pandoras_box"] = "Spawns lightning bolts, with the amount scaling with the current floor number",
 }
