@@ -61,7 +61,7 @@ return {
     ["item.hera.name"] = "Hera",
     ["item.hera.description"] =
         "{{GauntletHeraStatusEffect}} Entering a room inflicts Pregnant on [1] enemies#"..
-        "Killing a Pregnant enemy spawns [2]-[3] Minisaacs",
+        "{{Timer}} Killing a Pregnant enemy spawns [2]-[3] Minisaac for the room",
 
     ["item.poseidon.name"] = "Poseidon",
     ["item.poseidon.description"] =
