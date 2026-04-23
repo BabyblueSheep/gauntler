@@ -75,4 +75,9 @@ return {
         "{{Battery}} Fully recharges and overcharges the active item on pickup, and overcharges all future active items",
     ["item.zeus.description.book_of_virtues"] = "Wisps spawn a lightning bolt when destroyed",
     ["item.zeus.description.judas_birthright"] = "Lightning bolts burn enemies and leaves a fire behind",
+
+    ["item.zeus.description.bolt_spawn_default"] = "Spawns [1] lightning bolts when use",
+    ["item.zeus.description.bolt_spawn_default_one"] = "Spawns [1] lightning bolt when use",
+
+
 }

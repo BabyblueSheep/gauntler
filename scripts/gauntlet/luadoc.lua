@@ -4,3 +4,4 @@
 
 AccurateBlurbs = {}
 MinimapAPI = {}
+StageAPI = {}
