@@ -74,7 +74,7 @@
 	
 
 	<familiar id="10" 
-		name="Apollo" description="Gift of prophecy"
+		name="Apollo" description="Singing buddy"
 		gfx="apollo.png"
 		quality="3"
 		tags="baby summonable monstermanual"
