@@ -1,16 +1,16 @@
 local WAVE_CONFIGURATIONS_NORMAL_MODE = {
-    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 1,  MaxDifficulty = 1  },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
-    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
-    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 15, MaxDifficulty = 15 },
-    { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 1,  MaxDifficulty = 1 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 1,  MaxDifficulty = 1  },
 }
 local WAVE_CONFIGURATIONS_HARD_MODE = {
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 15, MaxDifficulty = 15 },
-    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 15, MaxDifficulty = 15 },
-    { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 1,  MaxDifficulty = 1 },
-    { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 5,  MaxDifficulty = 5 },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 5,  MaxDifficulty = 5  },
 }
 
 local TIME_BEFORE_DOORS_CLOSE = 10
@@ -115,6 +115,8 @@ local function SpawnAmbush(type, minDifficulty, maxDifficulty)
         0,
         type
     )
+
+    local returnedValue = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.PRE_SELECT_GAUNTLET_ROOM_WAVE, ambushWave)
 
     local room = game:GetRoom()
 
