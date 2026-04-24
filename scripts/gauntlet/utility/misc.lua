@@ -20,3 +20,10 @@ function TheGauntlet.Utility.CopyTableShallow(inputTable)
     end
     return tableCopy
 end
+
+---@param number number
+---@return string
+function TheGauntlet.Utility.NumberToPresentableNumber(number)
+    local value = string.format("%.2f", tostring(number)):gsub("%.?0+$", "")
+    return value
+end

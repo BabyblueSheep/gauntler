@@ -1,5 +1,5 @@
-BOOGER_STICK_CHANCE = 0.25
-BOOGER_DURATION = 30
+TheGauntlet.Items.Demeter.Constants.LOCUST_BOOGER_STICK_CHANCE = 0.25
+TheGauntlet.Items.Demeter.Constants.LOCUST_BOOGER_DURATION = 30
 
 
 
@@ -22,7 +22,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     if not player then return end
 
     local rng = player:GetCollectibleRNG(TheGauntlet.Items.Demeter.CollectibleType)
-    if rng:RandomFloat() >= BOOGER_STICK_CHANCE then return end
+    if rng:RandomFloat() >= TheGauntlet.Items.Demeter.Constants.LOCUST_BOOGER_STICK_CHANCE then return end
 
     local tear = TheGauntlet.Utility.SpawnTear
     (
@@ -35,7 +35,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     tear:Update()
     tear:ForceCollide(entity, false)
-    tear.StickTimer = BOOGER_DURATION
+    tear.StickTimer = TheGauntlet.Items.Demeter.Constants.LOCUST_BOOGER_DURATION
 
     local sprite = tear:GetSprite()
     local frameCount = sprite:GetCurrentAnimationData():GetLength()

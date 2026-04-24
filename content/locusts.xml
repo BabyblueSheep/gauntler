@@ -21,6 +21,8 @@
 	<color name="fly_gas" r="0" g="155" b="0" or="0" og="0" ob="0"/>
 	<color name="fly_fart" r="184" g="191" b="134" or="24" og="24" ob="24"/>
 
+	<color name="fly_white_dull" r="255" g="255" b="255" or="0" og="0" ob="0"/>
+
 
 
     <locust id="0" tearFlags="55" gfx="anm2=gauntlet/locust_olympian_zap.anm2" />
@@ -31,7 +33,7 @@
 
     <locust id="3" tearFlags="1" gfx="anm2=gauntlet/locust_olympian_drip.anm2" color="1-fly_cyan" />
 
-	<locust id="4" gfx="anm2=gauntlet/locust_olympian_glow.anm2" color="1-fly_black" />
+	<locust id="4" gfx="anm2=gauntlet/locust_olympian_glow.anm2" color="1-fly_white_dull" />
 
 	<locust id="5" tearFlags="22" procChance="0.25" tearFlags2="65" procChance2="1" tearFlags3="3" procChance3="0.25" gfx="anm2=gauntlet/locust_olympian_fire_season.anm2" />
 

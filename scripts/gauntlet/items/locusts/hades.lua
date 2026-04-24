@@ -1,5 +1,5 @@
-local STATUS_EFFECT_DURATION = 30 * 5
-local CHANCE_TO_APPLY_STATUS_EFFECT = 50.05
+TheGauntlet.Items.Hades.Constants.LOCUST_STATUS_EFFECT_DURATION = 30 * 5
+TheGauntlet.Items.Hades.Constants.LOCUST_CHANCE_TO_APPLY_STATUS_EFFECT = 0.05
 
 
 
@@ -21,7 +21,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     local player = TheGauntlet.Utility.GetPlayerFromEntity(source.Entity.SpawnerEntity)
     if not player then return end
 
-    if player:GetCollectibleRNG(TheGauntlet.Items.Hades.CollectibleType):RandomFloat() >= CHANCE_TO_APPLY_STATUS_EFFECT then return end
+    if player:GetCollectibleRNG(TheGauntlet.Items.Hades.CollectibleType):RandomFloat() >= TheGauntlet.Items.Hades.Constants.LOCUST_CHANCE_TO_APPLY_STATUS_EFFECT then return end
 
-    TheGauntlet.Items.Hades.InflictStatusEffect(entity, STATUS_EFFECT_DURATION, source)
+    TheGauntlet.Items.Hades.InflictStatusEffect(entity, TheGauntlet.Items.Hades.Constants.LOCUST_STATUS_EFFECT_DURATION, source)
 end)

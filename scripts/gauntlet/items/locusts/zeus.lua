@@ -1,4 +1,4 @@
-local CHANCE_TO_SUMMON_BOLT = 0.1
+TheGauntlet.Items.Zeus.Constants.LOCUST_CHANCE_TO_SUMMON_BOLT = 0.1
 
 
 
@@ -20,7 +20,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     local player = TheGauntlet.Utility.GetPlayerFromEntity(source.Entity.SpawnerEntity)
     if not player then return end
 
-    if player:GetCollectibleRNG(TheGauntlet.Items.Zeus.CollectibleType):RandomFloat() >= CHANCE_TO_SUMMON_BOLT then return end
+    if player:GetCollectibleRNG(TheGauntlet.Items.Zeus.CollectibleType):RandomFloat() >= TheGauntlet.Items.Zeus.Constants.LOCUST_CHANCE_TO_SUMMON_BOLT then return end
 
     TheGauntlet.Items.Zeus.SpawnLightningBolt(entity.Position, player)
 end)

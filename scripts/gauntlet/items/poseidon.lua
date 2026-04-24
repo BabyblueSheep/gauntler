@@ -1,7 +1,8 @@
 TheGauntlet.Items.Poseidon = {}
 
 TheGauntlet.Items.Poseidon.Constants = {
-    ENEMY_FLOW_SPEED = 5,
+    ENEMY_FLOW_SPEED_BASE = 1,
+    ENEMY_FLOW_SPEED_STAGE = 0.05,
     PICKUP_FLOW_SPEED = 0.5,
 }
 
@@ -74,18 +75,22 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
     targetCurrent = targetCurrent:Normalized()
 
-    for _, entity in ipairs(Isaac.GetRoomEntities()) do
-        if entity.Mass >= 100 then goto continue end
+    if targetCurrent:Length() > EPSILON then
+        for _, entity in ipairs(Isaac.GetRoomEntities()) do
+            if entity.Mass >= 100 then goto continue end
 
-        if entity:IsEnemy() then
-            if entity:IsFlying() then goto continue end
+            if entity:IsEnemy() then
+                if entity:IsFlying() then goto continue end
+                if entity:IsBoss() then goto continue end
 
-            entity:AddVelocity(targetCurrent * TheGauntlet.Items.Poseidon.Constants.ENEMY_FLOW_SPEED / entity.Mass)
-        elseif entity.Type == EntityType.ENTITY_PICKUP then
-            entity:AddVelocity(targetCurrent * TheGauntlet.Items.Poseidon.Constants.PICKUP_FLOW_SPEED)
+                local pushSpeed = (TheGauntlet.Items.Poseidon.Constants.ENEMY_FLOW_SPEED_BASE + game:GetLevel():GetStage() * TheGauntlet.Items.Poseidon.Constants.ENEMY_FLOW_SPEED_STAGE)
+                entity:AddVelocity(targetCurrent * pushSpeed, true)
+            elseif entity.Type == EntityType.ENTITY_PICKUP then
+                entity:AddVelocity(targetCurrent * TheGauntlet.Items.Poseidon.Constants.PICKUP_FLOW_SPEED, true)
+            end
+
+            ::continue::
         end
-
-        ::continue::
     end
 
     local shouldBeLoud = true

@@ -113,6 +113,8 @@ local function AppendZeusBoltDescription(descObj, collectibleType, iconType)
             originalDescriptionToUse = customZeusDescriptions["Default One"][EID:getLanguage()] or customZeusDescriptions["Default One"]["en_us"]
         end
 
+        originalDescriptionToUse = string.gsub(originalDescriptionToUse, "%[1%]", boltAmount)
+
         descriptionToUse = "#"..string.format(originalDescriptionToUse, boltAmount)
     else
         descriptionToUse = descriptionTableToUse[EID:getLanguage()] or descriptionTableToUse["en_us"]
@@ -174,14 +176,7 @@ end)
 
 
 
----@param number number
----@return string
-local function NumberToPresentableNumber(number)
-    local value = string.format("%.2f", tostring(number)):gsub("%.?0+$", "")
-    return value
-end
-
-local apolloMultishotCooldownSeconds = NumberToPresentableNumber(tonumber(XMLData.GetEntryByName(XMLNode.NULLITEM, "Apollo Multishot").cooldown) / 30)
+local apolloMultishotCooldownSeconds = TheGauntlet.Utility.NumberToPresentableNumber(tonumber(XMLData.GetEntryByName(XMLNode.NULLITEM, "Apollo Multishot").cooldown) / 30)
 
 local aresChallengeRoomDamage = XMLData.GetEntryByName(XMLNode.NULLITEM, "Ares Challenge Room Stats").damage
 local aresBossChallengeRoomDamage = XMLData.GetEntryByName(XMLNode.NULLITEM, "Ares Boss Challenge Room Stats").damage
@@ -193,7 +188,7 @@ local dionysusTears = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").tears
 local dionysusDamage = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").damage
 local dionysusRange = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").range
 local dionysusLuck = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").luck
-local dionysusDrunkTimeSeconds = NumberToPresentableNumber(TheGauntlet.Items.Dionysus.Constants.DRUNK_DURATION_ON_HIT_FRAMES / 30)
+local dionysusDrunkTimeSeconds = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Dionysus.Constants.DRUNK_DURATION_ON_HIT_FRAMES / 30)
 
 
 
@@ -313,6 +308,11 @@ local function RegisterLanguageKeys(language, localizationItems)
 
         TheGauntlet.Compat.EID.RegisterZeusDescription(collectibleType, language, description)
     end
+
+    EID.descriptions[language].AbyssLocustEffects["Gauntlet Demeter Booger"] = localizationItems["item.abyss.locust_effect.demeter"]
+    EID.descriptions[language].AbyssLocustEffects["Gauntlet Hades Status"] = localizationItems["item.abyss.locust_effect.hades"]
+    EID.descriptions[language].AbyssLocustEffects["Gauntlet Poseidon Push"] = localizationItems["item.abyss.locust_effect.poseidon"]
+    EID.descriptions[language].AbyssLocustEffects["Gauntlet Zeus Bolt"] = localizationItems["item.abyss.locust_effect.zeus"]
 end
 
 

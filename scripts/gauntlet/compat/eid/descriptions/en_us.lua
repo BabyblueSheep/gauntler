@@ -84,4 +84,12 @@ return {
     ["item.zeus.description.bolt_spawn.mama_mega"] = "Spawns [1] lightning bolt when used and on room entry",
     ["item.zeus.description.bolt_spawn.notched_axe"] = "Spawns [1] lightning bolt when running out of charge",
     ["item.zeus.description.bolt_spawn.pandoras_box"] = "Spawns lightning bolts, with the amount scaling with the current floor number",
+
+    --Tear flags formatting
+    ["item.abyss.locust_effect.hades"] = "calcifying",
+
+    --Locust flags formatting
+    ["item.abyss.locust_effect.demeter"] = "{{Collectible"..CollectibleType.COLLECTIBLE_SINUS_INFECTION.."}} Attaches a booger tear when dealing damage",
+    ["item.abyss.locust_effect.poseidon"] = "{{Collectible"..Isaac.GetItemIdByName("Poseidon").."}} Pushes nearby enemies in its direction when charging",
+    ["item.abyss.locust_effect.zeus"] = "{{Collectible"..Isaac.GetItemIdByName("Zeus").."}} Spawns a lightning bolt when dealing damage",
 }
