@@ -193,6 +193,8 @@ local dionysusDrunkTimeSeconds = TheGauntlet.Utility.NumberToPresentableNumber(T
 
 
 local function RegisterLanguageKeys(language, localizationItems)
+    EID:addItemPoolName(TheGauntlet.GauntletRoom.ITEM_POOL_ID, language, localizationItems["pool.gauntlet"])
+
     local collectibleTranslationItems = {
         {
             TheGauntlet.Items.Aphrodite.CollectibleType, "aphrodite",

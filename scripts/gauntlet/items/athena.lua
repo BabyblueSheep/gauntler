@@ -19,6 +19,26 @@ TheGauntlet.Items.Athena.CollectibleType = Isaac.GetItemIdByName("Athena")
 TheGauntlet.Items.Athena.AegisVariant = Isaac.GetEntityVariantByName("TheGauntlet Athena Aegis")
 TheGauntlet.Items.Athena.AegisSubtype = Isaac.GetEntitySubTypeByName("TheGauntlet Athena Aegis")
 
+TheGauntlet.Items.Athena.MetalHitSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Metal Hit")
+
+---@param position Vector
+---@param angle number
+local function DeflectEffects(position, angle)
+    local poofEffect = TheGauntlet.Utility.SpawnEffect
+    (
+        EntityType.ENTITY_EFFECT, EffectVariant.TEAR_POOF_A, 10,
+        position, Vector.Zero,
+        nil
+    )
+
+    poofEffect.Rotation = -90 - angle
+    poofEffect.DepthOffset = 99999
+    poofEffect.Color = Color(0, 0, 0, 1, 1, 1, 1)
+
+    sfxManager:Play(905, 50) --SoundEffect.SOUND_TEAR_BOUNCE
+    sfxManager:Play(TheGauntlet.Items.Athena.MetalHitSoundEffect)
+end
+
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
     local hasAthena = player:HasCollectible(TheGauntlet.Items.Athena.CollectibleType)
@@ -124,7 +144,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                     projectile.Velocity = projectile.Velocity:Length() * direction
                     projectile:AddProjectileFlags(ProjectileFlags.HIT_ENEMIES | ProjectileFlags.CANT_HIT_PLAYER)
 
-                    sfxManager:Play(907) --SoundEffect.SOUND_RIB_DEFLECT
+                    DeflectEffects(shieldEffect.Position + direction * 10, angle)
 
                     reflected = true
                 end
@@ -136,7 +156,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                         enemy.Velocity = Vector.Zero
                         enemy:AddKnockback(EntityRef(player), direction * 10, 15, true)
 
-                        sfxManager:Play(907) --SoundEffect.SOUND_RIB_DEFLECT
+                        DeflectEffects(shieldEffect.Position + direction * 10, angle)
 
                         reflected = true
                     end

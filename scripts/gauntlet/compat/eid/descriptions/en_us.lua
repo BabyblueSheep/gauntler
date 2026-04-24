@@ -1,4 +1,6 @@
 return {
+    ["pool.gauntlet"] = "Gauntlet",
+
     ["item.aphrodite.name"] = "Aphrodite",
     ["item.aphrodite.description"] =
         "{{Friendly}} Taking damage from an enemy converts it to a friendly companion",
@@ -22,7 +24,7 @@ return {
 
     ["item.athena.name"] = "Athena",
     ["item.athena.description"] =
-        "Grants [1] rotating shields around Isaac"..
+        "Grants [1] rotating shields around Isaac#"..
         "Shields reflect projectiles and knock enemies back#"..
         "{{Timer}} Shields go on a [2] second cooldown after deflecting",
 

@@ -2,7 +2,6 @@ if EID == nil then return end
 
 
 
-EID:addItemPoolName(TheGauntlet.GauntletRoom.ITEM_POOL_ID, "en_us", "Gauntlet")
 EID:assignItemPoolMarkup(TheGauntlet.GauntletRoom.ITEM_POOL_ID, "{{GauntletGauntletRoomPool}}")
 
 

@@ -6,6 +6,12 @@
 		<sample weight="1" path="gauntlet/thunder zap 1.wav" /> <!-- https://www.weloveindies.com/en/sounds-for-games -->
 		<sample weight="1" path="gauntlet/thunder zap 2.wav" />
 	</sound>
+	<sound name="TheGauntlet Metal Hit">
+		<sample weight="1" path="gauntlet/metal hit 1.wav" /> <!-- https://freesound.org/people/Artninja/sounds/717721/ -->
+		<sample weight="1" path="gauntlet/metal hit 2.wav" />
+		<sample weight="1" path="gauntlet/metal hit 3.wav" />
+		<sample weight="1" path="gauntlet/metal hit 4.wav" />
+	</sound>
 	<sound name="TheGauntlet Custom Water Flow">
 		<sample weight="1" path="gauntlet/water_flow_large.wav" />
 	</sound>
