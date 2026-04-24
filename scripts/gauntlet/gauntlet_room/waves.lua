@@ -67,9 +67,8 @@ local function SpawnEnemyIndicator(type, variant, subtype, position)
         SubType = subtype
     }
 
-    if entityConfig:IsBoss() then
-        effect:GetSprite():Play("Boss Summon", true)
-    end
+    --This seems to be correct, but who knows
+    effect.SpriteScale = Vector.One * entityConfig:GetCollisionRadius() / 16
 
     ---@diagnostic disable-next-line param-type-mismatch
     sfxManager:Play(871)
@@ -242,7 +241,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
             OnFinishGauntletRoom()
         else
-            if musicManager:GetCurrentMusicID() ~= Music.MUSIC_CHALLENGE_FIGHT then
+            if tempSave.WaveNumber == 1 then
                 musicManager:Play(Music.MUSIC_CHALLENGE_FIGHT, Options.MusicVolume)
                 musicManager:UpdateVolume()
             end

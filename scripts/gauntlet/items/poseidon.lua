@@ -27,6 +27,8 @@ local didAnyoneHavePoseidonThisRoom = false
 local framesLeftToUpdateVisualWater = 0
 local targetCurrentVolume = 0
 
+
+
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if game:GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
 
@@ -38,9 +40,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     fakeCurrentWaterCurrent = Vector(EPSILON, EPSILON)
 
-    --TODO?: see if this can be put earlier to prevent flickers with default water.
     room:SetWaterAmount(1)
-    room:SetWaterCurrent(Vector.Zero)
+    room:SetWaterCurrent(fakeCurrentWaterCurrent)
     targetCurrentVolume = 0
 
     sfxManager:SetAmbientSound(FLOW_SOUND, 0, 1)
@@ -70,7 +71,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
         end
     end
 
-    --if not wasRoomEnteredWithPoseidon then return end
+    if didAnyoneHavePoseidonThisRoom then
+        room:SetWaterCurrent(Vector.Zero)
+    end
 
     targetCurrent = Vector.Zero
 
