@@ -1,5 +1,5 @@
 return {
-    ["pool.gauntlet"] = "Gauntlet",
+    ["pool.gauntlet.name"] = "Gauntlet",
 
     ["item.aphrodite.name"] = "Aphrodite",
     ["item.aphrodite.description"] =
