@@ -1,5 +1,9 @@
 local game = Game()
 
+local stageAPICallbacks = require("scripts.stageapi.enums.Callbacks")
+
+StageAPI.UnregisterCallbacks("The Gauntlet")
+
 ---@param originalLayout RoomConfigRoom
 TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.PRE_SELECT_GAUNTLET_ROOM_WAVE, function (originalLayout)
     local room = game:GetRoom()
@@ -50,4 +54,18 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.PRE_SELECT_GAUNTLET_ROOM_W
     end
 
     return wave
+end)
+
+StageAPI.AddCallback("The Gauntlet", stageAPICallbacks.POST_SELECT_STAGE_MUSIC, 1, function (currentstage, musicID, roomType, musicRNG)
+    if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
+
+    local room = game:GetRoom()
+
+    if room:IsAmbushDone() then return end
+
+    local tempSave = TheGauntlet.SaveManager.GetTempSave()
+
+    if not tempSave.IsGauntletAmbushOngoing then return end
+
+    return Music.MUSIC_CHALLENGE_FIGHT
 end)

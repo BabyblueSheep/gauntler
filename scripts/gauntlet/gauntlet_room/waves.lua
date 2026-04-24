@@ -161,6 +161,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     tempSave.DidHostileEnemiesExist = false
 
+    tempSave.IsGauntletAmbushOngoing = false
+
     if not roomSave.Init then
         roomSave.TeleportSeed = room:GetAwardSeed()
         roomSave.WaveSeed = room:GetAwardSeed()
@@ -180,11 +182,14 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     local level = game:GetLevel()
     local room = game:GetRoom()
 
-    if level:GetDimension() == Dimension.MIRROR then return end
-    if room:IsAmbushDone() then return end
-
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
     local tempSave = TheGauntlet.SaveManager.GetTempSave()
+
+    if level:GetDimension() == Dimension.MIRROR then return end
+    if room:IsAmbushDone() then
+        tempSave.IsGauntletAmbushOngoing = false
+        return
+    end
 
     if not roomSave.Init then
         roomSave.TeleportSeed = room:GetAwardSeed()
@@ -211,6 +216,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     end
 
     room:KeepDoorsClosed()
+
+    tempSave.IsGauntletAmbushOngoing = true
 
     local doHostileEnemiesExist = false
 
@@ -247,6 +254,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
         if tempSave.WaveNumber > #waveConfigurations then
             room:SetClear(true)
             room:SetAmbushDone(true)
+
+            tempSave.IsGauntletAmbushOngoing = false
 
             musicManager:Play(Music.MUSIC_JINGLE_CHALLENGE_OUTRO, Options.MusicVolume)
             musicManager:UpdateVolume()
