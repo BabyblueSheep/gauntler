@@ -14,7 +14,7 @@ TheGauntlet.Utility.Callbacks = {
     --- - [RoomConfigRoom](lua://RoomConfigRoom) - the default room layout selected for the wave;
     --- 
     --- Returns:
-    ---  - Return either a [RoomConfigRoom](lua://RoomConfigRoom) or a Lua Room (if StageAPI is enabled) to use that for the wave.
+    ---  - Return either a [RoomConfigRoom](lua://RoomConfigRoom) or a table (assumed to be a Lua Room) to use that for the wave.
     PRE_SELECT_GAUNTLET_ROOM_WAVE = "TheGauntlet PRE_SELECT_GAUNTLET_ROOM_WAVE",
 
     ---Called before a Gauntlet room is placed on the floor. Can be used to change the room layout before placing it.

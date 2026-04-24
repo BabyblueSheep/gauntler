@@ -72,6 +72,7 @@ include("scripts.gauntlet.compat.eid.main")
 include("scripts.gauntlet.compat.eid.data")
 include("scripts.gauntlet.compat.eid.descriptions")
 include("scripts.gauntlet.compat.minimapi")
+include("scripts.gauntlet.compat.stageapi")
 
 TheGauntlet.SaveManager.Init(TheGauntlet)
 

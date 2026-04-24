@@ -1,11 +1,11 @@
-local WAVE_CONFIGURATIONS_NORMAL_MODE = {
+TheGauntlet.GauntletRoom.WAVE_CONFIGURATIONS_NORMAL_MODE = {
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 1,  MaxDifficulty = 1  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 1,  MaxDifficulty = 1  },
 }
-local WAVE_CONFIGURATIONS_HARD_MODE = {
+TheGauntlet.GauntletRoom.WAVE_CONFIGURATIONS_HARD_MODE = {
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
@@ -97,10 +97,10 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
     end
 end, FAKE_PENTAGRAM_VARIANT)
 
----@param type integer
+---@param roomType integer
 ---@param minDifficulty integer
 ---@param maxDifficulty integer
-local function SpawnAmbush(type, minDifficulty, maxDifficulty)
+local function SpawnAmbush(roomType, minDifficulty, maxDifficulty)
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
     local rng = RNG(roomSave.WaveSeed)
     roomSave.WaveSeed = rng:Next()
@@ -113,20 +113,34 @@ local function SpawnAmbush(type, minDifficulty, maxDifficulty)
         nil, nil,
         minDifficulty, maxDifficulty,
         0,
-        type
+        roomType
     )
+    local ambushWaveStageAPI
 
     local returnedValue = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.PRE_SELECT_GAUNTLET_ROOM_WAVE, ambushWave)
+    if type(returnedValue) == "userdata" and getmetatable(returnedValue).__type == "RoomConfigRoom" then
+        ambushWave = returnedValue
+    elseif type(returnedValue) == "table" then
+        ambushWaveStageAPI = returnedValue
+    end
 
     local room = game:GetRoom()
 
-    for i = 0, #ambushWave.Spawns - 1 do
-        local enemySpawn = ambushWave.Spawns:Get(i)
-        local enemySpawnEntry = enemySpawn:PickEntry(rng:RandomFloat())
+    if ambushWaveStageAPI and StageAPI then
+        local spawnEntities = StageAPI.ObtainSpawnObjects(returnedValue, roomSave.WaveSeed, true)
 
-        local gridIndex = enemySpawn.X + 1 + (enemySpawn.Y + 1) * room:GetGridWidth()
+        for gridIndex, entityData in pairs(spawnEntities) do
+            SpawnEnemyIndicator(entityData[1].Data.Type, entityData[1].Data.Variant, entityData[1].Data.SubType, room:GetGridPosition(gridIndex))
+        end
+    else
+        for i = 0, #ambushWave.Spawns - 1 do
+            local enemySpawn = ambushWave.Spawns:Get(i)
+            local enemySpawnEntry = enemySpawn:PickEntry(rng:RandomFloat())
 
-        SpawnEnemyIndicator(enemySpawnEntry.Type, enemySpawnEntry.Variant, enemySpawnEntry.Subtype, room:GetGridPosition(gridIndex))
+            local gridIndex = enemySpawn.X + 1 + (enemySpawn.Y + 1) * room:GetGridWidth()
+
+            SpawnEnemyIndicator(enemySpawnEntry.Type, enemySpawnEntry.Variant, enemySpawnEntry.Subtype, room:GetGridPosition(gridIndex))
+        end
     end
 end
 
@@ -228,7 +242,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
         tempSave.WaveDelay = 0
 
         tempSave.WaveNumber = tempSave.WaveNumber + 1
-        local waveConfigurations = Game().Difficulty == Difficulty.DIFFICULTY_HARD and WAVE_CONFIGURATIONS_HARD_MODE or WAVE_CONFIGURATIONS_NORMAL_MODE
+        local waveConfigurations = Game().Difficulty == Difficulty.DIFFICULTY_HARD and TheGauntlet.GauntletRoom.WAVE_CONFIGURATIONS_HARD_MODE or TheGauntlet.GauntletRoom.WAVE_CONFIGURATIONS_NORMAL_MODE
 
         if tempSave.WaveNumber > #waveConfigurations then
             room:SetClear(true)
