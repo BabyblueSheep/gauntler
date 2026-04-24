@@ -23,7 +23,7 @@ local actualWaterCurrent = Vector.Zero
 local targetCurrent = Vector.Zero
 local fakeCurrentWaterCurrent = Vector.Zero
 
-local wasRoomEnteredWithPoseidon = false
+local didAnyoneHavePoseidonThisRoom = false
 local framesLeftToUpdateVisualWater = 0
 local targetCurrentVolume = 0
 
@@ -32,11 +32,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     local room = game:GetRoom()
 
-    wasRoomEnteredWithPoseidon = false
+    didAnyoneHavePoseidonThisRoom = PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType)
 
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then return end
-
-    wasRoomEnteredWithPoseidon = true
+    if not didAnyoneHavePoseidonThisRoom then return end
 
     fakeCurrentWaterCurrent = Vector(EPSILON, EPSILON)
 
@@ -51,6 +49,10 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     if game:GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
 
+    if PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then
+        didAnyoneHavePoseidonThisRoom = true
+    end
+
     local room = game:GetRoom()
 
     if framesLeftToUpdateVisualWater > 0 then
@@ -58,9 +60,17 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
         local waterAmount = room:GetWaterAmount()
         room:SetWaterAmount(TheGauntlet.Utility.Lerp(waterAmount, 1, 0.25))
+        room:SetWaterCurrent(Vector.Zero)
+        targetCurrentVolume = 0
+
+        if framesLeftToUpdateVisualWater == 0 then
+            room:SetWaterAmount(1)
+            room:SetWaterCurrent(Vector.Zero)
+            targetCurrentVolume = 0
+        end
     end
 
-    if not wasRoomEnteredWithPoseidon then return end
+    --if not wasRoomEnteredWithPoseidon then return end
 
     targetCurrent = Vector.Zero
 
@@ -85,7 +95,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
                 local pushSpeed = (TheGauntlet.Items.Poseidon.Constants.ENEMY_FLOW_SPEED_BASE + game:GetLevel():GetStage() * TheGauntlet.Items.Poseidon.Constants.ENEMY_FLOW_SPEED_STAGE)
                 entity:AddVelocity(targetCurrent * pushSpeed, true)
-            elseif entity.Type == EntityType.ENTITY_PICKUP then
+            elseif entity.Type == EntityType.ENTITY_PICKUP or entity.Type == EntityType.ENTITY_BOMB then
+                if entity.Variant == BombVariant.BOMB_ROCKET or entity.Variant == BombVariant.BOMB_ROCKET_GIGA then goto continue end
+
                 entity:AddVelocity(targetCurrent * TheGauntlet.Items.Poseidon.Constants.PICKUP_FLOW_SPEED, true)
             end
 
@@ -114,10 +126,10 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_RENDER, function (_)
 
     if game:GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
 
-    if not wasRoomEnteredWithPoseidon then return end
-
     local room = game:GetRoom()
     actualWaterCurrent = room:GetWaterCurrent()
+
+    if not didAnyoneHavePoseidonThisRoom then return end
 
     fakeCurrentWaterCurrent = fakeCurrentWaterCurrent:Lerp(targetCurrent, 0.25)
     if fakeCurrentWaterCurrent:Length() < EPSILON then
@@ -129,7 +141,7 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_RENDER, function (_)
     if game:GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
 
-    if not wasRoomEnteredWithPoseidon then return end
+    if not didAnyoneHavePoseidonThisRoom then return end
 
     local room = game:GetRoom()
     room:SetWaterCurrent(actualWaterCurrent)
