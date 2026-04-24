@@ -198,11 +198,11 @@ local function RegisterLanguageKeys(language, localizationItems)
     local collectibleTranslationItems = {
         {
             TheGauntlet.Items.Aphrodite.CollectibleType, "aphrodite",
-            { apolloMultishotCooldownSeconds }
+            { }
         },
         {
             TheGauntlet.Items.Apollo.CollectibleType, "apollo",
-            { }
+            { TheGauntlet.Items.Apollo.Constants.CHANCE_TO_GIVE_BOOST, apolloMultishotCooldownSeconds }
         },
         {
             TheGauntlet.Items.Ares.CollectibleType, "ares",
