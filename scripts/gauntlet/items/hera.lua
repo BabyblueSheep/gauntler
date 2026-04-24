@@ -29,8 +29,10 @@ function TheGauntlet.Items.Hera.CanEntityBeImpregnanted(entity)
     local returnValue = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.HERA_CAN_ENTITY_BE_IMPREGNANTED, entity)
     if type(returnValue) == "boolean" then return returnValue end
 
+    if not entity:IsActiveEnemy(false) then return false end
+    if not entity:IsVulnerableEnemy() then return false end
+
     if entity.Type == EntityType.ENTITY_DUMMY then return false end
-    if not (entity:IsActiveEnemy(false) or (entity:ToNPC() and entity:ToNPC().CanShutDoors)) then return false end
     if entity.FrameCount > 0 then return false end
     if entity:IsBoss() then return false end
 
@@ -41,7 +43,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Hera.CollectibleType) then return end
 
     local enemiesToImpregnante = {}
-	
+
     for _, entity in ipairs(Isaac.GetRoomEntities()) do
         if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == FamiliarVariant.MINISAAC then
             if entity:GetData().HeraTemporary then
