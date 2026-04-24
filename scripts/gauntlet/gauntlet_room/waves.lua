@@ -138,16 +138,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
     local tempSave = TheGauntlet.SaveManager.GetTempSave()
 
-    if not tempSave.Init then
-        tempSave.WaveDelay = 0
-        tempSave.WaveNumber = 0
+    tempSave.WaveDelay = 0
+    tempSave.WaveNumber = 0
 
-        tempSave.ProperChallengeStartDelay = TIME_BEFORE_DOORS_CLOSE
+    tempSave.ProperChallengeStartDelay = TIME_BEFORE_DOORS_CLOSE
 
-        tempSave.DidHostileEnemiesExist = false
-
-        tempSave.Init = true
-    end
+    tempSave.DidHostileEnemiesExist = false
 
     if not roomSave.Init then
         roomSave.TeleportSeed = room:GetAwardSeed()
@@ -175,6 +171,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     local tempSave = TheGauntlet.SaveManager.GetTempSave()
 
     if not roomSave.Init then
+        roomSave.TeleportSeed = room:GetAwardSeed()
         roomSave.WaveSeed = room:GetAwardSeed()
 
         roomSave.Init = true
