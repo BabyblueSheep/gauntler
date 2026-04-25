@@ -4,13 +4,13 @@ TheGauntlet.Items.Artemis.Constants = {
     ARROW_DAMAGE_MULTIPLIER = 1.5,
     ARROW_SHOT_SPEED_MULTIPLIER = 1.5,
 
-    TIME_BETWEEN_ARROW_DIRECTION_CHANGE = 30 * 5,
+    TIME_BETWEEN_ARROW_DIRECTION_CHANGE_FRAMES = 30 * 5,
     MINIMUM_VALID_ANGLE_DIFFERENCE = 0.9, --Smaller = less strict. Used for unlocked rotation.
 }
 
 
 
-TheGauntlet.Items.Artemis.CollectibleType = Isaac.GetItemIdByName("Artemis")
+TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Artemis")
 
 local PIERCING_TEAR_VARIANTS = {
     [TearVariant.BLUE] = TearVariant.CUPID_BLUE,
@@ -26,15 +26,15 @@ end
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player)
-    if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end
+    if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then return end
 
-    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Artemis.CollectibleType)
+    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE)
     local randomDirection = TheGauntlet.Utility.RandomCardinalVector(rng)
 
     local data = player:GetData()
     if data.GauntletArtemis == nil then
         data.GauntletArtemis = {
-            TimeLeft = TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE,
+            TimeLeft = TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE_FRAMES,
             Direction = randomDirection,
             PreviousDirection = randomDirection
         }
@@ -42,7 +42,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player
 
     data.GauntletArtemis.TimeLeft = data.GauntletArtemis.TimeLeft - 1
     if data.GauntletArtemis.TimeLeft <= 0 then
-        data.GauntletArtemis.TimeLeft = TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE
+        data.GauntletArtemis.TimeLeft = TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE_FRAMES
         data.GauntletArtemis.PreviousDirection = data.GauntletArtemis.Direction
         data.GauntletArtemis.Direction = TheGauntlet.Utility.RandomCardinalVector(rng)
     end
@@ -54,14 +54,14 @@ end)
 ---@param wisp boolean
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, function (_, player, collectibleType, removeFromPlayerForm, wisp)
     player:GetData().GauntletArtemis = nil
-end, TheGauntlet.Items.Artemis.CollectibleType)
+end, TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE)
 
 ---@param tear EntityTear
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, function (_, tear)
     local player = TheGauntlet.Utility.GetPlayerFromEntity(tear.SpawnerEntity, true)
     if player == nil then return end
 
-    if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end
+    if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then return end
 
     local data = player:GetData()
     if data.GauntletArtemis == nil then return end
@@ -85,7 +85,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_BOMB, function (_, bomb)
     local player = TheGauntlet.Utility.GetPlayerFromEntity(bomb.SpawnerEntity, true)
     if player == nil then return end
 
-    if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end
+    if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then return end
 
     local data = player:GetData()
     if data.GauntletArtemis == nil then return end
@@ -107,7 +107,7 @@ end)
 ---@param tearDisplacement integer
 ---@param source Entity
 TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, function (_, player, tearParams, weaponType, damageScale, tearDisplacement, source)
-    if not player:HasCollectible(TheGauntlet.Items.Artemis.CollectibleType) then return end
+    if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then return end
 
     local data = player:GetData()
     if data.GauntletArtemis == nil then return end
@@ -129,7 +129,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, function (_, p
     end
 end)
 
-local arrowSprite, t = Sprite("gfx/gauntlet/effects/artemis_arrow.anm2", true)
+local arrowSprite = Sprite("gfx/gauntlet/effects/artemis_arrow.anm2", true)
 arrowSprite:Play("Left")
 
 ---@param player EntityPlayer
@@ -140,7 +140,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_RENDER, function (_, player)
     local angle = (data.GauntletArtemis.Direction:GetAngleDegrees() + 90) * math.pi / 180
     local previousAngle = (data.GauntletArtemis.PreviousDirection:GetAngleDegrees() + 90) * math.pi / 180
 
-    local rotationProgress = TheGauntlet.Utility.InverseLerp(TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE, TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE - 15, data.GauntletArtemis.TimeLeft)
+    local rotationProgress = TheGauntlet.Utility.InverseLerp(TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE_FRAMES, TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE_FRAMES - 15, data.GauntletArtemis.TimeLeft)
 
     local easedRotationProgress = 1 - (1 - rotationProgress)^3 --Ease Out Cubic
 

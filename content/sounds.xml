@@ -12,6 +12,9 @@
 		<sample weight="1" path="gauntlet/metal hit 3.wav" />
 		<sample weight="1" path="gauntlet/metal hit 4.wav" />
 	</sound>
+	<sound name="TheGauntlet Harp">
+		<sample weight="1" path="gauntlet/harp.wav"/> <!-- https://freesound.org/people/Cunningar0807/sounds/436129/ -->
+	</sound>
 	<sound name="TheGauntlet Custom Water Flow">
 		<sample weight="1" path="gauntlet/water_flow_large.wav" />
 	</sound>

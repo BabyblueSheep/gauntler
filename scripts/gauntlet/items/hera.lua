@@ -13,13 +13,15 @@ TheGauntlet.Items.Hera.Constants = {
 
 local game = Game()
 
-TheGauntlet.Items.Hera.CollectibleType = Isaac.GetItemIdByName("Hera")
+TheGauntlet.Items.Hera.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Hera")
+
+TheGauntlet.Items.Hera.STATUS_EFFECT_ID = "TheGauntlet_HeraPregnant"
 
 local pregnantStatusEffectSprite = Sprite("gfx/gauntlet/statuseffects.anm2", true)
 pregnantStatusEffectSprite:Play("Pregnant", true)
 
 StatusEffectLibrary.RegisterStatusEffect(
-	"TheGauntlet_HeraPregnant",
+	TheGauntlet.Items.Hera.STATUS_EFFECT_ID,
 	pregnantStatusEffectSprite,
     nil, nil, true
 )
@@ -40,7 +42,7 @@ function TheGauntlet.Items.Hera.CanEntityBeImpregnanted(entity)
 end
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Hera.CollectibleType) then return end
+    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Hera.COLLECTIBLE_TYPE) then return end
 
     local enemiesToImpregnante = {}
 
@@ -71,7 +73,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
         StatusEffectLibrary:AddStatusEffect
         (
             enemy,
-            StatusEffectLibrary.StatusFlag.TheGauntlet_HeraPregnant,
+            StatusEffectLibrary.StatusFlag[TheGauntlet.Items.Hera.STATUS_EFFECT_ID],
             TheGauntlet.Items.Hera.Constants.PREGNANT_STATUS_DURATION_FRAMES,
             EntityRef(nil)
         )
@@ -81,14 +83,14 @@ end)
 ---@param entity Entity
 ---@param killSource EntityRef
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, killSource)
-    if not StatusEffectLibrary:HasStatusEffect(entity, StatusEffectLibrary.StatusFlag.TheGauntlet_HeraPregnant) then return end
+    if not StatusEffectLibrary:HasStatusEffect(entity, StatusEffectLibrary.StatusFlag[TheGauntlet.Items.Hera.STATUS_EFFECT_ID]) then return end
 
     local player = killSource.Entity and TheGauntlet.Utility.GetPlayerFromEntity(killSource.Entity.SpawnerEntity)
     if not player then
         player = Isaac.GetPlayer(0)
     end
 
-    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Hera.CollectibleType)
+    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Hera.COLLECTIBLE_TYPE)
     local minisaacAmount = rng:RandomInt(TheGauntlet.Items.Hera.Constants.SPAWNED_MINISAAC_MINIMUM_AMOUNT, TheGauntlet.Items.Hera.Constants.SPAWNED_MINISAAC_MAXIMUM_AMOUNT)
 
     local isPersistent = entity:HasEntityFlags(EntityFlag.FLAG_PERSISTENT)

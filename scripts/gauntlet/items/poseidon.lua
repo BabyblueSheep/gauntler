@@ -11,12 +11,12 @@ TheGauntlet.Items.Poseidon.Constants = {
 local game = Game()
 local sfxManager = SFXManager()
 
-TheGauntlet.Items.Poseidon.CollectibleType = Isaac.GetItemIdByName("Poseidon")
+TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Poseidon")
 
 local FLOW_SOUND = Isaac.GetSoundIdByName("TheGauntlet Custom Water Flow")
 
---An epsilon is used to force there to technically always be a current.
---The reason is because there is no transition between flowing water and lack of flowing water.
+--The water shader usedHourglass has transition between flowing and still water.
+--So, an epsilon is used to force there to technically always be a current.
 local EPSILON = 0.01
 
 local actualWaterCurrent = Vector.Zero
@@ -34,7 +34,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     local room = game:GetRoom()
 
-    didAnyoneHavePoseidonThisRoom = PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType)
+    didAnyoneHavePoseidonThisRoom = PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE)
 
     if not didAnyoneHavePoseidonThisRoom then return end
 
@@ -50,7 +50,7 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     if game:GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
 
-    if PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then
+    if PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE) then
         didAnyoneHavePoseidonThisRoom = true
     end
 
@@ -78,7 +78,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     targetCurrent = Vector.Zero
 
     for _, player in ipairs(PlayerManager.GetPlayers()) do
-        if not player:HasCollectible(TheGauntlet.Items.Poseidon.CollectibleType) then goto continue end
+        if not player:HasCollectible(TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE) then goto continue end
 
         local direction = Isaac.GetAxisAlignedUnitVectorFromDir(player:GetFireDirection())
         targetCurrent = targetCurrent + direction
@@ -157,7 +157,5 @@ end)
 ---@param varData integer
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, collectibleType, charge, firstTime, slot, varData, player)
-    if collectibleType ~= TheGauntlet.Items.Poseidon.CollectibleType then return end
-
     framesLeftToUpdateVisualWater = 15
-end)
+end, TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE)

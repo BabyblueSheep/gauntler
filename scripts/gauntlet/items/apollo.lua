@@ -2,7 +2,7 @@ TheGauntlet.Items.Apollo = {}
 
 TheGauntlet.Items.Apollo.Constants =
 {
-    CHANCE_TO_GIVE_BOOST = 15,
+    CHANCE_TO_GIVE_BOOST = 0.15,
 }
 
 
@@ -10,42 +10,41 @@ TheGauntlet.Items.Apollo.Constants =
 local itemConfig = Isaac.GetItemConfig()
 local sfxManager = SFXManager()
 
-TheGauntlet.Items.Apollo.CollectibleType = Isaac.GetItemIdByName("Apollo")
-TheGauntlet.Items.Apollo.CollectibleTypeMultishot = Isaac.GetNullItemIdByName("Apollo Multishot")
-TheGauntlet.Items.Apollo.FamiliarVariant = Isaac.GetEntityVariantByName("TheGauntlet Apollo Baby")
-TheGauntlet.Items.Apollo.FamiliarSubType = Isaac.GetEntitySubTypeByName("TheGauntlet Apollo Baby")
+TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Apollo")
+TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE_MULTISHOT = Isaac.GetNullItemIdByName("Apollo Multishot")
+TheGauntlet.Items.Apollo.FAMILIAR_VARIANT = Isaac.GetEntityVariantByName("TheGauntlet Apollo Baby")
+
+TheGauntlet.Items.Apollo.HARP_SOUND_EFFECT = Isaac.GetSoundIdByName("TheGauntlet Harp")
 
 ---@param player EntityPlayer
 ---@param cache CacheFlag
 TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function (_, player, cache)
-    local familiarAmountToSpawn = player:GetCollectibleNum(TheGauntlet.Items.Apollo.CollectibleType) + player:GetEffects():GetCollectibleEffectNum(TheGauntlet.Items.Apollo.CollectibleType)
+    local familiarAmountToSpawn = player:GetCollectibleNum(TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE) + player:GetEffects():GetCollectibleEffectNum(TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE)
 
-    local apolloItemConfig = itemConfig:GetCollectible(TheGauntlet.Items.Apollo.CollectibleType)
+    local apolloItemConfig = itemConfig:GetCollectible(TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE)
 
     local rng = RNG(math.max(Random(), 1))
-    player:CheckFamiliar(TheGauntlet.Items.Apollo.FamiliarVariant, familiarAmountToSpawn, rng, apolloItemConfig, TheGauntlet.Items.Apollo.FamiliarSubType)
+    player:CheckFamiliar(TheGauntlet.Items.Apollo.FAMILIAR_VARIANT, familiarAmountToSpawn, rng, apolloItemConfig)
 end, CacheFlag.CACHE_FAMILIARS)
 
 ---@param familiar EntityFamiliar
 TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, function (_, familiar)
-    if familiar.SubType ~= TheGauntlet.Items.Apollo.FamiliarSubType then return end
-
     familiar:AddToFollowers()
 end, TheGauntlet.Items.Apollo.FamiliarVariant)
 
 ---@param familiar EntityFamiliar
 TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, function (_, familiar)
-    if familiar.SubType ~= TheGauntlet.Items.Apollo.FamiliarSubType then return end
-
     familiar:FollowParent()
 
     local sprite = familiar:GetSprite()
+    if sprite:IsEventTriggered("PlayHighActivation") then
+        sfxManager:Play(TheGauntlet.Items.Apollo.HARP_SOUND_EFFECT)
+
+        familiar.Player:GetEffects():AddNullEffect(TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE_MULTISHOT, false, 1)
+    end
+
     if sprite:IsFinished("Hit") then
         sprite:Play("Idle")
-
-        sfxManager:Play(SoundEffect.SOUND_SUPERHOLY)
-
-        familiar.Player:GetEffects():AddNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeMultishot, false, 1)
     end
 end, TheGauntlet.Items.Apollo.FamiliarVariant)
 
@@ -53,8 +52,6 @@ end, TheGauntlet.Items.Apollo.FamiliarVariant)
 ---@param collider Entity
 ---@param low boolean
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_FAMILIAR_COLLISION, function (_, familiar, collider, low)
-    if familiar.SubType ~= TheGauntlet.Items.Apollo.FamiliarSubType then return end
-
     if collider.Type ~= EntityType.ENTITY_PROJECTILE then return end
     if collider:ToProjectile():HasProjectileFlags(ProjectileFlags.CANT_HIT_PLAYER) then return end
 
@@ -63,9 +60,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FAMILIAR_COLLISION, function (_, fa
     local sprite = familiar:GetSprite()
 
     if sprite:IsPlaying("Hit") then return end
-    if familiar.Player:GetEffects():HasNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeMultishot) then return end
+    if familiar.Player:GetEffects():HasNullEffect(TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE_MULTISHOT) then return end
 
-    if familiar:GetDropRNG():RandomFloat() < (TheGauntlet.Items.Apollo.Constants.CHANCE_TO_GIVE_BOOST / 100) then
+    if familiar:GetDropRNG():RandomFloat() < TheGauntlet.Items.Apollo.Constants.CHANCE_TO_GIVE_BOOST then
         sprite:Play("Hit", true)
 
         sfxManager:Play(SoundEffect.SOUND_THUMBSUP)
@@ -86,7 +83,7 @@ local weaponsThatDontHaveSpread = {
 ---@param multiShotParams MultiShotParams
 ---@param weaponType WeaponType
 TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_MULTI_SHOT_PARAMS, function (_, player, multiShotParams, weaponType)
-    if player:GetEffects():HasNullEffect(TheGauntlet.Items.Apollo.CollectibleTypeMultishot) then
+    if player:GetEffects():HasNullEffect(TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE_MULTISHOT) then
         multiShotParams:SetNumTears(multiShotParams:GetNumTears() + 2)
         multiShotParams:SetNumLanesPerEye(multiShotParams:GetNumLanesPerEye() + 2)
 

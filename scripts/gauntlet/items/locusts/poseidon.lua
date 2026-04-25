@@ -7,7 +7,7 @@ local game = Game()
 
 ---@param familiar EntityFamiliar
 TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, function (_, familiar)
-    if familiar.SubType ~= TheGauntlet.Items.Poseidon.CollectibleType then return end
+    if familiar.SubType ~= TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE then return end
 
     if familiar.State == TheGauntlet.Utility.LocustState.CHARGING and familiar.FireCooldown == -1 then
 

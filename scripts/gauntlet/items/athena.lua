@@ -14,12 +14,11 @@ TheGauntlet.Items.Athena.Constants = {
 
 local sfxManager = SFXManager()
 
-TheGauntlet.Items.Athena.CollectibleType = Isaac.GetItemIdByName("Athena")
+TheGauntlet.Items.Athena.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Athena")
 
-TheGauntlet.Items.Athena.AegisVariant = Isaac.GetEntityVariantByName("TheGauntlet Athena Aegis")
-TheGauntlet.Items.Athena.AegisSubtype = Isaac.GetEntitySubTypeByName("TheGauntlet Athena Aegis")
+TheGauntlet.Items.Athena.EFFECT_VARIANT = Isaac.GetEntityVariantByName("TheGauntlet Athena Aegis")
 
-TheGauntlet.Items.Athena.MetalHitSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Metal Hit")
+TheGauntlet.Items.Athena.METAL_HIT_SOUND_EFFECT = Isaac.GetSoundIdByName("TheGauntlet Metal Hit")
 
 ---@param position Vector
 ---@param angle number
@@ -36,12 +35,12 @@ local function DeflectEffects(position, angle)
     poofEffect.Color = Color(0, 0, 0, 1, 1, 1, 1)
 
     sfxManager:Play(905, 50) --SoundEffect.SOUND_TEAR_BOUNCE
-    sfxManager:Play(TheGauntlet.Items.Athena.MetalHitSoundEffect)
+    sfxManager:Play(TheGauntlet.Items.Athena.METAL_HIT_SOUND_EFFECT)
 end
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
-    local hasAthena = player:HasCollectible(TheGauntlet.Items.Athena.CollectibleType)
+    local hasAthena = player:HasCollectible(TheGauntlet.Items.Athena.COLLECTIBLE_TYPE)
 
     local data = player:GetData()
 
@@ -53,7 +52,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
             if hasAthena then
                 local effect = TheGauntlet.Utility.SpawnEffect
                 (
-                    EntityType.ENTITY_EFFECT, TheGauntlet.Items.Athena.AegisVariant, TheGauntlet.Items.Athena.AegisSubtype,
+                    EntityType.ENTITY_EFFECT, TheGauntlet.Items.Athena.EFFECT_VARIANT, 0,
                     player.Position, Vector.Zero,
                     player
                 )

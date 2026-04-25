@@ -4,7 +4,7 @@ TheGauntlet.Items.Aphrodite = {}
 
 local sfxManager = SFXManager()
 
-TheGauntlet.Items.Aphrodite.CollectibleType = Isaac.GetItemIdByName("Aphrodite")
+TheGauntlet.Items.Aphrodite.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Aphrodite")
 
 ---@param entity Entity
 ---@param damage number
@@ -17,7 +17,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     ---@diagnostic disable-next-line assign-type-mismatch
     local player = entity:ToPlayer()
 
-    if not player:HasCollectible(TheGauntlet.Items.Aphrodite.CollectibleType) then return end
+    if not player:HasCollectible(TheGauntlet.Items.Aphrodite.COLLECTIBLE_TYPE) then return end
 
     if source.Entity == nil then return end
     local enemyToCharm = nil

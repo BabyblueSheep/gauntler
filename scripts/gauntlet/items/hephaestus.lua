@@ -2,7 +2,9 @@ TheGauntlet.Items.Hephaestus = {}
 
 
 
-TheGauntlet.Items.Hephaestus.CollectibleType = Isaac.GetItemIdByName("Hephaestus")
+local game = Game()
+
+TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Hephaestus")
 
 local possibleGoldenPickups = {
     {
@@ -83,16 +85,16 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, colle
             true
         )
     end
-end, TheGauntlet.Items.Hephaestus.CollectibleType)
+end, TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Hephaestus.CollectibleType) then return end
+    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE) then return end
     
-    local room = Game():GetRoom()
+    local room = game:GetRoom()
 
     local spawnPosition = room:FindFreePickupSpawnPosition(room:GetCenterPos(), nil, true)
 
-    local rng = Isaac.GetPlayer():GetCollectibleRNG(TheGauntlet.Items.Hephaestus.CollectibleType)
+    local rng = Isaac.GetPlayer():GetCollectibleRNG(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE)
 
     local goldenPickupEntry = nil
     while goldenPickupEntry == nil do

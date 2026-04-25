@@ -4,7 +4,7 @@ if EID == nil then return end
 
 
 
-EID:AddConditional(TheGauntlet.Items.Hephaestus.CollectibleType, function ()
+EID:AddConditional(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE, function ()
     return not Isaac.GetPersistentGameData():Unlocked(Achievement.GOLDEN_TRINKET)
 end, "Gauntlet Hephaestus if no Golden then only Trinket")
 
@@ -197,23 +197,23 @@ local function RegisterLanguageKeys(language, localizationItems)
 
     local collectibleTranslationItems = {
         {
-            TheGauntlet.Items.Aphrodite.CollectibleType, "aphrodite",
+            TheGauntlet.Items.Aphrodite.COLLECTIBLE_TYPE, "aphrodite",
             { }
         },
         {
-            TheGauntlet.Items.Apollo.CollectibleType, "apollo",
+            TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE, "apollo",
             { TheGauntlet.Items.Apollo.Constants.CHANCE_TO_GIVE_BOOST, apolloMultishotCooldownSeconds }
         },
         {
-            TheGauntlet.Items.Ares.CollectibleType, "ares",
+            TheGauntlet.Items.Ares.COLLECTIBLE_TYPE, "ares",
             { aresChallengeRoomDamage, aresBossChallengeRoomDamage }
         },
         {
-            TheGauntlet.Items.Artemis.CollectibleType, "artemis",
+            TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE, "artemis",
             { TheGauntlet.Items.Artemis.Constants.ARROW_DAMAGE_MULTIPLIER }
         },
         {
-            TheGauntlet.Items.Athena.CollectibleType, "athena",
+            TheGauntlet.Items.Athena.COLLECTIBLE_TYPE, "athena",
             { TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT, TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME_SECONDS }
         },
         {
@@ -229,15 +229,15 @@ local function RegisterLanguageKeys(language, localizationItems)
             { TheGauntlet.Items.Hades.Constants.CHANCE_TO_APPLY_SKULL }
         },
         {
-            TheGauntlet.Items.Hephaestus.CollectibleType, "hephaestus",
+            TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE, "hephaestus",
             { }
         },
         {
-            TheGauntlet.Items.Hera.CollectibleType, "hera",
+            TheGauntlet.Items.Hera.COLLECTIBLE_TYPE, "hera",
             { TheGauntlet.Items.Hera.Constants.AMOUNT_OF_ENEMIES_TO_IMPREGNATE, TheGauntlet.Items.Hera.Constants.SPAWNED_MINISAAC_MINIMUM_AMOUNT, TheGauntlet.Items.Hera.Constants.SPAWNED_MINISAAC_MAXIMUM_AMOUNT }
         },
         {
-            TheGauntlet.Items.Poseidon.CollectibleType, "poseidon",
+            TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE, "poseidon",
             { }
         },
         {

@@ -55,6 +55,7 @@ local function UpdateMinimapIcon(dimension)
     end
 end
 
+--[[
 ---@param roomIndex integer
 ---@param roomConfigRoom RoomConfigRoom
 ---@param dimension Dimension
@@ -75,10 +76,13 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.POST_PLACE_GAUNTLET_ROOM, 
         Clear = roomDescriptor.Clear,
     })
 end)
+]]
 
 TheGauntlet:AddPriorityCallback(ModCallbacks.MC_POST_NEW_LEVEL, CallbackPriority.LATE, function (_)
     if MinimapAPI == nil then return end
 
+    MinimapAPI:CheckForNewRedRooms(Dimension.NORMAL)
+    MinimapAPI:CheckForNewRedRooms(Dimension.MIRROR)
     UpdateMinimapIcon(Dimension.NORMAL)
     UpdateMinimapIcon(Dimension.MIRROR)
 end)
@@ -87,13 +91,15 @@ end)
 TheGauntlet:AddPriorityCallback(ModCallbacks.MC_POST_GAME_STARTED, CallbackPriority.LATE, function (_, isContinued)
     if MinimapAPI == nil then return end
 
+    MinimapAPI:CheckForNewRedRooms(Dimension.NORMAL)
+    MinimapAPI:CheckForNewRedRooms(Dimension.MIRROR)
     UpdateMinimapIcon(Dimension.NORMAL)
     UpdateMinimapIcon(Dimension.MIRROR)
 end)
-
+--[[
 TheGauntlet:AddPriorityCallback(ModCallbacks.MC_POST_HUD_RENDER, CallbackPriority.LATE, function (_)
     if MinimapAPI == nil then return end
 
     UpdateMinimapIcon(Dimension.NORMAL)
     UpdateMinimapIcon(Dimension.MIRROR)
-end)
+end)]]
