@@ -9,7 +9,6 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.PRE_SELECT_GAUNTLET_ROOM_W
     local room = game:GetRoom()
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
-    local tempSave = TheGauntlet.SaveManager.GetTempSave()
 
     if StageAPI == nil then return end
 
@@ -28,8 +27,8 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.PRE_SELECT_GAUNTLET_ROOM_W
         challengeWaveIDs = currentStageAPIRoom.Data.ChallengeWaveIDs
     end
 
-    local waveConfigurations = Game().Difficulty == Difficulty.DIFFICULTY_HARD and TheGauntlet.GauntletRoom.WAVE_CONFIGURATIONS_HARD_MODE or TheGauntlet.GauntletRoom.WAVE_CONFIGURATIONS_NORMAL_MODE
-    local waveConfiguration = waveConfigurations[tempSave.WaveNumber]
+    local waveConfigurations = Game().Difficulty == Difficulty.DIFFICULTY_HARD and TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_HARD_MODE or TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_NORMAL_MODE
+    local waveConfiguration = waveConfigurations[TheGauntlet.GauntletRoom.GetCurrentWaveNumber()]
 
     local waveLayoutsToUse = StageAPI.CurrentStage.ChallengeWaves.Normal
     if waveConfiguration.RoomSubtype == RoomSubType.CHALLENGE_WAVE_BOSS then

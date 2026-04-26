@@ -17,6 +17,7 @@ include("scripts.gauntlet.utility.misc")
 include("scripts.gauntlet.utility.random")
 
 TheGauntlet.GauntletRoom = {}
+TheGauntlet.GauntletRoom.Constants = {}
 include("scripts.gauntlet.gauntlet_room.common")
 include("scripts.gauntlet.gauntlet_room.backdrop")
 include("scripts.gauntlet.gauntlet_room.chance")

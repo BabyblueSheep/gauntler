@@ -1,9 +1,9 @@
-TheGauntlet.GauntletRoom.Backdrop = Isaac.GetBackdropIdByName("TheGauntlet Gauntlet Room Backdrop")
+TheGauntlet.GauntletRoom.BACKDROP_TYPE = Isaac.GetBackdropIdByName("TheGauntlet Gauntlet Room Backdrop")
 
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_BACKDROP_CHANGE, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
-    return TheGauntlet.GauntletRoom.Backdrop
+    return TheGauntlet.GauntletRoom.BACKDROP_TYPE
 end)
 
 local updateColorModifierFrameAmount = 0

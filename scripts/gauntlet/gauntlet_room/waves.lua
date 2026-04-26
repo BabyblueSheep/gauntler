@@ -1,11 +1,11 @@
-TheGauntlet.GauntletRoom.WAVE_CONFIGURATIONS_NORMAL_MODE = {
+TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_NORMAL_MODE = {
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 1,  MaxDifficulty = 1  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 1,  MaxDifficulty = 1  },
 }
-TheGauntlet.GauntletRoom.WAVE_CONFIGURATIONS_HARD_MODE = {
+TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_HARD_MODE = {
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
@@ -13,6 +13,7 @@ TheGauntlet.GauntletRoom.WAVE_CONFIGURATIONS_HARD_MODE = {
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 5,  MaxDifficulty = 5  },
 }
 
+local TIME_BETWEEN_WAVES = 30
 local TIME_BEFORE_DOORS_CLOSE = 10
 
 
@@ -26,9 +27,12 @@ local FAKE_PENTAGRAM_SUBTYPE = Isaac.GetEntitySubTypeByName("TheGauntlet A Repli
 
 TheGauntlet.GauntletRoom.ITEM_POOL_ID = Isaac.GetPoolIdByName("TheGauntlet gauntletRoom")
 
-TheGauntlet.GauntletRoom.ShadowSpellSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Shadow Spell")
+TheGauntlet.GauntletRoom.SHADOW_SPELL_SOUND_EFFECT = Isaac.GetSoundIdByName("TheGauntlet Shadow Spell")
 
-local TIME_BETWEEN_WAVES = 30 --TODO: seems to be correct after verifying, but proper confirmation would be nice
+function TheGauntlet.GauntletRoom.GetCurrentWaveNumber()
+    local tempSave = TheGauntlet.SaveManager.GetTempSave()
+    return tempSave.WaveNumber
+end
 
 local function OnFinishGauntletRoom()
     local room = game:GetRoom()
@@ -46,7 +50,6 @@ local function OnFinishGauntletRoom()
     room:TriggerClear(true)
 end
 
---TODO: see if the sprite is accurate to normal ambush indicators
 ---@param type EntityType
 ---@param variant integer
 ---@param subtype integer
@@ -70,8 +73,7 @@ local function SpawnEnemyIndicator(type, variant, subtype, position)
     --This seems to be correct, but who knows
     effect.SpriteScale = Vector.One * entityConfig:GetCollisionRadius() / 16
 
-    ---@diagnostic disable-next-line param-type-mismatch
-    sfxManager:Play(871)
+    sfxManager:Play(871) --SoundEffect.SOUND_SUMMON_PENTA
 end
 
 ---@param effect EntityEffect
@@ -92,7 +94,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
 
         entity:AddEntityFlags(EntityFlag.FLAG_AMBUSH)
 
-        ---@diagnostic disable-next-line param-type-mismatch
         sfxManager:Play(872) --SoundEffect.SOUND_SUMMON_WAVE
     end
 end, FAKE_PENTAGRAM_VARIANT)
@@ -294,9 +295,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     if damageFlags & DamageFlag.DAMAGE_NO_PENALTIES == DamageFlag.DAMAGE_NO_PENALTIES then return end
 
     if entity.Type ~= EntityType.ENTITY_PLAYER then return end
-    ---@type EntityPlayer
-    ---@diagnostic disable-next-line assign-type-mismatch
-    local player = entity:ToPlayer()
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
     local teleportRNG = RNG(roomSave.TeleportSeed)
@@ -314,5 +312,5 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     local randomRoomIndex = TheGauntlet.Utility.RandomItemFromList(adjacentRooms, teleportRNG)
     Game():StartRoomTransition(randomRoomIndex, -1, RoomTransitionAnim.TELEPORT)
 
-    sfxManager:Play(TheGauntlet.GauntletRoom.ShadowSpellSoundEffect)
+    sfxManager:Play(TheGauntlet.GauntletRoom.SHADOW_SPELL_SOUND_EFFECT)
 end)

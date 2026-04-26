@@ -141,7 +141,7 @@ end, function (descObj)
         local activeItemType = player:GetActiveItem()
 
         if activeItemType == 0 then
-            activeItemType = TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE
+            activeItemType = TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE_ACTIVE
 
             if hasInsertedZeusOnItsOwn then
                 goto continue

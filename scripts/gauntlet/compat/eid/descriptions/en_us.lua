@@ -45,7 +45,7 @@ return {
         "↑ {{Damage}} +[5] Damage#"..
         "↑ {{Range}} +[6] Range#"..
         "↑ {{Luck}} +[7] Luck#"..
-        "{{Timer}} Taking damage makes Isaac's movement slippery and distorts the screen for [8] seconds",
+        "{{Warning}} Taking damage makes Isaac's movement slippery and distorts the screen for [8] seconds",
 
     ["item.hades.name"] = "Hades",
     ["item.hades.description"] =

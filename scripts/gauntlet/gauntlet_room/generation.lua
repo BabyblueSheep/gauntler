@@ -4,7 +4,7 @@ local roomNeighbourOffsets = {
     1, -1, 13, -13
 }
 
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_, player)
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
     local level = game:GetLevel()
 
     local rng = RNG(level:GetDungeonPlacementSeed())

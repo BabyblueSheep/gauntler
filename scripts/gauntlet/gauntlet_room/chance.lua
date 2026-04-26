@@ -1,7 +1,7 @@
 local game = Game()
 
-local GAUNTLET_ROOM_CHANCE_PER_COMPLETED_CHALLENGE_ROOM = 0.1
-local GAUNTLET_ROOM_CHANCE_PER_COMPLETED_BOSS_CHALLENGE_ROOM = 0.25
+TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_PER_COMPLETED_CHALLENGE_ROOM = 0.1
+TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_PER_COMPLETED_BOSS_CHALLENGE_ROOM = 0.25
 
 TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.DefaultSaveKeys.GLOBAL, {
     BossChallengeRoomsCompleted = 0,
@@ -24,6 +24,7 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.POST_CHALLENGE_ROOM_TRIGGE
     end
 end)
 
+---Recomputes the generation chance. Automatically called on new floors.
 function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
     local runSave = TheGauntlet.SaveManager.GetRunSave()
 
@@ -32,7 +33,7 @@ function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
         return
     end
 
-    if not TheGauntlet.Utility.CanChallengeRoomsSpawn() then
+    if not TheGauntlet.Utility.CanAnyChallengeRoomsSpawn() then
         runSave.GauntletGenerationChance = 0
         return
     end
@@ -44,14 +45,15 @@ function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
         return
     end
 
-    local challengeRoomCompletionChance = runSave.ChallengeRoomsCompleted * GAUNTLET_ROOM_CHANCE_PER_COMPLETED_CHALLENGE_ROOM
-    local bossChallengeRoomCompletionChance = runSave.BossChallengeRoomsCompleted * GAUNTLET_ROOM_CHANCE_PER_COMPLETED_BOSS_CHALLENGE_ROOM
+    local challengeRoomCompletionChance = runSave.ChallengeRoomsCompleted * TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_PER_COMPLETED_CHALLENGE_ROOM
+    local bossChallengeRoomCompletionChance = runSave.BossChallengeRoomsCompleted * TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_PER_COMPLETED_BOSS_CHALLENGE_ROOM
 
     local totalChance = defaultChance + challengeRoomCompletionChance + bossChallengeRoomCompletionChance
 
     runSave.GauntletGenerationChance = totalChance
 end
 
+---Returns the current Gauntlet room spawn chance.
 function TheGauntlet.GauntletRoom.GetGenerationChance()
     if TheGauntlet.Settings.ForceGauntletSpawn() then
         return 1

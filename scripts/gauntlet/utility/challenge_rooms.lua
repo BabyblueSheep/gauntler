@@ -34,7 +34,7 @@ end
 
 ---Returns whether any challenge rooms are allowed to spawn on the current floor.
 ---@return boolean
-function TheGauntlet.Utility.CanChallengeRoomsSpawn()
+function TheGauntlet.Utility.CanAnyChallengeRoomsSpawn()
     local level = game:GetLevel()
     local stage = level:GetStage()
     
