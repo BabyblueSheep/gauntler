@@ -64,3 +64,17 @@ end
 TheGauntlet:AddPriorityCallback(ModCallbacks.MC_POST_NEW_LEVEL, CallbackPriority.EARLY, function (_)
     TheGauntlet.GauntletRoom.RecomputeGenerationChance()
 end)
+
+---@param collectibleType CollectibleType
+---@param rng RNG
+---@param player EntityPlayer
+---@param useFlags UseFlag
+---@param slot ActiveSlot
+---@param varData integer
+TheGauntlet:AddCallback(ModCallbacks.MC_USE_ITEM, function (_, collectibleType, rng, player, useFlags, slot, varData)
+    local runSave = TheGauntlet.SaveManager.GetRunSave()
+
+    runSave.BossChallengeRoomsCompleted = 0
+    runSave.ChallengeRoomsCompleted = 0
+    runSave.GauntletRoomsCompleted = 0
+end, CollectibleType.COLLECTIBLE_R_KEY)

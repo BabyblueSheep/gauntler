@@ -78,5 +78,5 @@ include("scripts.gauntlet.compat.stageapi")
 TheGauntlet.SaveManager.Init(TheGauntlet)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, function ()
-    print("["..TheGauntlet.Name.."] Not affiliated with Team Rapture")
+    TheGauntlet.Utility.Print("Not affiliated with Team Rapture")
 end)
