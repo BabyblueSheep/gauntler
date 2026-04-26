@@ -15,7 +15,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_TEAR_COLLISION, function (_, tear, 
     local player = TheGauntlet.Utility.GetPlayerFromEntity(tear.SpawnerEntity, true)
     if player == nil then return end
 
-    if not player:HasCollectible(TheGauntlet.Items.Zeus.CollectibleType) then return end
+    if not player:HasCollectible(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE) then return end
 
     if not game:IsErased(collider) then return end
 

@@ -17,7 +17,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_REMOVE, function (_, entity)
     local player = entity.Parent:ToPlayer()
     if not player then return end
 
-    if not player:HasCollectible(TheGauntlet.Items.Zeus.CollectibleType) then return end
+    if not player:HasCollectible(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE) then return end
 
     Isaac.CreateTimer(function ()
         if string.sub(player:GetSprite():GetAnimation(), 1, 6) == "Pickup" then return end

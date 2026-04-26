@@ -16,7 +16,7 @@ local sfxManager = SFXManager()
 
 TheGauntlet.Items.Athena.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Athena")
 
-TheGauntlet.Items.Athena.EFFECT_VARIANT = Isaac.GetEntityVariantByName("TheGauntlet Athena Aegis")
+TheGauntlet.Items.Athena.SHIELD_EFFECT_VARIANT = Isaac.GetEntityVariantByName("TheGauntlet Athena Aegis")
 
 TheGauntlet.Items.Athena.METAL_HIT_SOUND_EFFECT = Isaac.GetSoundIdByName("TheGauntlet Metal Hit")
 
@@ -52,7 +52,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
             if hasAthena then
                 local effect = TheGauntlet.Utility.SpawnEffect
                 (
-                    EntityType.ENTITY_EFFECT, TheGauntlet.Items.Athena.EFFECT_VARIANT, 0,
+                    EntityType.ENTITY_EFFECT, TheGauntlet.Items.Athena.SHIELD_EFFECT_VARIANT, 0,
                     player.Position, Vector.Zero,
                     player
                 )

@@ -9,7 +9,7 @@ TheGauntlet.Items.Zeus.RegisterBoltAmountForItem(CollectibleType.COLLECTIBLE_MAM
 end)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Zeus.CollectibleType) then return end
+    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE) then return end
 
     local level = game:GetLevel()
     local roomFlags = level:GetCurrentRoomDesc().Flags
@@ -21,6 +21,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     local boltAmount = 6
     for i = 1, boltAmount do
         ---@diagnostic disable-next-line: param-type-mismatch
-        TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE, PlayerManager.FirstCollectibleOwner(TheGauntlet.Items.Zeus.CollectibleType))
+        TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_TYPE, PlayerManager.FirstCollectibleOwner(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE))
     end
 end)

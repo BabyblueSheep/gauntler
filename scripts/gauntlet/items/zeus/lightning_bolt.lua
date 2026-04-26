@@ -1,16 +1,15 @@
 TheGauntlet.Items.Zeus.Constants.CHANCE_TO_STRIKE_ENEMY = 0.75
 TheGauntlet.Items.Zeus.Constants.BOLT_DAMAGE = 20
-TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL = 10
+TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL = 0.1
 
 
 
 local sfxManager = SFXManager()
 local generalRNG = RNG() --I don't think this is the best idea, but mehhhh
 
-TheGauntlet.Items.Zeus.LightningBoltVariant = Isaac.GetEntityVariantByName("TheGauntlet Zeus Lightning Bolt")
-TheGauntlet.Items.Zeus.LightningBoltSubType = Isaac.GetEntitySubTypeByName("TheGauntlet Zeus Lightning Bolt")
+TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT = Isaac.GetEntityVariantByName("TheGauntlet Zeus Lightning Bolt")
 
-TheGauntlet.Items.Zeus.ThunderZapSoundEffect = Isaac.GetSoundIdByName("TheGauntlet Thunder Zap")
+TheGauntlet.Items.Zeus.THUNDER_ZAP_SOUND_EFFECT = Isaac.GetSoundIdByName("TheGauntlet Thunder Zap")
 
 local scheduledLightningBolts = {}
 local currentLightningBoltDelay = 0
@@ -84,13 +83,13 @@ end)
 function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source)
     local bolt = TheGauntlet.Utility.SpawnEffect
     (
-        EntityType.ENTITY_EFFECT, TheGauntlet.Items.Zeus.LightningBoltVariant, TheGauntlet.Items.Zeus.LightningBoltSubType,
+        EntityType.ENTITY_EFFECT, TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT, 0,
         position, Vector.Zero,
         source
     )
     bolt.RenderZOffset = -1000
 
-    sfxManager:Play(TheGauntlet.Items.Zeus.ThunderZapSoundEffect, 1, 2, false, math.random() * 0.4 + 0.8)
+    sfxManager:Play(TheGauntlet.Items.Zeus.THUNDER_ZAP_SOUND_EFFECT, 1, 2, false, math.random() * 0.4 + 0.8)
 
     local tearFlags = TearFlags.TEAR_JACOBS
     if source ~= nil and source:ToPlayer() ~= nil and source:ToPlayer():HasCollectible(CollectibleType.COLLECTIBLE_BOOK_OF_BELIAL_PASSIVE) then
@@ -130,8 +129,7 @@ end
 
 ---@param effect EntityEffect
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, function(_, effect)
-    if effect.Variant ~= TheGauntlet.Items.Zeus.LightningBoltVariant then return end
-    if effect.SubType ~= TheGauntlet.Items.Zeus.LightningBoltSubType then return end
+    if effect.Variant ~= TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT then return end
 
     effect:GetData().BeamPoints = {}
     for i = 1, POINT_AMOUNT do
@@ -143,8 +141,7 @@ end)
 
 ---@param effect EntityEffect
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
-    if effect.Variant ~= TheGauntlet.Items.Zeus.LightningBoltVariant then return end
-    if effect.SubType ~= TheGauntlet.Items.Zeus.LightningBoltSubType then return end
+    if effect.Variant ~= TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT then return end
 
     if effect.FrameCount > 4 then
         effect:Remove()
@@ -164,8 +161,7 @@ coloredBeam:GetSprite():GetLayer(0):GetBlendMode():SetMode(BlendType.NORMAL)
 ---@param effect EntityEffect
 ---@param offset Vector
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_EFFECT_RENDER, function(_, effect, offset)
-    if effect.Variant ~= TheGauntlet.Items.Zeus.LightningBoltVariant then return end
-    if effect.SubType ~= TheGauntlet.Items.Zeus.LightningBoltSubType then return end
+    if effect.Variant ~= TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT then return end
 
     local alpha = TheGauntlet.Utility.InverseLerp(4, 0, effect.FrameCount)
 
@@ -189,8 +185,7 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
     if source.Entity == nil then return end
     if source.Entity.Type ~= EntityType.ENTITY_EFFECT then return end
-    if source.Entity.Variant ~= TheGauntlet.Items.Zeus.LightningBoltVariant then return end
-    if source.Entity.SubType ~= TheGauntlet.Items.Zeus.LightningBoltSubType then return end
+    if source.Entity.Variant ~= TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT then return end
 
     if entity.Type ~= EntityType.ENTITY_PLAYER then return end
 
@@ -205,15 +200,14 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
     if killSource.Entity == nil then return end
 
     if killSource.Entity.Type ~= EntityType.ENTITY_EFFECT then return end
-    if killSource.Entity.Variant ~= TheGauntlet.Items.Zeus.LightningBoltVariant then return end
-    if killSource.Entity.SubType ~= TheGauntlet.Items.Zeus.LightningBoltSubType then return end
+    if killSource.Entity.Variant ~= TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT then return end
 
     local player = TheGauntlet.Utility.GetPlayerFromEntity(killSource.Entity.SpawnerEntity)
     if not player then return end
 
-    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Zeus.CollectibleType)
+    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE)
     
-    if rng:RandomFloat() < (TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL / 100) then
+    if rng:RandomFloat() < TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL then
         player:AddActiveCharge(1)
     end
 end)

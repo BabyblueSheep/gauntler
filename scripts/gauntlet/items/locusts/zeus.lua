@@ -12,7 +12,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     if source.Entity.Type ~= EntityType.ENTITY_FAMILIAR then return end
     if source.Entity.Variant ~= FamiliarVariant.ABYSS_LOCUST then return end
-    if source.Entity.SubType ~= TheGauntlet.Items.Zeus.CollectibleType and source.Entity.SubType ~= TheGauntlet.Items.Zeus.CollectibleTypeActive then return end
+    if source.Entity.SubType ~= TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE and source.Entity.SubType ~= TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE_ACTIVE then return end
 
     --Repentance+ locusts seem not to have Siren compatibility, so neither won't mine
     if source.Entity:ToFamiliar():IsCharmed() then return end
@@ -20,7 +20,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     local player = TheGauntlet.Utility.GetPlayerFromEntity(source.Entity.SpawnerEntity)
     if not player then return end
 
-    if player:GetCollectibleRNG(TheGauntlet.Items.Zeus.CollectibleType):RandomFloat() >= TheGauntlet.Items.Zeus.Constants.LOCUST_CHANCE_TO_SUMMON_BOLT then return end
+    if player:GetCollectibleRNG(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE):RandomFloat() >= TheGauntlet.Items.Zeus.Constants.LOCUST_CHANCE_TO_SUMMON_BOLT then return end
 
     TheGauntlet.Items.Zeus.SpawnLightningBolt(entity.Position, player)
 end)
