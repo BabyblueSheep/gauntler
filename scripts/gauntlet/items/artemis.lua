@@ -17,6 +17,7 @@ local PIERCING_TEAR_VARIANTS = {
     [TearVariant.BLOOD] = TearVariant.CUPID_BLOOD
 }
 
+---Returns the current direction of the arrow, if it exists.
 ---@param player EntityPlayer
 ---@return Vector
 function TheGauntlet.Items.Artemis.GetCurrentDirection(player)
@@ -24,29 +25,79 @@ function TheGauntlet.Items.Artemis.GetCurrentDirection(player)
     return data and data.Direction or Vector.Zero
 end
 
+---Randomly rotates the arrow's direction, if it exists.
+---@param player EntityPlayer
+function TheGauntlet.Items.Artemis.RandomlyRotateArrow(player)
+    local data = player:GetData().GauntletArtemis
+    if data == nil then return end
+
+    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE)
+
+    --data.TimeLeft = TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE_FRAMES
+    data.PreviousDirection = data.Direction
+    data.Direction = TheGauntlet.Utility.RandomCardinalVector(rng)
+end
+
+--Sets the arrow to a specific direction, if it exists.
+---@param player EntityPlayer
+---@param direction Vector
+function TheGauntlet.Items.Artemis.RotateArrow(player, direction)
+    local data = player:GetData().GauntletArtemis
+    if data == nil then return end
+
+    data.PreviousDirection = data.Direction
+    data.Direction = direction:Normalized()
+end
+
+---Resets the timer to its initial value.
+---@param player EntityPlayer
+function TheGauntlet.Items.Artemis.ResetTimer(player)
+    local data = player:GetData().GauntletArtemis
+    if data == nil then return end
+
+    data.TimeLeft = TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE_FRAMES
+end
+
+---Returns the value of the timer.
+---@param player EntityPlayer
+function TheGauntlet.Items.Artemis.GetTimer(player)
+    local data = player:GetData().GauntletArtemis
+    return data and data.TimeLeft or -1
+end
+
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player)
     if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then return end
 
+    local data = player:GetData()
+
+    data.GauntletArtemis.TimeLeft = data.GauntletArtemis.TimeLeft - 1
+    if data.GauntletArtemis.TimeLeft <= 0 then
+        TheGauntlet.Items.Artemis.RandomlyRotateArrow(player)
+        TheGauntlet.Items.Artemis.ResetTimer(player)
+    end
+end)
+
+---@param collectibleType CollectibleType
+---@param charge integer
+---@param firstTime boolean
+---@param slot integer
+---@param varData integer
+---@param player EntityPlayer
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, collectibleType, charge, firstTime, slot, varData, player)
     local rng = player:GetCollectibleRNG(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE)
-    local randomDirection = TheGauntlet.Utility.RandomCardinalVector(rng)
 
     local data = player:GetData()
     if data.GauntletArtemis == nil then
+        local randomDirection = TheGauntlet.Utility.RandomCardinalVector(rng)
+    
         data.GauntletArtemis = {
             TimeLeft = TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE_FRAMES,
             Direction = randomDirection,
             PreviousDirection = randomDirection
         }
     end
-
-    data.GauntletArtemis.TimeLeft = data.GauntletArtemis.TimeLeft - 1
-    if data.GauntletArtemis.TimeLeft <= 0 then
-        data.GauntletArtemis.TimeLeft = TheGauntlet.Items.Artemis.Constants.TIME_BETWEEN_ARROW_DIRECTION_CHANGE_FRAMES
-        data.GauntletArtemis.PreviousDirection = data.GauntletArtemis.Direction
-        data.GauntletArtemis.Direction = TheGauntlet.Utility.RandomCardinalVector(rng)
-    end
-end)
+end, TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE)
 
 ---@param player EntityPlayer
 ---@param collectibleType CollectibleType
@@ -63,12 +114,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, function (_, tear)
 
     if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then return end
 
-    local data = player:GetData()
-    if data.GauntletArtemis == nil then return end
-
     local tearDirection = tear.Velocity:Normalized()
-    ---@type Vector
-    local arrowDirection = data.GauntletArtemis.Direction
+    local arrowDirection = TheGauntlet.Items.Artemis.GetCurrentDirection(player)
 
     local angleDifference = tearDirection:Dot(arrowDirection)
     if angleDifference > TheGauntlet.Items.Artemis.Constants.MINIMUM_VALID_ANGLE_DIFFERENCE then
@@ -87,12 +134,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_BOMB, function (_, bomb)
 
     if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then return end
 
-    local data = player:GetData()
-    if data.GauntletArtemis == nil then return end
-
     local tearDirection = bomb.Velocity:Normalized()
-    ---@type Vector
-    local arrowDirection = data.GauntletArtemis.Direction
+    local arrowDirection = TheGauntlet.Items.Artemis.GetCurrentDirection(player)
 
     local angleDifference = tearDirection:Dot(arrowDirection)
     if angleDifference > TheGauntlet.Items.Artemis.Constants.MINIMUM_VALID_ANGLE_DIFFERENCE then
@@ -109,14 +152,10 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, function (_, player, tearParams, weaponType, damageScale, tearDisplacement, source)
     if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then return end
 
-    local data = player:GetData()
-    if data.GauntletArtemis == nil then return end
-
     local tearFireDirection = player:GetFireDirection()
     if tearFireDirection == Direction.NO_DIRECTION then return end
     local tearDirection = Isaac.GetAxisAlignedUnitVectorFromDir(tearFireDirection)
-    ---@type Vector
-    local arrowDirection = data.GauntletArtemis.Direction
+    local arrowDirection = TheGauntlet.Items.Artemis.GetCurrentDirection(player)
 
     local angleDifference = tearDirection:Dot(arrowDirection)
     if angleDifference > TheGauntlet.Items.Artemis.Constants.MINIMUM_VALID_ANGLE_DIFFERENCE then

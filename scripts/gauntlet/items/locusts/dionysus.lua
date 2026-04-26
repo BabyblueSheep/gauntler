@@ -5,7 +5,7 @@ TheGauntlet.Items.Dionysus.Constants.LOCUST_WIGGLE_SPEED = 0.5
 
 ---@param familiar EntityFamiliar
 TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, function (_, familiar)
-    if familiar.SubType ~= TheGauntlet.Items.Dionysus.CollectibleType then return end
+    if familiar.SubType ~= TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE then return end
 
     if familiar.State == TheGauntlet.Utility.LocustState.CHARGING then
 

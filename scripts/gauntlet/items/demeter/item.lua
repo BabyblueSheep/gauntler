@@ -1,7 +1,7 @@
 TheGauntlet.Items.Demeter.Constants = {
     SUMMER_NPC_DAMAGE_PER_TICK = 2,
     AUTUMN_NPC_SLOWNESS = 1, --Seems to have an upper cap? Since at 1 they're still very slow
-    SPRING_BOOGER_CHANCE = 25,
+    SPRING_BOOGER_CHANCE = 0.25,
 }
 
 local SLOW_COLOR_OFFSET = 40 / 255
@@ -15,7 +15,7 @@ local SLOW_COLOR = Color
 
 local game = Game()
 
-TheGauntlet.Items.Demeter.CollectibleType = Isaac.GetItemIdByName("Demeter")
+TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Demeter")
 
 ---@enum Season
 TheGauntlet.Items.Demeter.Season = {
@@ -62,7 +62,7 @@ end
 TheGauntlet:AddPriorityCallback(ModCallbacks.MC_PRE_NPC_UPDATE, CallbackPriority.EARLY, function (_, npc)
     local season = TheGauntlet.Items.Demeter.GetSeason()
 
-    local owner = PlayerManager.FirstCollectibleOwner(TheGauntlet.Items.Demeter.CollectibleType)
+    local owner = PlayerManager.FirstCollectibleOwner(TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE)
     if season == TheGauntlet.Items.Demeter.Season.WINTER then
         npc:AddIce(EntityRef(owner), 30)
     elseif season == TheGauntlet.Items.Demeter.Season.SUMMER then
@@ -79,7 +79,7 @@ end)
 ---@param tearDisplacement integer
 ---@param source Entity
 TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, function (_, player, tearParams, weaponType, damageScale, tearDisplacement, source)
-    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Demeter.CollectibleType)
+    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE)
 
     if TheGauntlet.Items.Demeter.GetSeason() == TheGauntlet.Items.Demeter.Season.SPRING then
         if rng:RandomFloat() < TheGauntlet.Items.Demeter.Constants.SPRING_BOOGER_CHANCE then
@@ -92,7 +92,7 @@ end)
 --The current season needs to be unset because enemies spawn before MC_POST_NEW_ROOM is called (so, enemies spawn with the effects of the previous season).
 --But, MC_POST_NEW_ROOM still needs to be used because Room:IsFirstVisit() fails in MC_PRE_NEW_ROOM.
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_NEW_ROOM, function (_)
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Demeter.CollectibleType) then return end
+    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE) then return end
 
     local runSave = TheGauntlet.SaveManager.GetRunSave()
 
@@ -101,7 +101,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_NEW_ROOM, function (_)
 end)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Demeter.CollectibleType) then return end
+    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE) then return end
 
     local room = game:GetRoom()
 
@@ -125,7 +125,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, colle
     if TheGauntlet.Items.Demeter.GetSeason() == TheGauntlet.Items.Demeter.Season.NO_SEASON then
         TheGauntlet.Items.Demeter.SetSeason(TheGauntlet.Items.Demeter.Season.WINTER)
     end
-end, TheGauntlet.Items.Demeter.CollectibleType)
+end, TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE)
 
 ---@param player EntityPlayer
 ---@param collectibleType CollectibleType
@@ -135,4 +135,4 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, functi
     if PlayerManager.AnyoneHasCollectible(collectibleType) then return end
 
     TheGauntlet.Items.Demeter.SetSeason(TheGauntlet.Items.Demeter.Season.NO_SEASON)
-end, TheGauntlet.Items.Demeter.CollectibleType)
+end, TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE)

@@ -26,6 +26,7 @@ StatusEffectLibrary.RegisterStatusEffect(
     nil, nil, true
 )
 
+---Whether the given entity can be inflicted with Pregnant or not.
 ---@param entity Entity
 function TheGauntlet.Items.Hera.CanEntityBeImpregnanted(entity)
     local returnValue = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.HERA_CAN_ENTITY_BE_IMPREGNANTED, entity)

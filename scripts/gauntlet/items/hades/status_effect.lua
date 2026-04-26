@@ -1,8 +1,10 @@
 local hadesSkullStatusEffectSprite = Sprite("gfx/gauntlet/statuseffects.anm2", true)
 hadesSkullStatusEffectSprite:Play("HadesSkull", true)
 
+TheGauntlet.Items.Hades.STATUS_EFFECT_ID = "TheGauntlet_HadesSkull"
+
 StatusEffectLibrary.RegisterStatusEffect(
-	"TheGauntlet_HadesSkull",
+	TheGauntlet.Items.Hades.STATUS_EFFECT_ID,
 	hadesSkullStatusEffectSprite,
     Color
     (
@@ -12,6 +14,7 @@ StatusEffectLibrary.RegisterStatusEffect(
     )
 )
 
+---Inflict the Calcified status effect to an enemy.
 ---@param entity Entity
 ---@param source EntityRef
 ---@param duration integer

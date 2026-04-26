@@ -1,6 +1,6 @@
 TheGauntlet.Items.Hades.Constants = {
     SKULL_STATUS_DURATION = 30 * 5,
-    CHANCE_TO_APPLY_SKULL = 5,
+    CHANCE_TO_APPLY_SKULL = 0.05,
 }
 
 
@@ -27,15 +27,16 @@ local AQUARIUS_CREEP_COLOR = Color
 
 
 
-TheGauntlet.Items.Hades.CollectibleType = Isaac.GetItemIdByName("Hades")
+TheGauntlet.Items.Hades.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Hades")
 
+---Whether the effect should proc after calling this.
 ---@param player EntityPlayer
 ---@return boolean
 function TheGauntlet.Items.Hades.ShouldProc(player)
-    if not player:HasCollectible(TheGauntlet.Items.Hades.CollectibleType) then return false end
-    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Hades.CollectibleType)
+    if not player:HasCollectible(TheGauntlet.Items.Hades.COLLECTIBLE_TYPE) then return false end
+    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Hades.COLLECTIBLE_TYPE)
 
-    return rng:RandomFloat() < (TheGauntlet.Items.Hades.Constants.CHANCE_TO_APPLY_SKULL / 100)
+    return rng:RandomFloat() < TheGauntlet.Items.Hades.Constants.CHANCE_TO_APPLY_SKULL
 end
 
 ---@param entity Entity

@@ -6,14 +6,14 @@ EID:assignItemPoolMarkup(TheGauntlet.GauntletRoom.ITEM_POOL_ID, "{{GauntletGaunt
 
 
 
-EID.CarBatteryNoSynergy[TheGauntlet.Items.Zeus.CollectibleType] = true
+EID.CarBatteryNoSynergy[TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE] = true
 
 EID.BFFSNoSynergy[TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE] = true
 
-EID.HealthUpData["5.100."..TheGauntlet.Items.Dionysus.CollectibleType] = 1
-EID.HealingItemData["5.100."..TheGauntlet.Items.Dionysus.CollectibleType] = true
-EID.BloodUpData[TheGauntlet.Items.Dionysus.CollectibleType] = 4
-EID:AddPlayerConditional(TheGauntlet.Items.Dionysus.CollectibleType, PlayerType.PLAYER_BETHANY_B, "Health Up Blood Charges", {variableText = 4})
+EID.HealthUpData["5.100."..TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE] = 1
+EID.HealingItemData["5.100."..TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE] = true
+EID.BloodUpData[TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE] = 4
+EID:AddPlayerConditional(TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE, PlayerType.PLAYER_BETHANY_B, "Health Up Blood Charges", {variableText = 4})
 
 
 
@@ -23,14 +23,14 @@ local locustIds = {
     TheGauntlet.Items.Ares.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Athena.COLLECTIBLE_TYPE,
-    TheGauntlet.Items.Demeter.CollectibleType,
-    TheGauntlet.Items.Dionysus.CollectibleType,
-    TheGauntlet.Items.Hades.CollectibleType,
+    TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Hades.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Hera.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE,
-    TheGauntlet.Items.Zeus.CollectibleType,
-    TheGauntlet.Items.Zeus.CollectibleTypeActive,
+    TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE_ACTIVE,
 }
 
 ---@param xmlData table
@@ -85,17 +85,17 @@ EID.XMLLocusts[TheGauntlet.Items.Hera.COLLECTIBLE_TYPE][1] = 3
 EID.XMLLocusts[TheGauntlet.Items.Hera.COLLECTIBLE_TYPE][2] = 1
 
 --Surely this is a terrible way to do this
-EID.XMLLocusts[TheGauntlet.Items.Zeus.CollectibleType][5] = { "Gauntlet Zeus Bolt" }
-EID.XMLLocusts[TheGauntlet.Items.Zeus.CollectibleType][11] = TheGauntlet.Items.Zeus.Constants.LOCUST_CHANCE_TO_SUMMON_BOLT
+EID.XMLLocusts[TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE][5] = { "Gauntlet Zeus Bolt" }
+EID.XMLLocusts[TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE][11] = TheGauntlet.Items.Zeus.Constants.LOCUST_CHANCE_TO_SUMMON_BOLT
 
-EID.XMLLocusts[TheGauntlet.Items.Zeus.CollectibleTypeActive][5] = { "Gauntlet Zeus Bolt" }
-EID.XMLLocusts[TheGauntlet.Items.Zeus.CollectibleTypeActive][11] = TheGauntlet.Items.Zeus.Constants.LOCUST_CHANCE_TO_SUMMON_BOLT
+EID.XMLLocusts[TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE_ACTIVE][5] = { "Gauntlet Zeus Bolt" }
+EID.XMLLocusts[TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE_ACTIVE][11] = TheGauntlet.Items.Zeus.Constants.LOCUST_CHANCE_TO_SUMMON_BOLT
 
 EID.XMLLocusts[TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE][4] = { "Gauntlet Poseidon Push" }
 
-EID.XMLLocusts[TheGauntlet.Items.Hades.CollectibleType][4] = { "Gauntlet Hades Status" }
-EID.XMLLocusts[TheGauntlet.Items.Hades.CollectibleType][10] = TheGauntlet.Items.Hades.Constants.LOCUST_CHANCE_TO_APPLY_STATUS_EFFECT
+EID.XMLLocusts[TheGauntlet.Items.Hades.COLLECTIBLE_TYPE][4] = { "Gauntlet Hades Status" }
+EID.XMLLocusts[TheGauntlet.Items.Hades.COLLECTIBLE_TYPE][10] = TheGauntlet.Items.Hades.Constants.LOCUST_CHANCE_TO_APPLY_STATUS_EFFECT
 
-EID.XMLLocusts[TheGauntlet.Items.Demeter.CollectibleType][4] = { "Gauntlet Demeter Booger" }
+EID.XMLLocusts[TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE][4] = { "Gauntlet Demeter Booger" }
 
-EID.XMLLocusts[TheGauntlet.Items.Dionysus.CollectibleType][7] = { 10 } --lol.
+EID.XMLLocusts[TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE][7] = { 10 } --lol.

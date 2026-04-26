@@ -3,6 +3,7 @@ TheGauntlet.Items.Apollo = {}
 TheGauntlet.Items.Apollo.Constants =
 {
     CHANCE_TO_GIVE_BOOST = 0.15,
+    BOOST_DURATION_FRAMES = 10 * 30
 }
 
 
@@ -16,6 +17,16 @@ TheGauntlet.Items.Apollo.FAMILIAR_VARIANT = Isaac.GetEntityVariantByName("TheGau
 
 TheGauntlet.Items.Apollo.HARP_SOUND_EFFECT = Isaac.GetSoundIdByName("TheGauntlet Harp")
 
+---Triggers an Apollo familiar's animation for boosting the player.
+---@param familiar EntityFamiliar
+function TheGauntlet.Items.Apollo.TriggerHit(familiar)
+    if familiar.Variant ~= TheGauntlet.Items.Apollo.FamiliarVariant then return end
+
+    familiar:GetSprite():Play("Hit", true)
+
+    sfxManager:Play(SoundEffect.SOUND_THUMBSUP)
+end
+
 ---@param player EntityPlayer
 ---@param cache CacheFlag
 TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function (_, player, cache)
@@ -26,6 +37,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, function (_, player, cac
     local rng = RNG(math.max(Random(), 1))
     player:CheckFamiliar(TheGauntlet.Items.Apollo.FAMILIAR_VARIANT, familiarAmountToSpawn, rng, apolloItemConfig)
 end, CacheFlag.CACHE_FAMILIARS)
+
+--I would implement charmed by Siren behavior, but neither Farting Baby nor Dry Baby seem to.
+--Oh well.
 
 ---@param familiar EntityFamiliar
 TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, function (_, familiar)
@@ -40,7 +54,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, function (_, familiar)
     if sprite:IsEventTriggered("PlayHighActivation") then
         sfxManager:Play(TheGauntlet.Items.Apollo.HARP_SOUND_EFFECT)
 
-        familiar.Player:GetEffects():AddNullEffect(TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE_MULTISHOT, false, 1)
+        familiar.Player:AddNullItemEffect(TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE_MULTISHOT, true, TheGauntlet.Items.Apollo.Constants.BOOST_DURATION_FRAMES, false)
     end
 
     if sprite:IsFinished("Hit") then
@@ -57,15 +71,10 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FAMILIAR_COLLISION, function (_, fa
 
     collider:Die()
 
-    local sprite = familiar:GetSprite()
-
-    if sprite:IsPlaying("Hit") then return end
-    if familiar.Player:GetEffects():HasNullEffect(TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE_MULTISHOT) then return end
+    if familiar:GetSprite():IsPlaying("Hit") then return end
 
     if familiar:GetDropRNG():RandomFloat() < TheGauntlet.Items.Apollo.Constants.CHANCE_TO_GIVE_BOOST then
-        sprite:Play("Hit", true)
-
-        sfxManager:Play(SoundEffect.SOUND_THUMBSUP)
+        TheGauntlet.Items.Apollo.TriggerHit(familiar)
     end
 
 end, TheGauntlet.Items.Apollo.FamiliarVariant)

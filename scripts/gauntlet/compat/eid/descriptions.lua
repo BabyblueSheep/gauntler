@@ -11,11 +11,11 @@ end, "Gauntlet Hephaestus if no Golden then only Trinket")
 EID:addDescriptionModifier("Gauntlet Zeus Active is Zeus Passive", function (descObj)
     if descObj.ObjType ~= EntityType.ENTITY_PICKUP then return false end
     if descObj.ObjVariant ~= PickupVariant.PICKUP_COLLECTIBLE then return false end
-    if descObj.ObjSubType ~= TheGauntlet.Items.Zeus.CollectibleTypeActive then return false end
+    if descObj.ObjSubType ~= TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE_ACTIVE then return false end
 
     return true
 end, function (descObj)
-    return EID:getDescriptionObj(descObj.ObjType, descObj.ObjVariant, TheGauntlet.Items.Zeus.CollectibleType, descObj.Entity)
+    return EID:getDescriptionObj(descObj.ObjType, descObj.ObjVariant, TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE, descObj.Entity)
 end, 1)
 
 local itemsThatAreThrowable = {
@@ -129,7 +129,7 @@ end
 EID:addDescriptionModifier("Gauntlet Zeus Bolt Amount When Zeus", function (descObj)
     if descObj.ObjType ~= EntityType.ENTITY_PICKUP then return false end
     if descObj.ObjVariant ~= PickupVariant.PICKUP_COLLECTIBLE then return false end
-    if descObj.ObjSubType ~= TheGauntlet.Items.Zeus.CollectibleType then return false end
+    if descObj.ObjSubType ~= TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE then return false end
 
     return true
 end, function (descObj)
@@ -141,7 +141,7 @@ end, function (descObj)
         local activeItemType = player:GetActiveItem()
 
         if activeItemType == 0 then
-            activeItemType = TheGauntlet.Items.Zeus.CollectibleType
+            activeItemType = TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE
 
             if hasInsertedZeusOnItsOwn then
                 goto continue
@@ -150,7 +150,7 @@ end, function (descObj)
 
         AppendZeusBoltDescription(descObj, activeItemType, activeItemType)
 
-        if activeItemType == TheGauntlet.Items.Zeus.CollectibleType then
+        if activeItemType == TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE then
             hasInsertedZeusOnItsOwn = true
         end
 
@@ -164,9 +164,9 @@ EID:addDescriptionModifier("Gauntlet Zeus Bolt Amount When Active", function (de
     if descObj.ObjType ~= EntityType.ENTITY_PICKUP then return false end
     if descObj.ObjVariant ~= PickupVariant.PICKUP_COLLECTIBLE then return false end
 
-    return PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Zeus.CollectibleType)
+    return PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE)
 end, function (descObj)
-    AppendZeusBoltDescription(descObj, descObj.ObjSubType, TheGauntlet.Items.Zeus.CollectibleType)
+    AppendZeusBoltDescription(descObj, descObj.ObjSubType, TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE)
 
     return descObj
 end)
@@ -176,10 +176,13 @@ end)
 
 
 
-local apolloMultishotCooldownSeconds = TheGauntlet.Utility.NumberToPresentableNumber(tonumber(XMLData.GetEntryByName(XMLNode.NULLITEM, "Apollo Multishot").cooldown) / 30)
+local apolloMultishotCooldownSeconds = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Apollo.Constants.BOOST_DURATION_FRAMES / 30)
+local apolloChanceToGiveBoost = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Apollo.Constants.CHANCE_TO_GIVE_BOOST * 100)
 
 local aresChallengeRoomDamage = XMLData.GetEntryByName(XMLNode.NULLITEM, "Ares Challenge Room Stats").damage
 local aresBossChallengeRoomDamage = XMLData.GetEntryByName(XMLNode.NULLITEM, "Ares Boss Challenge Room Stats").damage
+
+local athenaShieldTimeDisableSeconds = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME_FRAMES / 30)
 
 local dionysusHealthContainer = math.tointeger(XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").maxhearts) // 2
 local dionysusHealthHeal = math.tointeger(XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").hearts) // 2 - dionysusHealthContainer
@@ -190,7 +193,11 @@ local dionysusRange = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").range
 local dionysusLuck = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").luck
 local dionysusDrunkTimeSeconds = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Dionysus.Constants.DRUNK_DURATION_ON_HIT_FRAMES / 30)
 
+local demeterBoogerChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Demeter.Constants.SPRING_BOOGER_CHANCE * 100)
 
+local hadesSkullChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Hades.Constants.CHANCE_TO_APPLY_SKULL * 100)
+
+local zeusBoltPipGiveChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL * 100)
 
 local function RegisterLanguageKeys(language, localizationItems)
     EID:addItemPoolName(TheGauntlet.GauntletRoom.ITEM_POOL_ID, language, localizationItems["pool.gauntlet.name"])
@@ -202,7 +209,7 @@ local function RegisterLanguageKeys(language, localizationItems)
         },
         {
             TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE, "apollo",
-            { TheGauntlet.Items.Apollo.Constants.CHANCE_TO_GIVE_BOOST, apolloMultishotCooldownSeconds }
+            { apolloChanceToGiveBoost, apolloMultishotCooldownSeconds }
         },
         {
             TheGauntlet.Items.Ares.COLLECTIBLE_TYPE, "ares",
@@ -214,19 +221,19 @@ local function RegisterLanguageKeys(language, localizationItems)
         },
         {
             TheGauntlet.Items.Athena.COLLECTIBLE_TYPE, "athena",
-            { TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT, TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME_SECONDS }
+            { TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT, athenaShieldTimeDisableSeconds }
         },
         {
-            TheGauntlet.Items.Demeter.CollectibleType, "demeter",
-            { TheGauntlet.Items.Demeter.Constants.SPRING_BOOGER_CHANCE }
+            TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE, "demeter",
+            { demeterBoogerChance }
         },
         {
-            TheGauntlet.Items.Dionysus.CollectibleType, "dionysus",
+            TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE, "dionysus",
             { dionysusHealthContainer, dionysusHealthHeal, dionysusSpeed, dionysusTears, dionysusDamage, dionysusRange, dionysusLuck, dionysusDrunkTimeSeconds }
         },
         {
-            TheGauntlet.Items.Hades.CollectibleType, "hades",
-            { TheGauntlet.Items.Hades.Constants.CHANCE_TO_APPLY_SKULL }
+            TheGauntlet.Items.Hades.COLLECTIBLE_TYPE, "hades",
+            { hadesSkullChance }
         },
         {
             TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE, "hephaestus",
@@ -241,8 +248,8 @@ local function RegisterLanguageKeys(language, localizationItems)
             { }
         },
         {
-            TheGauntlet.Items.Zeus.CollectibleType, "zeus",
-            { TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL }
+            TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE, "zeus",
+            { zeusBoltPipGiveChance }
         },
     }
 
@@ -264,8 +271,8 @@ local function RegisterLanguageKeys(language, localizationItems)
 
     EID.descriptions[language].ConditionalDescs["Gauntlet Hephaestus if no Golden then only Trinket"] = { localizationItems["item.hephaestus.description.without_golden_trinket"] }
 
-    EID:addSynergyCondition(CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES, TheGauntlet.Items.Zeus.CollectibleType, localizationItems["item.zeus.description.book_of_virtues"] , nil, language)
-    EID:addBookOfBelialBuffsCondition(TheGauntlet.Items.Zeus.CollectibleType, localizationItems["item.zeus.description.judas_birthright"] , nil, nil, language)
+    EID:addSynergyCondition(CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES, TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE, localizationItems["item.zeus.description.book_of_virtues"] , nil, language)
+    EID:addBookOfBelialBuffsCondition(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE, localizationItems["item.zeus.description.judas_birthright"] , nil, nil, language)
 
     if customZeusDescriptions["Default"] == nil then
         customZeusDescriptions["Default"] = {}

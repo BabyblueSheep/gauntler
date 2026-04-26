@@ -8,6 +8,11 @@ local drunkTimerOne = 0
 local drunkTimerTwo = 0
 local drunkTimerThree = 0
 
+--Forces the drunk shader to activate.
+function TheGauntlet.Items.Dionysus.ForceDrunkShader()
+    shouldGetDrunk = true
+end
+
 TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderName)
     if shaderName ~= "TheGauntlet Drunk Distortion" then return end
 
@@ -69,7 +74,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     local player = entity:ToPlayer()
     if player == nil then return end
 
-    if not player:HasCollectible(TheGauntlet.Items.Dionysus.CollectibleType) then return end
+    if not player:HasCollectible(TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE) then return end
 
-    shouldGetDrunk = true
+    TheGauntlet.Items.Dionysus.ForceDrunkShader()
 end)

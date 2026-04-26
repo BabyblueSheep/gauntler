@@ -8,6 +8,7 @@ local currentColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
 local targetColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
 local colorUpdateCounter = 0
 
+---Reset the current season shader to match the current season.  
 function TheGauntlet.Items.Demeter.RefreshSeasonVisuals()
     local season = TheGauntlet.Items.Demeter.GetSeason()
 

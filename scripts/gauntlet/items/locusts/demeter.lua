@@ -13,7 +13,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     if source.Entity.Type ~= EntityType.ENTITY_FAMILIAR then return end
     if source.Entity.Variant ~= FamiliarVariant.ABYSS_LOCUST then return end
-    if source.Entity.SubType ~= TheGauntlet.Items.Demeter.CollectibleType then return end
+    if source.Entity.SubType ~= TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE then return end
 
     --Repentance+ locusts seem not to have Siren compatibility, so neither won't mine
     if source.Entity:ToFamiliar():IsCharmed() then return end
@@ -21,7 +21,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     local player = TheGauntlet.Utility.GetPlayerFromEntity(source.Entity.SpawnerEntity)
     if not player then return end
 
-    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Demeter.CollectibleType)
+    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE)
     if rng:RandomFloat() >= TheGauntlet.Items.Demeter.Constants.LOCUST_BOOGER_STICK_CHANCE then return end
 
     local tear = TheGauntlet.Utility.SpawnTear

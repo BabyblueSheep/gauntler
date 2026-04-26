@@ -7,11 +7,25 @@ TheGauntlet.Items.Dionysus.Constants = {
 
 local game = Game()
 
-TheGauntlet.Items.Dionysus.CollectibleType = Isaac.GetItemIdByName("Dionysus")
+TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Dionysus")
+
+---Forces slippery physics for some duration.
+---@param player EntityPlayer
+---@param duration integer
+---@param additive boolean?
+function TheGauntlet.Items.Dionysus.ForcePlayerDrunk(player, duration, additive)
+    local data = player:GetData()
+    if additive then
+        data.TheGauntletDionysusDrunkMovementTimer = data.TheGauntletDionysusDrunkMovementTimer + duration
+    else
+        data.TheGauntletDionysusDrunkMovementTimer = duration
+    end
+    data.TheGauntletDionysusPreviousVelocity = player.Velocity
+end
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
     if TheGauntlet.Settings.RemoveDionysus() then
-        game:GetItemPool():AddRoomBlacklist(TheGauntlet.Items.Dionysus.CollectibleType)
+        game:GetItemPool():AddRoomBlacklist(TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE)
     end
 end)
 
@@ -45,9 +59,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     local player = entity:ToPlayer()
     if player == nil then return end
 
-    if not player:HasCollectible(TheGauntlet.Items.Dionysus.CollectibleType) then return end
+    if not player:HasCollectible(TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE) then return end
 
-    local data = player:GetData()
-    data.TheGauntletDionysusDrunkMovementTimer = TheGauntlet.Items.Dionysus.Constants.DRUNK_DURATION_ON_HIT_FRAMES
-    data.TheGauntletDionysusPreviousVelocity = player.Velocity
+    TheGauntlet.Items.Dionysus.ForcePlayerDrunk(player, TheGauntlet.Items.Dionysus.Constants.DRUNK_DURATION_ON_HIT_FRAMES)
 end)
