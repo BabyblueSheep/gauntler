@@ -99,7 +99,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
                 local pushSpeed = (TheGauntlet.Items.Poseidon.Constants.ENEMY_FLOW_SPEED_BASE + game:GetLevel():GetStage() * TheGauntlet.Items.Poseidon.Constants.ENEMY_FLOW_SPEED_STAGE)
                 entity:AddVelocity(targetCurrent * pushSpeed, true)
             elseif entity.Type == EntityType.ENTITY_PICKUP or entity.Type == EntityType.ENTITY_BOMB then
-                if entity.Variant == BombVariant.BOMB_ROCKET or entity.Variant == BombVariant.BOMB_ROCKET_GIGA then goto continue end
+                if entity.Type == EntityType.ENTITY_BOMB then
+                    if entity.Variant == BombVariant.BOMB_ROCKET or entity.Variant == BombVariant.BOMB_ROCKET_GIGA then goto continue end
+                end
 
                 entity:AddVelocity(targetCurrent * TheGauntlet.Items.Poseidon.Constants.PICKUP_FLOW_SPEED, true)
             end
