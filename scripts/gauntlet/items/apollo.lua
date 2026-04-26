@@ -20,7 +20,7 @@ TheGauntlet.Items.Apollo.HARP_SOUND_EFFECT = Isaac.GetSoundIdByName("TheGauntlet
 ---Triggers an Apollo familiar's animation for boosting the player.
 ---@param familiar EntityFamiliar
 function TheGauntlet.Items.Apollo.TriggerHit(familiar)
-    if familiar.Variant ~= TheGauntlet.Items.Apollo.FamiliarVariant then return end
+    if familiar.Variant ~= TheGauntlet.Items.Apollo.FAMILIAR_VARIANT then return end
 
     familiar:GetSprite():Play("Hit", true)
 
@@ -44,7 +44,7 @@ end, CacheFlag.CACHE_FAMILIARS)
 ---@param familiar EntityFamiliar
 TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, function (_, familiar)
     familiar:AddToFollowers()
-end, TheGauntlet.Items.Apollo.FamiliarVariant)
+end, TheGauntlet.Items.Apollo.FAMILIAR_VARIANT)
 
 ---@param familiar EntityFamiliar
 TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, function (_, familiar)
@@ -60,7 +60,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_UPDATE, function (_, familiar)
     if sprite:IsFinished("Hit") then
         sprite:Play("Idle")
     end
-end, TheGauntlet.Items.Apollo.FamiliarVariant)
+end, TheGauntlet.Items.Apollo.FAMILIAR_VARIANT)
 
 ---@param familiar EntityFamiliar
 ---@param collider Entity
@@ -77,7 +77,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FAMILIAR_COLLISION, function (_, fa
         TheGauntlet.Items.Apollo.TriggerHit(familiar)
     end
 
-end, TheGauntlet.Items.Apollo.FamiliarVariant)
+end, TheGauntlet.Items.Apollo.FAMILIAR_VARIANT)
 
 local weaponsThatDontHaveSpread = {
     [WeaponType.WEAPON_SPIRIT_SWORD] = true,

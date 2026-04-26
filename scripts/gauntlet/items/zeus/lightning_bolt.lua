@@ -1,9 +1,10 @@
-TheGauntlet.Items.Zeus.Constants.CHANCE_TO_STRIKE_ENEMY = 0.75
+TheGauntlet.Items.Zeus.Constants.CHANCE_TO_STRIKE_ENEMY = -0.75
 TheGauntlet.Items.Zeus.Constants.BOLT_DAMAGE = 20
 TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL = 0.1
 
 
 
+local game = Game()
 local sfxManager = SFXManager()
 local generalRNG = RNG() --I don't think this is the best idea, but mehhhh
 
@@ -60,7 +61,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             if bolt.TargetType == TheGauntlet.Items.Zeus.TargetType.ENEMY and #enemyPositions > 0 then
                 targetPosition = TheGauntlet.Utility.RandomItemFromList(enemyPositions, generalRNG)
             else
-                targetPosition = Game():GetRoom():GetRandomPosition(10)
+                targetPosition = game:GetRoom():GetRandomPosition(10)
             end
 
             TheGauntlet.Items.Zeus.SpawnLightningBolt(targetPosition, bolt.Source)
@@ -96,7 +97,43 @@ function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source)
         tearFlags = tearFlags | TearFlags.TEAR_BURN
     end
 
-    Game():BombExplosionEffects(position, TheGauntlet.Items.Zeus.Constants.BOLT_DAMAGE, tearFlags, Color.Default, bolt, 0.5)
+    game:BombExplosionEffects(position, TheGauntlet.Items.Zeus.Constants.BOLT_DAMAGE, tearFlags, Color.Default, bolt, 0.5)
+
+    if game:GetRoom():HasWater() then
+
+        local sparkDirection = generalRNG:RandomVector() * 16
+
+        local nearbyEnemies = Isaac.FindInRadius(position, 40 * 10, EntityPartition.ENEMY)
+        if #nearbyEnemies > 0 then
+
+            local closestEnemy = nearbyEnemies[1]
+            for i = 2, #nearbyEnemies do
+                if closestEnemy.Position:Distance(position) > nearbyEnemies[i].Position:Distance(position) then
+                    closestEnemy = nearbyEnemies[i]
+                end
+            end
+            local directionToClosestEnemy = (closestEnemy.Position - position)
+
+            if directionToClosestEnemy:Length() > 0.01 then
+                sparkDirection = directionToClosestEnemy
+            end
+
+        end
+
+        local player = source
+        if player == nil or player:ToPlayer() == nil then
+            player = Isaac.GetPlayer()
+        end
+
+        local spark = EntityLaser.ShootAngle(LaserVariant.ELECTRIC, position, sparkDirection:GetAngleDegrees(), 7, Vector.Zero, player)
+        spark.SubType = LaserSubType.LASER_SUBTYPE_NO_IMPACT
+        spark.MaxDistance = sparkDirection:Length()
+        spark:SetOneHit(true)
+        spark.DisableFollowParent = true
+        spark.TearFlags = TearFlags.TEAR_SPECTRAL | TearFlags.TEAR_JACOBS
+        spark.SpriteOffset = Vector(0, -18)
+
+    end
 end
 
 local POINT_AMOUNT = 24
