@@ -19,14 +19,14 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
     if game:IsGreedMode() then return end
 
     local level = game:GetLevel()
-    
+
     local roomSubtype = -1
     if TheGauntlet.Utility.CanBossChallengeRoomsSpawn() then
         roomSubtype = RoomSubType.CHALLENGE_BOSS
     elseif TheGauntlet.Utility.CanNormalChallengeRoomsSpawn() then
         roomSubtype = RoomSubType.CHALLENGE_NORMAL
     end
-    
+
     if roomSubtype == -1 then return end
 
     local rng = RNG(level:GetDungeonPlacementSeed())
