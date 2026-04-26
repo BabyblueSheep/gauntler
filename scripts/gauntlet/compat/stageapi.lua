@@ -1,5 +1,7 @@
 local game = Game()
 
+if StageAPI == nil then return end
+
 local stageAPICallbacks = require("scripts.stageapi.enums.Callbacks")
 
 StageAPI.UnregisterCallbacks("The Gauntlet")
@@ -9,8 +11,6 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.PRE_SELECT_GAUNTLET_ROOM_W
     local room = game:GetRoom()
 
     local roomSave = TheGauntlet.SaveManager.GetRoomSave()
-
-    if StageAPI == nil then return end
 
     if StageAPI.CurrentStage == nil then return end
     if StageAPI.CurrentStage.ChallengeWaves == nil then return end
