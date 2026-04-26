@@ -23,7 +23,6 @@ local sfxManager = SFXManager()
 local musicManager = MusicManager()
 
 local FAKE_PENTAGRAM_VARIANT = Isaac.GetEntityVariantByName("TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
-local FAKE_PENTAGRAM_SUBTYPE = Isaac.GetEntitySubTypeByName("TheGauntlet A Replication and Recreation of a Spawn Pentagram added in Repentance Plus")
 
 TheGauntlet.GauntletRoom.ITEM_POOL_ID = Isaac.GetPoolIdByName("TheGauntlet gauntletRoom")
 
@@ -60,7 +59,7 @@ local function SpawnEnemyIndicator(type, variant, subtype, position)
 
     local effect = TheGauntlet.Utility.SpawnEffect
     (
-        EntityType.ENTITY_EFFECT, FAKE_PENTAGRAM_VARIANT, FAKE_PENTAGRAM_SUBTYPE,
+        EntityType.ENTITY_EFFECT, FAKE_PENTAGRAM_VARIANT, 0,
         position, Vector.Zero, nil
     )
 
@@ -78,8 +77,6 @@ end
 
 ---@param effect EntityEffect
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
-    if effect.SubType ~= FAKE_PENTAGRAM_SUBTYPE then return end
-
     local sprite = effect:GetSprite()
     if sprite:IsFinished() then
         local enemyData = effect:GetData().FakeAmbush
@@ -223,7 +220,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
     local doHostileEnemiesExist = false
 
     for _, entity in ipairs(Isaac.GetRoomEntities()) do
-        if (entity:IsActiveEnemy(true) and entity:CanShutDoors()) or (entity.Type == EntityType.ENTITY_EFFECT and entity.Variant == FAKE_PENTAGRAM_VARIANT and entity.SubType == FAKE_PENTAGRAM_SUBTYPE) then
+        if (entity:IsActiveEnemy(true) and entity:CanShutDoors()) or (entity.Type == EntityType.ENTITY_EFFECT and entity.Variant == FAKE_PENTAGRAM_VARIANT) then
             doHostileEnemiesExist = true
             break
         end
@@ -250,7 +247,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
         tempSave.WaveDelay = 0
 
         tempSave.WaveNumber = tempSave.WaveNumber + 1
-        local waveConfigurations = Game().Difficulty == Difficulty.DIFFICULTY_HARD and TheGauntlet.GauntletRoom.WAVE_CONFIGURATIONS_HARD_MODE or TheGauntlet.GauntletRoom.WAVE_CONFIGURATIONS_NORMAL_MODE
+        local waveConfigurations = Game().Difficulty == Difficulty.DIFFICULTY_HARD and TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_HARD_MODE or TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_NORMAL_MODE
 
         if tempSave.WaveNumber > #waveConfigurations then
             room:SetClear(true)
@@ -310,7 +307,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     end
 
     local randomRoomIndex = TheGauntlet.Utility.RandomItemFromList(adjacentRooms, teleportRNG)
-    Game():StartRoomTransition(randomRoomIndex, -1, RoomTransitionAnim.TELEPORT)
+    game:StartRoomTransition(randomRoomIndex, -1, RoomTransitionAnim.TELEPORT)
 
     sfxManager:Play(TheGauntlet.GauntletRoom.SHADOW_SPELL_SOUND_EFFECT)
 end)
