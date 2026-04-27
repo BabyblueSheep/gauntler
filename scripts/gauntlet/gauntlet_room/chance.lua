@@ -33,24 +33,52 @@ function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
         return
     end
 
-    if not TheGauntlet.Utility.CanAnyChallengeRoomsSpawn() then
+    if Isaac.GetChallenge() ~= Challenge.CHALLENGE_NULL then
+        local challenge = game:GetChallengeParams()
+        local roomFilter = challenge:GetRoomFilter()
+        for _, roomType in ipairs(roomFilter) do
+            if roomType == RoomType.ROOM_CHALLENGE then
+                runSave.GauntletGenerationChance = 0
+                return
+            end
+        end
+    end
+
+    local shouldApplyStagePenalty = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_STAGE_PENALTY)
+    if shouldApplyStagePenalty == nil or type(shouldApplyStagePenalty) ~= "boolean" then
+        shouldApplyStagePenalty = not TheGauntlet.Utility.CanAnyChallengeRoomsSpawn()
+    end
+
+    if shouldApplyStagePenalty then
         runSave.GauntletGenerationChance = 0
-        return
+        goto skipCalculations
     end
 
     local defaultChance = 0.01
 
-    if runSave.GauntletRoomsCompleted > 0 then
+    local shouldApplyGauntletPenalty = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_GAUNTLET_PENALTY)
+    if shouldApplyGauntletPenalty == nil or type(shouldApplyGauntletPenalty) ~= "boolean" then
+        shouldApplyGauntletPenalty = runSave.GauntletRoomsCompleted > 0
+    end
+
+    if shouldApplyGauntletPenalty then
         runSave.GauntletGenerationChance = defaultChance
-        return
+        goto skipCalculations
     end
 
     local challengeRoomCompletionChance = runSave.ChallengeRoomsCompleted * TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_PER_COMPLETED_CHALLENGE_ROOM
     local bossChallengeRoomCompletionChance = runSave.BossChallengeRoomsCompleted * TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_PER_COMPLETED_BOSS_CHALLENGE_ROOM
 
-    local totalChance = defaultChance + challengeRoomCompletionChance + bossChallengeRoomCompletionChance
+    local itemChance = 0
+    if PlayerManager.AnyoneHasCollectible(CollectibleType.COLLECTIBLE_SAUSAGE) then
+        itemChance = itemChance + 0.069
+    end
+
+    local totalChance = defaultChance + challengeRoomCompletionChance + bossChallengeRoomCompletionChance + itemChance
 
     runSave.GauntletGenerationChance = totalChance
+
+    ::skipCalculations::
 end
 
 ---Returns the current Gauntlet room spawn chance.

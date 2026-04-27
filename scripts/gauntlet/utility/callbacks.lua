@@ -1,4 +1,19 @@
 TheGauntlet.Utility.Callbacks = {
+    ---Called during Gauntlet room chance calculation, while applying the stage penalty (to not spawn them in Chapters 1 & 6+).
+    ---
+    ---Returns:
+    --- - Return a boolean to override applying the penalty.
+    PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_STAGE_PENALTY = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_STAGE_PENALTY",
+
+    ---Called during Gauntlet room chance calculation, before forcing the chance to its base value if a Gauntlet room has been completed.
+    ---
+    ---Returns:
+    --- - Return a boolean to override applying the penalty.
+    PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_GAUNTLET_PENALTY = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_GAUNTLET_PENALTY",
+
+    ---Called during Gauntlet room chance calculation, before applying boosts for completing Challenge rooms.
+    PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_CHALLENGE_BOOST = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_CHALLENGE_BOOST",
+
     ---Called when finishing all waves of a challenge room.
     ---
     ---Parameters:
