@@ -3,6 +3,10 @@ local game = Game()
 TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_PER_COMPLETED_CHALLENGE_ROOM = 0.1
 TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_PER_COMPLETED_BOSS_CHALLENGE_ROOM = 0.25
 
+TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_IF_ANYONE_OWNS_SAUSAGE = 0.069
+TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_IF_ANYONE_OWNS_CHAMPION_BELT = 0.15
+TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_IF_ANYONE_OWNS_PURPLE_HEART = 0.15
+
 TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.DefaultSaveKeys.GLOBAL, {
     BossChallengeRoomsCompleted = 0,
     ChallengeRoomsCompleted = 0,
@@ -24,13 +28,11 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.POST_CHALLENGE_ROOM_TRIGGE
     end
 end)
 
----Recomputes the generation chance. Automatically called on new floors.
-function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
+local function InnerCalculateChance()
     local runSave = TheGauntlet.SaveManager.GetRunSave()
 
     if game:IsGreedMode() then
-        runSave.GauntletGenerationChance = 0
-        return
+        return 0
     end
 
     if Isaac.GetChallenge() ~= Challenge.CHALLENGE_NULL then
@@ -38,10 +40,15 @@ function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
         local roomFilter = challenge:GetRoomFilter()
         for _, roomType in ipairs(roomFilter) do
             if roomType == RoomType.ROOM_CHALLENGE then
-                runSave.GauntletGenerationChance = 0
-                return
+                return 0
             end
         end
+    end
+
+    local defaultChance = 0.01
+    local newChance = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.PRE_GAUNTLET_ROOM_GENERATION_CHANCE_GET_DEFAULT_CHANCE, defaultChance)
+    if newChance ~= nil and type(newChance) == "number" then
+        defaultChance = newChance
     end
 
     local shouldApplyStagePenalty = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_STAGE_PENALTY)
@@ -50,11 +57,8 @@ function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
     end
 
     if shouldApplyStagePenalty then
-        runSave.GauntletGenerationChance = 0
-        goto skipCalculations
+        return 0
     end
-
-    local defaultChance = 0.01
 
     local shouldApplyGauntletPenalty = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_GAUNTLET_PENALTY)
     if shouldApplyGauntletPenalty == nil or type(shouldApplyGauntletPenalty) ~= "boolean" then
@@ -62,23 +66,53 @@ function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
     end
 
     if shouldApplyGauntletPenalty then
-        runSave.GauntletGenerationChance = defaultChance
-        goto skipCalculations
+        return defaultChance
     end
 
+    local totalChance = defaultChance
+
+    newChance = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_BOOSTS, totalChance)
+    if newChance ~= nil and type(newChance) == "number" then
+        totalChance = newChance
+    end
+
+    
     local challengeRoomCompletionChance = runSave.ChallengeRoomsCompleted * TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_PER_COMPLETED_CHALLENGE_ROOM
     local bossChallengeRoomCompletionChance = runSave.BossChallengeRoomsCompleted * TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_PER_COMPLETED_BOSS_CHALLENGE_ROOM
 
     local itemChance = 0
     if PlayerManager.AnyoneHasCollectible(CollectibleType.COLLECTIBLE_SAUSAGE) then
-        itemChance = itemChance + 0.069
+        itemChance = itemChance + TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_IF_ANYONE_OWNS_SAUSAGE
+    end
+    if PlayerManager.AnyoneHasCollectible(CollectibleType.COLLECTIBLE_CHAMPION_BELT) then
+        itemChance = itemChance + TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_IF_ANYONE_OWNS_CHAMPION_BELT
+    end
+    if PlayerManager.AnyoneHasTrinket(TrinketType.TRINKET_PURPLE_HEART) then
+        itemChance = itemChance + TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_IF_ANYONE_OWNS_PURPLE_HEART
     end
 
-    local totalChance = defaultChance + challengeRoomCompletionChance + bossChallengeRoomCompletionChance + itemChance
+    totalChance = totalChance + challengeRoomCompletionChance + bossChallengeRoomCompletionChance + itemChance
+
+    newChance = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.POST_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_BOOSTS, totalChance)
+    if newChance ~= nil and type(newChance) == "number" then
+        totalChance = newChance
+    end
+
+    return totalChance
+end
+
+---Recomputes the generation chance. Automatically called on new floors.
+function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
+    local runSave = TheGauntlet.SaveManager.GetRunSave()
+
+    local totalChance = InnerCalculateChance()
+
+    local newChance = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.POST_GAUNTLET_ROOM_GENERATION_CHANCE_CALCULATE, totalChance)
+    if newChance ~= nil and type(newChance) == "number" then
+        totalChance = newChance
+    end
 
     runSave.GauntletGenerationChance = totalChance
-
-    ::skipCalculations::
 end
 
 ---Returns the current Gauntlet room spawn chance.

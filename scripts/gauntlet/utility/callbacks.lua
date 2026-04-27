@@ -1,18 +1,57 @@
 TheGauntlet.Utility.Callbacks = {
     ---Called during Gauntlet room chance calculation, while applying the stage penalty (to not spawn them in Chapters 1 & 6+).
+    ---Use this to override the check for stages, i.e. if you're making a custom stage mod.
     ---
     ---Returns:
-    --- - Return a boolean to override applying the penalty.
+    --- - Return a boolean to override applying the penalty. If anything else is returned, default behavior is used.
     PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_STAGE_PENALTY = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_STAGE_PENALTY",
 
-    ---Called during Gauntlet room chance calculation, before forcing the chance to its base value if a Gauntlet room has been completed.
+    ---Called during Gauntlet room chance calculation, after ensuring that Gauntlet rooms can generate.
+    ---Use this to override or change the base chance.
+    ---
+    ---Parameters:
+    --- - [number](lua://number) - the current chance;
     ---
     ---Returns:
-    --- - Return a boolean to override applying the penalty.
+    --- - Return a number to set the new chance.
+    PRE_GAUNTLET_ROOM_GENERATION_CHANCE_GET_DEFAULT_CHANCE = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_GET_DEFAULT_CHANCE",
+
+    ---Called during Gauntlet room chance calculation, before forcing the chance to its base value if a Gauntlet room has been completed.
+    ---Use this to continue Gauntlet room generation even after a Gauntlet room has been completed.
+    ---
+    ---Returns:
+    --- - Return a boolean to override applying the penalty. If anything else is returned, default behavior is used.
     PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_GAUNTLET_PENALTY = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_GAUNTLET_PENALTY",
 
-    ---Called during Gauntlet room chance calculation, before applying boosts for completing Challenge rooms.
-    PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_CHALLENGE_BOOST = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_CHALLENGE_BOOST",
+    ---Called during Gauntlet room chance calculation, before applying boosts for completing Challenge rooms and having items.
+    ---Use this to apply boosts before anything else (potentially, any additive boosts).
+    ---
+    ---Parameters:
+    --- - [number](lua://number) - the current chance;
+    ---
+    ---Returns:
+    --- - Return a number to set the new chance.
+    PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_BOOSTS = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_BOOSTS",
+
+    ---Called during Gauntlet room chance calculation, after applying boosts for completing Challenge rooms and having items.
+    ---Use this to apply boosts before anything else (potentially, any multiplicative boosts).
+    ---
+    ---Parameters:
+    --- - [number](lua://number) - the current chance;
+    ---
+    ---Returns:
+    --- - Return a number to set the new chance.
+    POST_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_BOOSTS = "TheGauntlet POST_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_BOOSTS",
+
+    ---Called during Gauntlet room chance calculation, after all calculations have been done.
+    ---Use this to do fully custom chance calculation.
+    ---
+    ---Parameters:
+    --- - [number](lua://number) - the current chance;
+    ---
+    ---Returns:
+    --- - Return a number to set the new chance.
+    POST_GAUNTLET_ROOM_GENERATION_CHANCE_CALCULATE = "TheGauntlet POST_GAUNTLET_ROOM_GENERATION_CHANCE_CALCULATE",
 
     ---Called when finishing all waves of a challenge room.
     ---
