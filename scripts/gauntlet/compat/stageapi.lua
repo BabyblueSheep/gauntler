@@ -27,7 +27,7 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.PRE_SELECT_GAUNTLET_ROOM_W
         challengeWaveIDs = currentStageAPIRoom.Data.ChallengeWaveIDs
     end
 
-    local waveConfigurations = Game().Difficulty == Difficulty.DIFFICULTY_HARD and TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_HARD_MODE or TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_NORMAL_MODE
+    local waveConfigurations = TheGauntlet.GauntletRoom.GetDefaultWaveConfigurations()
     local waveConfiguration = waveConfigurations[TheGauntlet.GauntletRoom.GetCurrentWaveNumber()]
 
     local waveLayoutsToUse = StageAPI.CurrentStage.ChallengeWaves.Normal

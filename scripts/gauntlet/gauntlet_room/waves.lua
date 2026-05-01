@@ -2,15 +2,15 @@ TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_NORMAL_MODE = {
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 1,  MaxDifficulty = 1  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
-    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 1,  MaxDifficulty = 1  },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 5,  MaxDifficulty = 5  },
 }
 TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_HARD_MODE = {
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 5,  MaxDifficulty = 5  },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 10, MaxDifficulty = 10 },
-    { RoomSubtype = RoomSubType.CHALLENGE_WAVE,      MinDifficulty = 15, MaxDifficulty = 15 },
     { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 5,  MaxDifficulty = 5  },
+    { RoomSubtype = RoomSubType.CHALLENGE_WAVE_BOSS, MinDifficulty = 10, MaxDifficulty = 10 },
 }
 
 local TIME_BETWEEN_WAVES = 30
@@ -28,9 +28,23 @@ TheGauntlet.GauntletRoom.ITEM_POOL_ID = Isaac.GetPoolIdByName("TheGauntlet gaunt
 
 TheGauntlet.GauntletRoom.SHADOW_SPELL_SOUND_EFFECT = Isaac.GetSoundIdByName("TheGauntlet Shadow Spell")
 
+---Gets the current wave number in the Gauntlet room.
+---@return integer | nil
 function TheGauntlet.GauntletRoom.GetCurrentWaveNumber()
     local tempSave = TheGauntlet.SaveManager.GetTempSave()
     return tempSave.WaveNumber
+end
+
+---Gets the current wave configuration set.
+---@return table
+function TheGauntlet.GauntletRoom.GetDefaultWaveConfigurations()
+    local waveConfiguration = TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_NORMAL_MODE
+
+    if game.Difficulty == Difficulty.DIFFICULTY_HARD or game.Difficulty == Difficulty.DIFFICULTY_GREEDIER then
+        waveConfiguration = TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_HARD_MODE
+    end
+
+    return waveConfiguration
 end
 
 local function OnFinishGauntletRoom()
@@ -247,7 +261,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
         tempSave.WaveDelay = 0
 
         tempSave.WaveNumber = tempSave.WaveNumber + 1
-        local waveConfigurations = Game().Difficulty == Difficulty.DIFFICULTY_HARD and TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_HARD_MODE or TheGauntlet.GauntletRoom.Constants.WAVE_CONFIGURATIONS_NORMAL_MODE
+        local waveConfigurations = TheGauntlet.GauntletRoom.GetDefaultWaveConfigurations()
 
         if tempSave.WaveNumber > #waveConfigurations then
             room:SetClear(true)
