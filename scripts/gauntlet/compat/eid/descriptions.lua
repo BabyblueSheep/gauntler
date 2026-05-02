@@ -191,7 +191,7 @@ end, function (descObj)
     local chanceDescription = newChanceDescriptions[EID:getLanguage()] or newChanceDescriptions["en_us"]
     chanceDescription = string.gsub(chanceDescription, "%[1%]", itemsWithNewChance[descObj.ObjSubType])
 
-    EID:appendToDescription(descObj, "# "..chanceDescription)
+    EID:appendToDescription(descObj, "#"..chanceDescription)
 
     return descObj
 end)
