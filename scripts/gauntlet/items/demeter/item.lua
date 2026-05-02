@@ -136,3 +136,15 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, functi
 
     TheGauntlet.Items.Demeter.SetSeason(TheGauntlet.Items.Demeter.Season.NO_SEASON)
 end, TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE)
+
+---@param statusEffect StatusEffect
+---@param entity Entity
+---@param source EntityRef
+---@param duration integer
+TheGauntlet:AddCallback(ModCallbacks.MC_PRE_STATUS_EFFECT_APPLY, function (_, statusEffect, entity, source, duration)
+    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE) then return end
+    if TheGauntlet.Items.Demeter.GetSeason() ~= TheGauntlet.Items.Demeter.Season.WINTER then return end
+    if statusEffect ~= StatusEffect.POISON then return end
+
+    return duration + 30
+end)
