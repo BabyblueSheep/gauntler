@@ -223,6 +223,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
             door:Close(true)
 
+            musicManager:Play(Music.MUSIC_CHALLENGE_FIGHT, Options.MusicVolume)
+            musicManager:UpdateVolume()
+
             ::continue::
         end
     end
@@ -275,11 +278,6 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
             OnFinishGauntletRoom()
         else
-            if tempSave.WaveNumber == 1 then
-                musicManager:Play(Music.MUSIC_CHALLENGE_FIGHT, Options.MusicVolume)
-                musicManager:UpdateVolume()
-            end
-
             local waveConfiguration = waveConfigurations[tempSave.WaveNumber]
             SpawnAmbush(waveConfiguration.RoomSubtype, waveConfiguration.MinDifficulty, waveConfiguration.MaxDifficulty)
         end
