@@ -1,6 +1,8 @@
 return {
     ["pool.gauntlet.name"] = "Gauntlet",
 
+    ["item.generic.gauntlet_chance_boost"] = "{{GauntletGauntletRoomStat}} +[1]% Gauntlet Room chance",
+
     ["item.aphrodite.name"] = "Aphrodite",
     ["item.aphrodite.description"] =
         "{{Friendly}} Taking damage from an enemy converts it to a friendly companion",

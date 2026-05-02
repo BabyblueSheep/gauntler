@@ -115,7 +115,7 @@ function TheGauntlet.GauntletRoom.RecomputeGenerationChance()
     runSave.GauntletGenerationChance = totalChance
 end
 
----Returns the current Gauntlet room spawn chance.
+---Returns the current Gauntlet Room spawn chance.
 function TheGauntlet.GauntletRoom.GetGenerationChance()
     if TheGauntlet.Settings.ForceGauntletSpawn() then
         return 1

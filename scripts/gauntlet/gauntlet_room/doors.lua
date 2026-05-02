@@ -65,7 +65,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_
     
     if not gridSave.Init then
         gridSave.FedHeart = false
-        --Doors to a Gauntlet room through red rooms are always unlocked (consistent with vanilla)
+        --Doors to a Gauntlet Room through red rooms are always unlocked (consistent with vanilla)
         if roomDescriptor.Flags & RoomDescriptor.FLAG_RED_ROOM == RoomDescriptor.FLAG_RED_ROOM then
             gridSave.FedHeart = true
         end
@@ -77,7 +77,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_
         tempSave.WasClear = isClear
         tempSave.IsOpen = isClear
 
-        --Entering a Gauntlet room makes it always open, even if the main entrance wasn't open (consistent with vanilla)
+        --Entering a Gauntlet Room makes it always open, even if the main entrance wasn't open (consistent with vanilla)
         local targetRoom = level:GetCurrentRoomDesc():GetNeighboringRooms()[door.Slot]
         if targetRoom.VisitedCount > 0 then
             gridSave.FedHeart = true

@@ -1,7 +1,7 @@
 TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_SUBTYPE = 89
 TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_MINES_SUBTYPE = 90
 
----Whether the room the game is currently in is a Gauntlet room.
+---Whether the room the game is currently in is a Gauntlet Room.
 ---@return boolean
 function TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom()
     local level = Game():GetLevel()
@@ -10,7 +10,7 @@ function TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom()
     return TheGauntlet.GauntletRoom.IsRoomGauntletRoom(roomDescriptor)
 end
 
-----Whether the room descriptir is a Gauntlet room.
+----Whether the room descriptir is a Gauntlet Room.
 ---@param roomDescriptor RoomDescriptor
 ---@return boolean
 function TheGauntlet.GauntletRoom.IsRoomGauntletRoom(roomDescriptor)

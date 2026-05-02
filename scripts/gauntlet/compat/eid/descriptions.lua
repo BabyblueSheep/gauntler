@@ -172,6 +172,45 @@ end, function (descObj)
 end)
 
 
+local newChanceDescriptions = {}
+
+local itemsWithNewChance = {
+    [CollectibleType.COLLECTIBLE_SAUSAGE] = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_IF_ANYONE_OWNS_SAUSAGE * 100),
+    [CollectibleType.COLLECTIBLE_CHAMPION_BELT] = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_IF_ANYONE_OWNS_CHAMPION_BELT * 100),
+}
+local trinketsWithNewChance = {
+    [TrinketType.TRINKET_PURPLE_HEART] = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.GauntletRoom.Constants.GENERATION_CHANCE_IF_ANYONE_OWNS_PURPLE_HEART * 100),
+}
+
+EID:addDescriptionModifier("Gauntlet Vanilla Item Chance", function (descObj)
+    if descObj.ObjType ~= EntityType.ENTITY_PICKUP then return false end
+    if descObj.ObjVariant ~= PickupVariant.PICKUP_COLLECTIBLE then return false end
+
+    return itemsWithNewChance[descObj.ObjSubType] ~= nil
+end, function (descObj)
+    local chanceDescription = newChanceDescriptions[EID:getLanguage()] or newChanceDescriptions["en_us"]
+    chanceDescription = string.gsub(chanceDescription, "%[1%]", itemsWithNewChance[descObj.ObjSubType])
+
+    EID:appendToDescription(descObj, "# "..chanceDescription)
+
+    return descObj
+end)
+
+EID:addDescriptionModifier("Gauntlet Vanilla Trinket Chance", function (descObj)
+    if descObj.ObjType ~= EntityType.ENTITY_PICKUP then return false end
+    if descObj.ObjVariant ~= PickupVariant.PICKUP_TRINKET then return false end
+
+    return trinketsWithNewChance[descObj.ObjSubType] ~= nil
+end, function (descObj)
+    local chanceDescription = newChanceDescriptions[EID:getLanguage()] or newChanceDescriptions["en_us"]
+    chanceDescription = string.gsub(chanceDescription, "%[1%]", trinketsWithNewChance[descObj.ObjSubType])
+
+    EID:appendToDescription(descObj, "# "..chanceDescription)
+
+    return descObj
+end)
+
+
 
 
 
@@ -322,6 +361,8 @@ local function RegisterLanguageKeys(language, localizationItems)
     EID.descriptions[language].AbyssLocustEffects["Gauntlet Hades Status"] = localizationItems["item.abyss.locust_effect.hades"]
     EID.descriptions[language].AbyssLocustEffects["Gauntlet Poseidon Push"] = localizationItems["item.abyss.locust_effect.poseidon"]
     EID.descriptions[language].AbyssLocustEffects["Gauntlet Zeus Bolt"] = localizationItems["item.abyss.locust_effect.zeus"]
+
+    newChanceDescriptions[language] = localizationItems["item.generic.gauntlet_chance_boost"]
 end
 
 

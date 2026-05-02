@@ -1,12 +1,12 @@
 TheGauntlet.Utility.Callbacks = {
-    ---Called during Gauntlet room chance calculation, while applying the stage penalty (to not spawn them in Chapters 1 & 6+).
+    ---Called during Gauntlet Room chance calculation, while applying the stage penalty (to not spawn them in Chapters 1 & 6+).
     ---Use this to override the check for stages, i.e. if you're making a custom stage mod.
     ---
     ---Returns:
     --- - Return a boolean to override applying the penalty. If anything else is returned, default behavior is used.
     PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_STAGE_PENALTY = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_STAGE_PENALTY",
 
-    ---Called during Gauntlet room chance calculation, after ensuring that Gauntlet rooms can generate.
+    ---Called during Gauntlet Room chance calculation, after ensuring that Gauntlet Rooms can generate.
     ---Use this to override or change the base chance.
     ---
     ---Parameters:
@@ -16,14 +16,14 @@ TheGauntlet.Utility.Callbacks = {
     --- - Return a number to set the new chance.
     PRE_GAUNTLET_ROOM_GENERATION_CHANCE_GET_DEFAULT_CHANCE = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_GET_DEFAULT_CHANCE",
 
-    ---Called during Gauntlet room chance calculation, before forcing the chance to its base value if a Gauntlet room has been completed.
-    ---Use this to continue Gauntlet room generation even after a Gauntlet room has been completed.
+    ---Called during Gauntlet Room chance calculation, before forcing the chance to its base value if a Gauntlet Room has been completed.
+    ---Use this to continue Gauntlet Room generation even after a Gauntlet Room has been completed.
     ---
     ---Returns:
     --- - Return a boolean to override applying the penalty. If anything else is returned, default behavior is used.
     PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_GAUNTLET_PENALTY = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_GAUNTLET_PENALTY",
 
-    ---Called during Gauntlet room chance calculation, before applying boosts for completing Challenge rooms and having items.
+    ---Called during Gauntlet Room chance calculation, before applying boosts for completing Challenge rooms and having items.
     ---Use this to apply boosts before anything else (potentially, any additive boosts).
     ---
     ---Parameters:
@@ -33,7 +33,7 @@ TheGauntlet.Utility.Callbacks = {
     --- - Return a number to set the new chance.
     PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_BOOSTS = "TheGauntlet PRE_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_BOOSTS",
 
-    ---Called during Gauntlet room chance calculation, after applying boosts for completing Challenge rooms and having items.
+    ---Called during Gauntlet Room chance calculation, after applying boosts for completing Challenge rooms and having items.
     ---Use this to apply boosts before anything else (potentially, any multiplicative boosts).
     ---
     ---Parameters:
@@ -43,7 +43,7 @@ TheGauntlet.Utility.Callbacks = {
     --- - Return a number to set the new chance.
     POST_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_BOOSTS = "TheGauntlet POST_GAUNTLET_ROOM_GENERATION_CHANCE_APPLY_BOOSTS",
 
-    ---Called during Gauntlet room chance calculation, after all calculations have been done.
+    ---Called during Gauntlet Room chance calculation, after all calculations have been done.
     ---Use this to do fully custom chance calculation.
     ---
     ---Parameters:
@@ -71,7 +71,7 @@ TheGauntlet.Utility.Callbacks = {
     ---  - Return either a [RoomConfigRoom](lua://RoomConfigRoom) or a table (assumed to be a Lua Room) to use that for the wave.
     PRE_SELECT_GAUNTLET_ROOM_WAVE = "TheGauntlet PRE_SELECT_GAUNTLET_ROOM_WAVE",
 
-    ---Called before a Gauntlet room is placed on the floor. Can be used to change the room layout before placing it.
+    ---Called before a Gauntlet Room is placed on the floor. Can be used to change the room layout before placing it.
     ---
     ---Parameters:
     --- - [integer](lua://integer) - the index the room will be located at;
@@ -82,7 +82,7 @@ TheGauntlet.Utility.Callbacks = {
     --- - Return a [RoomConfigRoom](lua://RoomConfigRoom) to place a different room layout.
     PRE_PLACE_GAUNTLET_ROOM = "TheGauntlet PRE_PLACE_GAUNTLET_ROOM",
 
-    ---Called after a Gauntlet room is placed on the floor.
+    ---Called after a Gauntlet Room is placed on the floor.
     ---
     ---Parameters:
     --- - [integer](lua://integer) - the index the room is located at;

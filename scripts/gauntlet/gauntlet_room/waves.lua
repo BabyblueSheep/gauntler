@@ -28,7 +28,7 @@ TheGauntlet.GauntletRoom.ITEM_POOL_ID = Isaac.GetPoolIdByName("TheGauntlet gaunt
 
 TheGauntlet.GauntletRoom.SHADOW_SPELL_SOUND_EFFECT = Isaac.GetSoundIdByName("TheGauntlet Shadow Spell")
 
----Gets the current wave number in the Gauntlet room.
+---Gets the current wave number in the Gauntlet Room.
 ---@return integer | nil
 function TheGauntlet.GauntletRoom.GetCurrentWaveNumber()
     local tempSave = TheGauntlet.SaveManager.GetTempSave()
