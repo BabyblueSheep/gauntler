@@ -127,7 +127,11 @@ end)
 
 
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_RENDER, function (_)
-    if MenuManager.IsActive() then return end
+    --MenuManager:IsActive() doesn't return true on the intro cutscene.
+    --So, a hacky workaround is required.
+    local isInARun = Isaac.GetPlayer() ~= nil
+
+    if not isInARun then return end
 
     if game:GetLevel():GetCurrentRoomDesc().Data.Type == RoomType.ROOM_DUNGEON then return end
 
