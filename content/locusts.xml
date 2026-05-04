@@ -41,7 +41,7 @@
 
 	<locust id="7" scale="1.25" damageMultiplier2="1.2" procChance="0.5" gfx="anm2=gauntlet/locust_olympian_glow.anm2" color="1-fly_darkred" />
 
-	<locust id="8" tearFlags="13" gfx="anm2=gauntlet/locust_olympian_charm.anm2" />
+	<locust id="8" tearFlags="13" procChance="0.5" gfx="anm2=gauntlet/locust_olympian_charm.anm2" />
 
 	<locust id="9" tearFlags="53" procChance="0.33" gfx="anm2=gauntlet/locust_olympian_gold.anm2" />
 
