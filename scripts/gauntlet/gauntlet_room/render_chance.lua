@@ -85,7 +85,7 @@ local function GetStatDisplayOffset(statNumber)
     end
 
     --If Planetarium's arent unlocked, account for the lack of Planetarium chance
-    if not persistentGameData:Unlocked(Achievement.PLANETARIUMS) and statNumber >= 8 then
+    if not (Options.StatHUDPlanetarium and persistentGameData:Unlocked(Achievement.PLANETARIUMS)) and statNumber >= 8 then
         statNumber = statNumber - 1
     end
 
