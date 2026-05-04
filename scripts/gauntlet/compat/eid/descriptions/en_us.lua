@@ -5,7 +5,7 @@ return {
 
     ["item.aphrodite.name"] = "Aphrodite",
     ["item.aphrodite.description"] =
-        "{{Friendly}} Taking damage from an enemy converts it to a friendly companion#"..
+        "{{Friendly}} Taking damage from a non-boss enemy converts it to a friendly companion#"..
         "{{Charm}} Taking damage from a boss charms it",
 
     ["item.apollo.name"] = "Apollo",
