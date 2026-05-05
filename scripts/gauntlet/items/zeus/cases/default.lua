@@ -13,7 +13,7 @@ return function (configItem, player, slot)
     elseif configItem.ChargeType == 1 then
         local chargeAmount = playerSave.PreviousChargeAmount
         if chargeAmount == 0 then return chargeAmount end
-        return chargeAmount // 60
+        return chargeAmount // 110
     else
         local chargeAmount = playerSave.PreviousChargeAmount
         if chargeAmount == 0 then return chargeAmount end

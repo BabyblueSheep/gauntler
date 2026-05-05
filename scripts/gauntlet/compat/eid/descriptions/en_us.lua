@@ -33,7 +33,7 @@ return {
 
     ["item.demeter.name"] = "Demeter",
     ["item.demeter.description"] =
-        "Causes a room-wide effect that cycles every room:#"..
+        "Causes a room-wide effect that cycles after clearing a room:#"..
         "{{GauntletDemeterWinter}} Enemies are frozen on death#"..
         "{{GauntletDemeterSpring}} [1]% chance to shoot a sticky booger#"..
         "{{GauntletDemeterSummer}} Enemies constantly burn#"..

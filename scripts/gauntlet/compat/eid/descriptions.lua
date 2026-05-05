@@ -87,7 +87,7 @@ local function DefaultZeusBoltAmount(collectibleType)
     if configItem.ChargeType == 2 then
         return 0
     elseif configItem.ChargeType == 1 then
-        return configItem.MaxCharges // 60
+        return configItem.MaxCharges // 110
     else
         return configItem.MaxCharges
     end

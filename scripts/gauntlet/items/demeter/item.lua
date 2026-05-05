@@ -89,30 +89,15 @@ TheGauntlet:AddCallback(ModCallbacks.MC_EVALUATE_TEAR_HIT_PARAMS, function (_, p
     end
 end)
 
---The current season needs to be unset because enemies spawn before MC_POST_NEW_ROOM is called (so, enemies spawn with the effects of the previous season).
---But, MC_POST_NEW_ROOM still needs to be used because Room:IsFirstVisit() fails in MC_PRE_NEW_ROOM.
-TheGauntlet:AddCallback(ModCallbacks.MC_PRE_NEW_ROOM, function (_)
+---@param silent boolean
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_ROOM_TRIGGER_CLEAR, function (_, silent)
     if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE) then return end
 
-    local runSave = TheGauntlet.SaveManager.GetRunSave()
-
-    runSave.DemeterTempSavedSeason = runSave.DemeterCurrentSeason
-    runSave.DemeterCurrentSeason = TheGauntlet.Items.Demeter.Season.NO_SEASON
-end)
-
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
-    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE) then return end
-
-    local room = game:GetRoom()
-
-    local runSave = TheGauntlet.SaveManager.GetRunSave()
-
-    runSave.DemeterCurrentSeason = runSave.DemeterTempSavedSeason
-    runSave.DemeterTempSavedSeason = TheGauntlet.Items.Demeter.Season.NO_SEASON
-
-    if not room:IsFirstVisit() then return end
-
-    TheGauntlet.Items.Demeter.IncrementSeason()
+    if TheGauntlet.Items.Demeter.GetSeason() == TheGauntlet.Items.Demeter.Season.NO_SEASON then
+        TheGauntlet.Items.Demeter.SetSeason(TheGauntlet.Items.Demeter.Season.WINTER)
+    else
+        TheGauntlet.Items.Demeter.IncrementSeason()
+    end
 end)
 
 ---@param collectibleType CollectibleType
