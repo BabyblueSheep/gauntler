@@ -41,14 +41,15 @@ return {
 
     ["item.dionysus.name"] = "Dionysus",
     ["item.dionysus.description"] =
-        "↑ {{Heart}} +[1] Health#"..
-        "{{HealingRed}} Heals [2] heart#"..
-        "↑ {{Speed}} +[3] Speed#"..
-        "↑ {{Tears}} +[4] Tears#"..
-        "↑ {{Damage}} +[5] Damage#"..
-        "↑ {{Range}} +[6] Range#"..
-        "↑ {{Luck}} +[7] Luck#"..
-        "{{Warning}} Taking damage makes Isaac's movement slippery and distorts the screen for [8] seconds",
+        "↑ {{Speed}} +[1] Speed#"..
+        "↑ {{Tears}} +[2] Tears#"..
+        "↑ {{Damage}} +[3] Damage#"..
+        "↑ {{Range}} +[4] Range#"..
+        "↑ {{Luck}} +[5] Luck#"..
+        "↑ {{Heart}} +[6] Health#"..
+        "{{HealingRed}} Heals [7] heart#"..
+        "+[8] {{Coin}} coin, {{Bomb}} bomb and {{Key}} key#"..
+        "{{Warning}} Taking damage makes Isaac's movement slippery and distorts the screen for [9] seconds",
 
     ["item.hades.name"] = "Hades",
     ["item.hades.description"] =

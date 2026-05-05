@@ -230,6 +230,7 @@ local dionysusTears = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").tears
 local dionysusDamage = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").damage
 local dionysusRange = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").range
 local dionysusLuck = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").luck
+local dionysusCoin = XMLData.GetEntryByName(XMLNode.ITEM, "Dionysus").coins
 local dionysusDrunkTimeSeconds = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Dionysus.Constants.DRUNK_DURATION_ON_HIT_FRAMES / 30)
 
 local demeterBoogerChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Demeter.Constants.SPRING_BOOGER_CHANCE * 100)
@@ -268,7 +269,7 @@ local function RegisterLanguageKeys(language, localizationItems)
         },
         {
             TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE, "dionysus",
-            { dionysusHealthContainer, dionysusHealthHeal, dionysusSpeed, dionysusTears, dionysusDamage, dionysusRange, dionysusLuck, dionysusDrunkTimeSeconds }
+            { dionysusSpeed, dionysusTears, dionysusDamage, dionysusRange, dionysusLuck, dionysusHealthContainer, dionysusHealthHeal, dionysusCoin, dionysusDrunkTimeSeconds }
         },
         {
             TheGauntlet.Items.Hades.COLLECTIBLE_TYPE, "hades",
