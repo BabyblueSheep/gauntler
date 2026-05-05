@@ -15,7 +15,8 @@ TheGauntlet.Items.Aphrodite.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Aphrodite"
 ---@param damageFlags DamageFlag
 ---@param source EntityRef
 ---@param damageCooldown integer
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
+---@param extraSource EntityRef
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown, extraSource)
     if entity.Type ~= EntityType.ENTITY_PLAYER then return end
     ---@type EntityPlayer
     ---@diagnostic disable-next-line assign-type-mismatch
