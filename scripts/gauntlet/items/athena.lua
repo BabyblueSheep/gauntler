@@ -42,11 +42,15 @@ end
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
     local hasAthena = player:HasCollectible(TheGauntlet.Items.Athena.COLLECTIBLE_TYPE)
 
-    local data = player:GetData()
+    local data = EntitySaveStateManager.GetEntityData(TheGauntlet, player)
+
+    if data.Athena == nil then
+        data.Athena = {}
+    end
 
     for i = 1, TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT do
         ---@type EntityEffect
-        local shieldEffect = data["AthenaShield"..tostring(i)]
+        local shieldEffect = data.Athena["Shield"..tostring(i)]
 
         if not (shieldEffect ~= nil and shieldEffect:Exists()) then
             if hasAthena then
@@ -57,7 +61,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                     player
                 )
                 effect:Update()
-                data["AthenaShield"..tostring(i)] = effect
+                data.Athena["Shield"..tostring(i)] = effect
             end
         else
             if not hasAthena then
@@ -68,17 +72,17 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
 
     if not hasAthena then return end
 
-    if data.AthenaRotationTimer == nil then
-        data.AthenaRotationTimer = 0
+    if data.Athena.RotationTimer == nil then
+        data.Athena.RotationTimer = 0
     end
-    data.AthenaRotationTimer = data.AthenaRotationTimer + 1
+    data.Athena.RotationTimer = data.Athena.RotationTimer + 1
 
     for i = 1, TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT do
         ---@type EntityEffect
-        local shieldEffect = data["AthenaShield"..tostring(i)]
+        local shieldEffect = data.Athena["Shield"..tostring(i)]
 
         local shieldSprite = shieldEffect:GetSprite()
-        local shieldData = shieldEffect:GetData()
+        local shieldData = EntitySaveStateManager.GetEntityData(TheGauntlet, shieldEffect)
 
         if shieldData.DisabledTimer == nil then
             shieldData.DisabledTimer = 0
@@ -99,7 +103,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
             shieldData.Unretracting = false
         end
 
-        local direction = Vector.FromAngle(data.AthenaRotationTimer * TheGauntlet.Items.Athena.Constants.SHIELD_ROTATION_SPEED + i / TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT * 360)
+        local direction = Vector.FromAngle(data.Athena.RotationTimer * TheGauntlet.Items.Athena.Constants.SHIELD_ROTATION_SPEED + i / TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT * 360)
         local distanceFromPlayer = TheGauntlet.Utility.Lerp(40, 20, shieldData.EasedRetractTimer)
         shieldEffect.Position = player.Position + direction * distanceFromPlayer
         shieldEffect.Velocity = Vector.Zero
