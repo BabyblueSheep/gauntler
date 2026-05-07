@@ -1,7 +1,19 @@
+local backupSaveManager = nil
+if TheGauntlet ~= nil then
+    backupSaveManager = TheGauntlet.CustomSaveManager
+end
+
 TheGauntlet = RegisterMod("The Gauntlet", 1)
 
 TheGauntlet.SaveManager = include("scripts.gauntlet.library.save_manager")
 include("scripts.gauntlet.library.status_effect_library")
+
+if backupSaveManager ~= nil then
+    TheGauntlet.CustomSaveManager = backupSaveManager
+else
+    ---@type CustomSaveManager
+    TheGauntlet.CustomSaveManager = include("scripts.gauntlet.library.custom_save_manager")(TheGauntlet)
+end
 
 include("scripts.gauntlet.library.dead_sea_scrolls_integration")
 include("scripts.gauntlet.library.dead_sea_scrolls_changelogs")

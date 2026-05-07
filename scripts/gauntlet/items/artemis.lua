@@ -21,7 +21,7 @@ local PIERCING_TEAR_VARIANTS = {
 ---@param player EntityPlayer
 ---@return Vector
 function TheGauntlet.Items.Artemis.GetCurrentDirection(player)
-    local data = EntitySaveStateManager.GetEntityData(TheGauntlet, player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
     if data.Artemis == nil then
         return Vector.Zero
     end
@@ -31,7 +31,7 @@ end
 ---Randomly rotates the arrow's direction, if it exists.
 ---@param player EntityPlayer
 function TheGauntlet.Items.Artemis.RandomlyRotateArrow(player)
-    local data = EntitySaveStateManager.GetEntityData(TheGauntlet, player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
     if data.Artemis == nil then
         return
     end
@@ -47,7 +47,7 @@ end
 ---@param player EntityPlayer
 ---@param direction Vector
 function TheGauntlet.Items.Artemis.RotateArrow(player, direction)
-    local data = EntitySaveStateManager.GetEntityData(TheGauntlet, player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
     if data.Artemis == nil then
         return
     end
@@ -59,7 +59,7 @@ end
 ---Resets the timer to its initial value.
 ---@param player EntityPlayer
 function TheGauntlet.Items.Artemis.ResetTimer(player)
-    local data = EntitySaveStateManager.GetEntityData(TheGauntlet, player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
     if data.Artemis == nil then
         return
     end
@@ -70,7 +70,7 @@ end
 ---Returns the value of the timer.
 ---@param player EntityPlayer
 function TheGauntlet.Items.Artemis.GetTimer(player)
-    local data = EntitySaveStateManager.GetEntityData(TheGauntlet, player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
     if data.Artemis == nil then
         return -1
     end
@@ -79,27 +79,15 @@ end
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player)
-    local data = EntitySaveStateManager.GetEntityData(TheGauntlet, player)
-    if data.Artemis == nil then
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
+
+    if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then
+        data.Artemis = nil
         return
     end
 
-    data.Artemis.TimeLeft = data.Artemis.TimeLeft - 1
-    if data.Artemis.TimeLeft <= 0 then
-        TheGauntlet.Items.Artemis.RandomlyRotateArrow(player)
-        TheGauntlet.Items.Artemis.ResetTimer(player)
-    end
-end)
-
----@param player EntityPlayer
----@param collectibleType CollectibleType
----@param firstTime boolean
----@param wispOrInnate integer
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_ADDED, function (_, player, collectibleType, firstTime, wispOrInnate)
-    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE)
-
-    local data = EntitySaveStateManager.GetEntityData(TheGauntlet, player)
     if data.Artemis == nil then
+        local rng = player:GetCollectibleRNG(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE)
         local randomDirection = TheGauntlet.Utility.RandomCardinalVector(rng)
 
         data.Artemis = {
@@ -108,55 +96,13 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_ADDED, function
             PreviousDirection = randomDirection
         }
     end
-end, TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE)
 
----@param player EntityPlayer
----@param collectibleType CollectibleType
----@param removeFromPlayerForm boolean
----@param wisp boolean
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, function (_, player, collectibleType, removeFromPlayerForm, wisp)
-    local data = EntitySaveStateManager.GetEntityData(TheGauntlet, player)
-    data.Artemis = nil
-end, TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE)
-
---[[
----@param tear EntityTear
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, function (_, tear)
-    local player = TheGauntlet.Utility.GetPlayerFromEntity(tear.SpawnerEntity, true)
-    if player == nil then return end
-
-    if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then return end
-
-    local tearDirection = tear.Velocity:Normalized()
-    local arrowDirection = TheGauntlet.Items.Artemis.GetCurrentDirection(player)
-
-    local angleDifference = tearDirection:Dot(arrowDirection)
-    if angleDifference > TheGauntlet.Items.Artemis.Constants.MINIMUM_VALID_ANGLE_DIFFERENCE then
-        tear.Velocity = tear.Velocity * TheGauntlet.Items.Artemis.Constants.ARROW_SHOT_SPEED_MULTIPLIER
-                
-        --[[if PIERCING_TEAR_VARIANTS[tear.Variant] then
-            tear:ChangeVariant(PIERCING_TEAR_VARIANTS[tear.Variant])
-        end]]
-    --nd
---end)
-
---[[
----@param bomb EntityTear
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_BOMB, function (_, bomb)
-    local player = TheGauntlet.Utility.GetPlayerFromEntity(bomb.SpawnerEntity, true)
-    if player == nil then return end
-
-    if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then return end
-
-    local tearDirection = bomb.Velocity:Normalized()
-    local arrowDirection = TheGauntlet.Items.Artemis.GetCurrentDirection(player)
-
-    local angleDifference = tearDirection:Dot(arrowDirection)
-    if angleDifference > TheGauntlet.Items.Artemis.Constants.MINIMUM_VALID_ANGLE_DIFFERENCE then
-        bomb.Velocity = bomb.Velocity * TheGauntlet.Items.Artemis.Constants.ARROW_SHOT_SPEED_MULTIPLIER
+    data.Artemis.TimeLeft = data.Artemis.TimeLeft - 1
+    if data.Artemis.TimeLeft <= 0 then
+        TheGauntlet.Items.Artemis.RandomlyRotateArrow(player)
+        TheGauntlet.Items.Artemis.ResetTimer(player)
     end
 end)
-]]
 
 ---@param player EntityPlayer
 ---@param tearParams TearParams
@@ -189,7 +135,7 @@ arrowSprite:Play("Left")
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_RENDER, function (_, player)
-    local data = EntitySaveStateManager.GetEntityData(TheGauntlet, player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
     if data.Artemis == nil then
         return
     end

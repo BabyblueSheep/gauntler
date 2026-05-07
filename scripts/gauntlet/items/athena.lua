@@ -42,17 +42,17 @@ end
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
     local hasAthena = player:HasCollectible(TheGauntlet.Items.Athena.COLLECTIBLE_TYPE)
 
-    local data = EntitySaveStateManager.GetEntityData(TheGauntlet, player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
 
     if data.Athena == nil then
         data.Athena = {}
     end
 
     for i = 1, TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT do
-        ---@type EntityEffect
+        ---@type EntityPtr
         local shieldEffect = data.Athena["Shield"..tostring(i)]
 
-        if not (shieldEffect ~= nil and shieldEffect:Exists()) then
+        if not (shieldEffect ~= nil and shieldEffect.Ref ~= nil) then
             if hasAthena then
                 local effect = TheGauntlet.Utility.SpawnEffect
                 (
@@ -61,11 +61,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                     player
                 )
                 effect:Update()
-                data.Athena["Shield"..tostring(i)] = effect
+                data.Athena["Shield"..tostring(i)] = EntityPtr(effect)
             end
         else
-            if not hasAthena then
-                shieldEffect:Remove()
+            if not hasAthena and (shieldEffect ~= nil and shieldEffect.Ref ~= nil) then
+                shieldEffect.Ref:Remove()
             end
         end
     end
@@ -78,11 +78,17 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
     data.Athena.RotationTimer = data.Athena.RotationTimer + 1
 
     for i = 1, TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT do
-        ---@type EntityEffect
-        local shieldEffect = data.Athena["Shield"..tostring(i)]
+        ---@type EntityPtr
+        local shieldEffectPtr = data.Athena["Shield"..tostring(i)]
+        if shieldEffectPtr == nil or shieldEffectPtr.Ref == nil then
+            goto continue
+        end
+
+        ---@type Entity
+        local shieldEffect = shieldEffectPtr.Ref
 
         local shieldSprite = shieldEffect:GetSprite()
-        local shieldData = EntitySaveStateManager.GetEntityData(TheGauntlet, shieldEffect)
+        local shieldData = TheGauntlet.CustomSaveManager.GetTemporaryRoomData(shieldEffect)
 
         if shieldData.DisabledTimer == nil then
             shieldData.DisabledTimer = 0
@@ -197,5 +203,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                 end
             end
         end
+
+        ::continue::
     end
 end)
