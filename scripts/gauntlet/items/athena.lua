@@ -12,6 +12,7 @@ TheGauntlet.Items.Athena.Constants = {
 
 
 
+local game = Game()
 local sfxManager = SFXManager()
 
 TheGauntlet.Items.Athena.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Athena")
@@ -42,15 +43,20 @@ end
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
     local hasAthena = player:HasCollectible(TheGauntlet.Items.Athena.COLLECTIBLE_TYPE)
 
-    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
+    local dataHourglass = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassRunData(player)
 
     if data.Athena == nil then
         data.Athena = {}
     end
+    if dataHourglass.Athena == nil then
+        dataHourglass.Athena = {}
+    end
 
     for i = 1, TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT do
         ---@type EntityPtr
-        local shieldEffect = data.Athena["Shield"..tostring(i)]
+        local shieldEffect = data.Athena["ShieldEntity"..tostring(i)]
+        local shieldSavedData = dataHourglass.Athena["ShieldSavedData"..tostring(i)]
 
         if not (shieldEffect ~= nil and shieldEffect.Ref ~= nil) then
             if hasAthena then
@@ -61,7 +67,13 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                     player
                 )
                 effect:Update()
-                data.Athena["Shield"..tostring(i)] = EntityPtr(effect)
+                data.Athena["ShieldEntity"..tostring(i)] = EntityPtr(effect)
+                if shieldSavedData ~= nil then
+                    local shieldData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassRoomData(effect)
+                    for k, v in pairs(shieldSavedData) do
+                        shieldData[k] = v
+                    end
+                end
             end
         else
             if not hasAthena and (shieldEffect ~= nil and shieldEffect.Ref ~= nil) then
@@ -71,15 +83,16 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
     end
 
     if not hasAthena then return end
+    if game:IsPaused() then return end
 
-    if data.Athena.RotationTimer == nil then
-        data.Athena.RotationTimer = 0
+    if dataHourglass.Athena.RotationTimer == nil then
+        dataHourglass.Athena.RotationTimer = 0
     end
-    data.Athena.RotationTimer = data.Athena.RotationTimer + 1
+    dataHourglass.Athena.RotationTimer = dataHourglass.Athena.RotationTimer + 1
 
     for i = 1, TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT do
         ---@type EntityPtr
-        local shieldEffectPtr = data.Athena["Shield"..tostring(i)]
+        local shieldEffectPtr = data.Athena["ShieldEntity"..tostring(i)]
         if shieldEffectPtr == nil or shieldEffectPtr.Ref == nil then
             goto continue
         end
@@ -88,7 +101,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
         local shieldEffect = shieldEffectPtr.Ref
 
         local shieldSprite = shieldEffect:GetSprite()
-        local shieldData = TheGauntlet.CustomSaveManager.GetTemporaryRoomData(shieldEffect)
+        local shieldData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassRoomData(shieldEffect)
 
         if shieldData.DisabledTimer == nil then
             shieldData.DisabledTimer = 0
@@ -109,7 +122,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
             shieldData.Unretracting = false
         end
 
-        local direction = Vector.FromAngle(data.Athena.RotationTimer * TheGauntlet.Items.Athena.Constants.SHIELD_ROTATION_SPEED + i / TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT * 360)
+        local direction = Vector.FromAngle(dataHourglass.Athena.RotationTimer * TheGauntlet.Items.Athena.Constants.SHIELD_ROTATION_SPEED + i / TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT * 360)
         local distanceFromPlayer = TheGauntlet.Utility.Lerp(40, 20, shieldData.EasedRetractTimer)
         shieldEffect.Position = player.Position + direction * distanceFromPlayer
         shieldEffect.Velocity = Vector.Zero
@@ -141,7 +154,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
             shieldSprite.Rotation = TheGauntlet.Utility.Lerp(-60, -120, TheGauntlet.Utility.InverseLerp(135, 225, correctedAngle))
             shieldEffect.FlipX = true
         end
-        local alpha = TheGauntlet.Utility.Lerp(1, 0.25, shieldData.RetractTimer)
+        local alpha = TheGauntlet.Utility.Lerp(1, 0.25, shieldData.RetractTimer / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES)
         shieldSprite.Color = Color(1, 1, 1, alpha)
 
         if not shieldData.Disabled then
@@ -181,28 +194,30 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
 
         if shieldData.Disabled then
             if shieldData.Retracting then
-                shieldData.RetractTimer = shieldData.RetractTimer + 1 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES
-                if shieldData.RetractTimer > 1 then
-                    shieldData.RetractTimer = 1
+                shieldData.RetractTimer = shieldData.RetractTimer + 1
+                if shieldData.RetractTimer > TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES then
+                    shieldData.RetractTimer = TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES
                     shieldData.Retracting = false
                     shieldData.DisabledTimer = 0
                 end
-                shieldData.EasedRetractTimer = 1.0 - (1.0 - shieldData.RetractTimer)^3
+                shieldData.EasedRetractTimer = 1.0 - (1.0 - (shieldData.RetractTimer / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES))^3
             elseif shieldData.Unretracting then
-                shieldData.RetractTimer = shieldData.RetractTimer - 1 / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES
+                shieldData.RetractTimer = shieldData.RetractTimer - 1
                 if shieldData.RetractTimer < 0 then
                     shieldData.RetractTimer = 0
                     shieldData.Unretracting = false
                     shieldData.Disabled = false
                 end
-                shieldData.EasedRetractTimer = shieldData.RetractTimer^3
+                shieldData.EasedRetractTimer = (shieldData.RetractTimer / TheGauntlet.Items.Athena.Constants.SHIELD_RETRACT_TIME_FRAMES)^3
             else
-                shieldData.DisabledTimer = shieldData.DisabledTimer + 1 / TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME_FRAMES
-                if shieldData.DisabledTimer > 1 then
+                shieldData.DisabledTimer = shieldData.DisabledTimer + 1
+                if shieldData.DisabledTimer > TheGauntlet.Items.Athena.Constants.SHIELD_DISABLE_TIME_FRAMES then
                     shieldData.Unretracting = true
                 end
             end
         end
+
+        dataHourglass.Athena["ShieldSavedData"..tostring(i)] = TheGauntlet.Utility.CopyTableShallow(shieldData)
 
         ::continue::
     end

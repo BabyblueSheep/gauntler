@@ -8,11 +8,10 @@ TheGauntlet = RegisterMod("The Gauntlet", 1)
 TheGauntlet.SaveManager = include("scripts.gauntlet.library.save_manager")
 include("scripts.gauntlet.library.status_effect_library")
 
+---@type CustomSaveManager
+TheGauntlet.CustomSaveManager = include("scripts.gauntlet.library.custom_save_manager")(TheGauntlet)
 if backupSaveManager ~= nil then
-    TheGauntlet.CustomSaveManager = backupSaveManager
-else
-    ---@type CustomSaveManager
-    TheGauntlet.CustomSaveManager = include("scripts.gauntlet.library.custom_save_manager")(TheGauntlet)
+    TheGauntlet.CustomSaveManager.Update(TheGauntlet.CustomSaveManager, backupSaveManager)
 end
 
 include("scripts.gauntlet.library.dead_sea_scrolls_integration")

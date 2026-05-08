@@ -743,7 +743,7 @@ function SaveManager.Save()
 		SaveManager.Utility.SendWarning(msg)
 	end
 
-	modReference:SaveData(json.encode(finalData))
+	--modReference:SaveData(json.encode(finalData))
 
 	SaveManager.Utility.RunCallback(SaveManager.Utility.CustomCallback.POST_DATA_SAVE, finalData)
 end

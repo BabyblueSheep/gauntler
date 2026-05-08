@@ -3,6 +3,10 @@
 ---@param inputTable table
 ---@return table
 function TheGauntlet.Utility.CopyListShallow(inputTable)
+    if type(inputTable) ~= "table" then
+		return inputTable
+	end
+
     local tableCopy = {}
     for i = 1, #inputTable do
         tableCopy[i] = inputTable[i]
@@ -14,11 +18,31 @@ end
 ---@param inputTable table
 ---@return table
 function TheGauntlet.Utility.CopyTableShallow(inputTable)
+    if type(inputTable) ~= "table" then
+		return inputTable
+	end
+
     local tableCopy = {}
     for k, v in pairs(inputTable) do
         tableCopy[k] = v
     end
     return tableCopy
+end
+
+---Creates a deep copy of a table.
+---@param inputTable table
+---@return table
+function TheGauntlet.Utility.CopyTableDeep(inputTable)
+    if type(inputTable) ~= "table" then
+		return inputTable
+	end
+
+	local tableCopy = {}
+	for k, v in pairs(inputTable) do
+		tableCopy[k] = TheGauntlet.Utility.CopyTableDeep(v)
+	end
+
+	return tableCopy
 end
 
 ---@param number number

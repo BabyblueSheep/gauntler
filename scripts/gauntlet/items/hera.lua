@@ -49,7 +49,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     for _, entity in ipairs(Isaac.GetRoomEntities()) do
         if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == FamiliarVariant.MINISAAC then
-            if entity:GetData().HeraTemporary then
+            if TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassRunData(entity).Hera == nil then
+                goto continue
+            end
+
+            if TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassRunData(entity).Hera.Minisaac then
                 entity:Remove()
                 goto continue
             end
@@ -102,8 +106,14 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
                 local familiar = player:AddMinisaac(entity.Position)
                 familiar.Velocity = rng:RandomVector() * TheGauntlet.Utility.RandomFloat(0, 5, rng)
 
-                familiar:GetData().HeraTemporary = true
-                TheGauntlet.SaveManager.GetRunSave(familiar).HeraTemporary = true
+                local familiarData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassRunData(familiar)
+                familiarData.Hera = {
+                    Minisaac = true
+                }
+                local familiarPersistentData = TheGauntlet.CustomSaveManager.GetPersistentRunData(familiar)
+                familiarPersistentData.Hera = {
+                    Minisaac = true
+                }
             end
         end
     end, 1, 1, isPersistent)
@@ -112,8 +122,13 @@ end)
 --Hack to make Hera Minisaacs not persist between exit-continuing
 ---@param familiar EntityFamiliar
 TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, function (_, familiar)
-    if TheGauntlet.SaveManager.GetRunSave(familiar).HeraTemporary then
-        if not familiar:GetData().HeraTemporary then
+    local familiarData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassRunData(familiar)
+    local familiarPersistentData = TheGauntlet.CustomSaveManager.GetPersistentRunData(familiar)
+
+    if familiarPersistentData.Hera == nil then return end
+
+    if familiarPersistentData.Hera.Minisaac then
+        if not familiarData.Hera.Minisaac then
             familiar:Remove()
         end
     end
