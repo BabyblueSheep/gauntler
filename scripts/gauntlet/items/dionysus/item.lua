@@ -14,13 +14,13 @@ TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Dionysus")
 ---@param duration integer
 ---@param additive boolean?
 function TheGauntlet.Items.Dionysus.ForcePlayerDrunk(player, duration, additive)
-    local data = player:GetData()
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryData(player)
     if additive then
-        data.TheGauntletDionysusDrunkMovementTimer = data.TheGauntletDionysusDrunkMovementTimer + duration
+        data.Dionysus.DrunkMovementTimer = data.TheGauntletDionysusDrunkMovementTimer + duration
     else
-        data.TheGauntletDionysusDrunkMovementTimer = duration
+        data.Dionysus.DrunkMovementTimer = duration
     end
-    data.TheGauntletDionysusPreviousVelocity = player.Velocity
+    data.Dionysus.PreviousVelocity = player.Velocity
 end
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function()
@@ -31,23 +31,24 @@ end)
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, function (_, player)
-    local data = player:GetData()
-
-    data.TheGauntletDionysusDrunkMovementTimer = 0
-    data.TheGauntletDionysusPreviousVelocity = Vector.Zero
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryData(player)
+    data.Dionysus = {
+        DrunkMovementTimer = 0,
+        PreviousVelocity = Vector.Zero
+    }
 end)
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player)
-    local data = player:GetData()
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryData(player)
 
-    if data.TheGauntletDionysusDrunkMovementTimer > 0 then
-        data.TheGauntletDionysusDrunkMovementTimer = data.TheGauntletDionysusDrunkMovementTimer - 1
+    if data.Dionysus.DrunkMovementTimer > 0 then
+        data.Dionysus.DrunkMovementTimer = data.Dionysus.DrunkMovementTimer - 1
 
-        player.Velocity = TheGauntlet.Utility.Lerp(player.Velocity, data.TheGauntletDionysusPreviousVelocity, TheGauntlet.Items.Dionysus.Constants.DRUNK_SLIPPERINESS)
+        player.Velocity = TheGauntlet.Utility.Lerp(player.Velocity, data.Dionysus.PreviousVelocity, TheGauntlet.Items.Dionysus.Constants.DRUNK_SLIPPERINESS)
     end
 
-    data.TheGauntletDionysusPreviousVelocity = player.Velocity
+    data.Dionysus.PreviousVelocity = player.Velocity
 end)
 
 ---@param entity Entity
@@ -55,7 +56,8 @@ end)
 ---@param damageFlags DamageFlag
 ---@param source EntityRef
 ---@param damageCooldown integer
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
+---@param extraSource EntityRef
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown, extraSource)
     local player = entity:ToPlayer()
     if player == nil then return end
 

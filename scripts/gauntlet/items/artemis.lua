@@ -21,7 +21,7 @@ local PIERCING_TEAR_VARIANTS = {
 ---@param player EntityPlayer
 ---@return Vector
 function TheGauntlet.Items.Artemis.GetCurrentDirection(player)
-    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryData(player)
     if data.Artemis == nil then
         return Vector.Zero
     end
@@ -31,7 +31,7 @@ end
 ---Randomly rotates the arrow's direction, if it exists.
 ---@param player EntityPlayer
 function TheGauntlet.Items.Artemis.RandomlyRotateArrow(player)
-    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryData(player)
     if data.Artemis == nil then
         return
     end
@@ -47,7 +47,7 @@ end
 ---@param player EntityPlayer
 ---@param direction Vector
 function TheGauntlet.Items.Artemis.RotateArrow(player, direction)
-    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryData(player)
     if data.Artemis == nil then
         return
     end
@@ -59,7 +59,7 @@ end
 ---Resets the timer to its initial value.
 ---@param player EntityPlayer
 function TheGauntlet.Items.Artemis.ResetTimer(player)
-    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryData(player)
     if data.Artemis == nil then
         return
     end
@@ -70,7 +70,7 @@ end
 ---Returns the value of the timer.
 ---@param player EntityPlayer
 function TheGauntlet.Items.Artemis.GetTimer(player)
-    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryData(player)
     if data.Artemis == nil then
         return -1
     end
@@ -79,7 +79,7 @@ end
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player)
-    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryData(player)
 
     if not player:HasCollectible(TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE) then
         data.Artemis = nil
@@ -135,7 +135,7 @@ arrowSprite:Play("Left")
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_RENDER, function (_, player)
-    local data = TheGauntlet.CustomSaveManager.GetTemporaryRunData(player)
+    local data = TheGauntlet.CustomSaveManager.GetTemporaryData(player)
     if data.Artemis == nil then
         return
     end

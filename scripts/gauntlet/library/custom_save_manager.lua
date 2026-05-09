@@ -13,45 +13,60 @@ local saveKeys = {
     TEMPORARY_NO_HOURGLASS = "temporary_no_hourglass",
     PERSISTENT = "persistent",
 
-    GLOBAL = "global",
-    RUN = "run",
-    FLOOR = "floor",
-    ROOM = "room",
-
-    INDEPENDENT = "independent",
     PLAYER = "player",
     FAMILIAR = "familiar",
+    BOMB = "bomb",
+    KNIFE = "knife",
     PER_ROOM_ENTITY = "per_room_entity",
 }
 
 local saveKeysPersistenceAll = { saveKeys.TEMPORARY, saveKeys.TEMPORARY_NO_HOURGLASS, saveKeys.PERSISTENT }
 local saveKeysPersistenceHourglassAffected = { saveKeys.TEMPORARY, saveKeys.PERSISTENT }
-local saveKeysLifetimeAll = { saveKeys.GLOBAL, saveKeys.RUN, saveKeys.FLOOR, saveKeys.ROOM }
-local saveKeysLifetimeRun = { saveKeys.RUN, saveKeys.FLOOR, saveKeys.ROOM }
-local saveKeysEntityAll = { saveKeys.INDEPENDENT, saveKeys.PLAYER, saveKeys.FAMILIAR, saveKeys.PER_ROOM_ENTITY }
-local saveKeysEntityPersistent = { saveKeys.INDEPENDENT, saveKeys.PLAYER, saveKeys.FAMILIAR }
+local saveKeysPersistenceEntities = { saveKeys.TEMPORARY, saveKeys.TEMPORARY_NO_HOURGLASS }
+local saveKeysPersistenceHourglassAffectedEntities = { saveKeys.TEMPORARY }
 
-saveManager._saveData = {}
-saveManager._saveDataPreviousRooms = {}
+local saveKeysEntityAll = { saveKeys.PLAYER, saveKeys.FAMILIAR, saveKeys.BOMB, saveKeys.KNIFE, saveKeys.PER_ROOM_ENTITY }
+local saveKeysEntityPersistent = { saveKeys.PLAYER, saveKeys.FAMILIAR, saveKeys.BOMB, saveKeys.KNIFE }
 
-for _, keyPersistence in ipairs(saveKeysPersistenceAll) do
-    saveManager._saveData[keyPersistence] = {}
-    for _, keyLifetime in ipairs(saveKeysLifetimeAll) do
-        saveManager._saveData[keyPersistence][keyLifetime] = {}
+local blacklistedBombVariants = {
+    [BombVariant.BOMB_THROWABLE] = true,
+	[BombVariant.BOMB_ROCKET] = true,
+	[BombVariant.BOMB_ROCKET_GIGA] = true
+}
+
+
+saveManager._saveDataIndependent = {}
+saveManager._saveDataIndependentPreviousRooms = {}
+
+saveManager._saveDataEntities = {}
+saveManager._saveDataEntitiesPreviousRooms = {}
+
+local hasDataBeenLoaded = false
+
+local function ClearTables()
+    for _, keyPersistence in ipairs(saveKeysPersistenceAll) do
+        saveManager._saveDataIndependent[keyPersistence] = {}
+    end
+
+    for _, keyPersistence in ipairs(saveKeysPersistenceEntities) do
+        saveManager._saveDataEntities[keyPersistence] = {}
         for _, keyEntity in ipairs(saveKeysEntityAll) do
-            saveManager._saveData[keyPersistence][keyLifetime][keyEntity] = {}
+            saveManager._saveDataEntities[keyPersistence][keyEntity] = {}
+        end
+    end
+
+    for _, keyPersistence in ipairs(saveKeysPersistenceHourglassAffected) do
+        saveManager._saveDataIndependentPreviousRooms[keyPersistence] = { {}, {} }
+    end
+
+    for _, keyPersistence in ipairs(saveKeysPersistenceHourglassAffectedEntities) do
+        saveManager._saveDataEntitiesPreviousRooms[keyPersistence] = {}
+        for _, keyEntity in ipairs(saveKeysEntityPersistent) do
+            saveManager._saveDataEntitiesPreviousRooms[keyPersistence][keyEntity] = {}
         end
     end
 end
-for _, keyPersistence in ipairs(saveKeysPersistenceHourglassAffected) do
-    saveManager._saveDataPreviousRooms[keyPersistence] = {}
-    for _, keyLifetime in ipairs(saveKeysLifetimeAll) do
-        saveManager._saveDataPreviousRooms[keyPersistence][keyLifetime] = {}
-        for _, keyEntity in ipairs(saveKeysEntityAll) do
-            saveManager._saveDataPreviousRooms[keyPersistence][keyLifetime][keyEntity] = { {}, {} }
-        end
-    end
-end
+ClearTables()
 
 
 ---@param inputTable table
@@ -80,76 +95,72 @@ end
 local function GetEntityKeyAndUniqueIndex(entity)
     local player = entity:ToPlayer()
     local familiar = entity:ToFamiliar()
+    local bomb = entity:ToBomb()
+    local knife = entity:ToKnife()
+
     if player ~= nil then
         return saveKeys.PLAYER, GetPlayerIndex(player)
     elseif familiar ~= nil then
         return saveKeys.FAMILIAR, familiar.InitSeed
+    elseif bomb ~= nil and blacklistedBombVariants[bomb.Variant] ~= true then
+        return saveKeys.BOMB, bomb.InitSeed
+    elseif knife ~= nil then
+        return saveKeys.KNIFE, knife.InitSeed
     else
         return saveKeys.PER_ROOM_ENTITY, GetPtrHash(entity)
     end
 end
 
+local keysInSavedTable = { "Independent", "IndependentHourglass" }
+
 ---@param player EntityPlayer
 mod:AddPriorityCallback(ModCallbacks.MC_POST_PLAYER_INIT, CallbackPriority.IMPORTANT, function (_, player)
-    for _, keyPersistence in ipairs(saveKeysPersistenceAll) do
-        for _, keyEntity in ipairs(saveKeysEntityAll) do
-            saveManager._saveData[keyPersistence][saveKeys.RUN][keyEntity] = {}
+    if not hasDataBeenLoaded then
+        if mod:HasData() then
+            local tableToLoad = json.decode(mod:LoadData())
+            local doesTableMatchThisManagersLayout = true
+            for _, keyEntity in ipairs(keysInSavedTable) do
+                if tableToLoad[keyEntity] == nil then
+                    doesTableMatchThisManagersLayout = false
+                end
+            end
+
+            if doesTableMatchThisManagersLayout then
+                saveManager._saveDataIndependent[saveKeys.PERSISTENT] = CopyTableDeep(tableToLoad.Independent)
+                saveManager._saveDataIndependentPreviousRooms[saveKeys.PERSISTENT] = CopyTableDeep(tableToLoad.IndependentHourglass)
+            end
         end
+
+        hasDataBeenLoaded = true
     end
 end)
 
 mod:AddPriorityCallback(ModCallbacks.MC_PRE_GAME_EXIT, CallbackPriority.IMPORTANT, function (_, shouldSave)
-    for _, keyPersistence in ipairs(saveKeysPersistenceAll) do
-        for _, keyLifetime in ipairs(saveKeysLifetimeAll) do
-            for _, keyEntity in ipairs(saveKeysEntityAll) do
-                saveManager._saveData[keyPersistence][keyLifetime][keyEntity] = {}
-            end
-        end
-    end
-    for _, keyPersistence in ipairs(saveKeysPersistenceHourglassAffected) do
-        for _, keyLifetime in ipairs(saveKeysLifetimeAll) do
-            for _, keyEntity in ipairs(saveKeysEntityAll) do
-                saveManager._saveDataPreviousRooms[keyPersistence][keyLifetime][keyEntity] = { {}, {} }
-            end
-        end
+    if shouldSave then
+        local tableToSave = {
+            Independent = CopyTableDeep(saveManager._saveDataIndependent[saveKeys.PERSISTENT]),
+            IndependentHourglass = CopyTableDeep(saveManager._saveDataIndependentPreviousRooms[saveKeys.PERSISTENT]),
+        }
+        local stringToSave = json.encode(tableToSave)
+
+        mod:SaveData(stringToSave)
     end
 
-    if not shouldSave then return end
+    hasDataBeenLoaded = false
 
-    local tableToSave = saveManager._saveData[saveKeys.PERSISTENT]
-    local stringToSave = json.encode(tableToSave)
-
-    print(saveManager._saveData[saveKeys.PERSISTENT][saveKeys.RUN][saveKeys.FAMILIAR])
-    for k, v in pairs(saveManager._saveData[saveKeys.PERSISTENT][saveKeys.RUN][saveKeys.FAMILIAR]) do
-        print(k, v, tableToSave[saveKeys.RUN][saveKeys.FAMILIAR][k].Hera)
-    end
-
-    print(stringToSave)
-    mod:SaveData(stringToSave)
-end)
-
-mod:AddPriorityCallback(ModCallbacks.MC_POST_NEW_LEVEL, CallbackPriority.IMPORTANT, function (_)
-    for _, keyPersistence in ipairs(saveKeysPersistenceAll) do
-        for _, keyEntity in ipairs(saveKeysEntityAll) do
-            saveManager._saveData[keyPersistence][saveKeys.FLOOR][keyEntity] = {}
-        end
-    end
-end)
-
-mod:AddPriorityCallback(ModCallbacks.MC_POST_NEW_ROOM, CallbackPriority.IMPORTANT, function (_)
-    for _, keyPersistence in ipairs(saveKeysPersistenceAll) do
-        for _, keyEntity in ipairs(saveKeysEntityAll) do
-            saveManager._saveData[keyPersistence][saveKeys.ROOM][keyEntity] = {}
-        end
-    end
+    ClearTables()
 end)
 
 ---@param slot integer
 mod:AddPriorityCallback(ModCallbacks.MC_POST_GLOWING_HOURGLASS_LOAD, CallbackPriority.IMPORTANT, function (_, slot)
     for _, keyPersistence in ipairs(saveKeysPersistenceHourglassAffected) do
-        for _, keyLifetime in ipairs(saveKeysLifetimeRun) do
-            for _, keyEntity in ipairs(saveKeysEntityPersistent) do
-                saveManager._saveData[keyPersistence][keyLifetime][keyEntity] = CopyTableDeep(saveManager._saveDataPreviousRooms[keyPersistence][keyLifetime][keyEntity][slot + 1])
+        saveManager._saveDataIndependent[keyPersistence] = CopyTableDeep(saveManager._saveDataIndependentPreviousRooms[keyPersistence][slot + 1])
+    end
+
+    for _, keyPersistence in ipairs(saveKeysPersistenceHourglassAffectedEntities) do
+        for _, keyEntity in ipairs(saveKeysEntityPersistent) do
+            for individualEntityKey, _ in pairs(saveManager._saveDataEntities[keyPersistence][keyEntity]) do
+                saveManager._saveDataEntities[keyPersistence][keyEntity][individualEntityKey] = CopyTableDeep(saveManager._saveDataEntitiesPreviousRooms[keyPersistence][keyEntity][individualEntityKey][slot + 1])
             end
         end
     end
@@ -158,9 +169,13 @@ end)
 ---@param slot integer
 mod:AddPriorityCallback(ModCallbacks.MC_POST_GLOWING_HOURGLASS_SAVE, CallbackPriority.IMPORTANT, function (_, slot)
     for _, keyPersistence in ipairs(saveKeysPersistenceHourglassAffected) do
-        for _, keyLifetime in ipairs(saveKeysLifetimeRun) do
-            for _, keyEntity in ipairs(saveKeysEntityPersistent) do
-                saveManager._saveDataPreviousRooms[keyPersistence][keyLifetime][keyEntity][slot + 1] = CopyTableDeep(saveManager._saveData[keyPersistence][keyLifetime][keyEntity])
+        saveManager._saveDataIndependentPreviousRooms[keyPersistence][slot + 1] = CopyTableDeep(saveManager._saveDataIndependent[keyPersistence])
+    end
+
+    for _, keyPersistence in ipairs(saveKeysPersistenceHourglassAffectedEntities) do
+        for _, keyEntity in ipairs(saveKeysEntityPersistent) do
+            for individualEntityKey, _ in pairs(saveManager._saveDataEntities[keyPersistence][keyEntity]) do
+                saveManager._saveDataEntitiesPreviousRooms[keyPersistence][keyEntity][individualEntityKey][slot + 1] = CopyTableDeep(saveManager._saveDataEntities[keyPersistence][keyEntity][individualEntityKey])
             end
         end
     end
@@ -168,15 +183,22 @@ end)
 
 ---@param entity Entity
 mod:AddPriorityCallback(ModCallbacks.MC_POST_ENTITY_REMOVE, CallbackPriority.IMPORTANT, function (_, entity)
+    local bomb = entity:ToBomb()
+    if bomb ~= nil then
+        if bomb:GetExplosionCountdown() > 0 then return end
+    end
+
     local entityKey, index = GetEntityKeyAndUniqueIndex(entity)
-    for _, keyPersistence in ipairs(saveKeysPersistenceAll) do
-        for _, keyLifetime in ipairs(saveKeysLifetimeRun) do
-            if saveManager._saveData[keyPersistence][keyLifetime][entityKey][index] ~= nil then
-                saveManager._saveData[keyPersistence][keyLifetime][entityKey][index] = nil
-            end
-        end
+
+    for _, keyPersistence in ipairs(saveKeysPersistenceEntities) do
+        saveManager._saveDataEntities[keyPersistence][entityKey][index] = nil
+    end
+    if entityKey == saveKeys.PER_ROOM_ENTITY then return end
+    for _, keyPersistence in ipairs(saveKeysPersistenceHourglassAffectedEntities) do
+        saveManager._saveDataEntitiesPreviousRooms[keyPersistence][entityKey][index] = nil
     end
 end)
+
 
 
 
@@ -193,120 +215,56 @@ local persistenceCategoryToKey = {
     [2] = saveKeys.PERSISTENT
 }
 
----@enum LifetimeCategory
-saveManager.LifetimeCategory = {
-    GLOBAL = 0,
-    RUN = 1,
-    FLOOR = 2,
-    ROOM = 3,
-}
-
-local lifetimeCategoryToKey = {
-    [0] = saveKeys.GLOBAL,
-    [1] = saveKeys.RUN,
-    [2] = saveKeys.FLOOR,
-    [3] = saveKeys.ROOM
-}
-
 ---@param persistenceCategory PersistenceCategory
----@param lifetimeCategory LifetimeCategory
 ---@param entity Entity?
 ---@return table
-function saveManager.GetData(persistenceCategory, lifetimeCategory, entity)
+function saveManager.GetData(persistenceCategory, entity)
     local persistenceKey = persistenceCategoryToKey[persistenceCategory]
-    local lifetimeKey = lifetimeCategoryToKey[lifetimeCategory]
-
-    if lifetimeKey == saveKeys.GLOBAL then
-        return saveManager._saveData[persistenceKey][lifetimeKey]
-    end
 
     if entity == nil then
-        return saveManager._saveData[persistenceKey][lifetimeKey][saveKeys.INDEPENDENT]
+        return saveManager._saveDataIndependent[persistenceKey]
+    end
+
+    if persistenceCategory == saveManager.PersistenceCategory.PERSISTENT then
+        local tableSave = EntitySaveStateManager.GetEntityData(mod, entity)
+        return tableSave
     end
 
     local key, index = GetEntityKeyAndUniqueIndex(entity)
-    if key == "familiar" then
-        print(persistenceKey, lifetimeKey, key, index)
+    local indexString = tostring(index)
+
+    if saveManager._saveDataEntities[persistenceKey][key][indexString] == nil then
+        saveManager._saveDataEntities[persistenceKey][key][indexString] = {}
+        if persistenceCategory ~= saveManager.PersistenceCategory.TEMPORARY_NO_HOURGLASS then
+            saveManager._saveDataEntitiesPreviousRooms[persistenceKey][key][indexString] = { {}, {} }
+        end
     end
-
-    if saveManager._saveData[persistenceKey][lifetimeKey][key][index] == nil then
-        saveManager._saveData[persistenceKey][lifetimeKey][key][index] = {}
-    end
-    return saveManager._saveData[persistenceKey][lifetimeKey][key][index]
-end
-
-function saveManager.GetTemporaryGlobalData()
-    return saveManager.GetData(saveManager.PersistenceCategory.TEMPORARY, saveManager.LifetimeCategory.GLOBAL)
+    return saveManager._saveDataEntities[persistenceKey][key][indexString]
 end
 
 ---@param entity Entity?
----@return table
-function saveManager.GetTemporaryRunData(entity)
-    return saveManager.GetData(saveManager.PersistenceCategory.TEMPORARY, saveManager.LifetimeCategory.RUN, entity)
+function saveManager.GetTemporaryData(entity)
+    return saveManager.GetData(saveManager.PersistenceCategory.TEMPORARY, entity)
 end
 
 ---@param entity Entity?
----@return table
-function saveManager.GetTemporaryFloorData(entity)
-    return saveManager.GetData(saveManager.PersistenceCategory.TEMPORARY, saveManager.LifetimeCategory.FLOOR, entity)
+function saveManager.GetTemporaryNoHourglassData(entity)
+    return saveManager.GetData(saveManager.PersistenceCategory.TEMPORARY_NO_HOURGLASS, entity)
 end
 
 ---@param entity Entity?
----@return table
-function saveManager.GetTemporaryRoomData(entity)
-    return saveManager.GetData(saveManager.PersistenceCategory.TEMPORARY, saveManager.LifetimeCategory.ROOM, entity)
-end
-
-function saveManager.GetTemporaryNoHourglassGlobalData()
-    return saveManager.GetData(saveManager.PersistenceCategory.TEMPORARY_NO_HOURGLASS, saveManager.LifetimeCategory.GLOBAL)
-end
-
----@param entity Entity?
----@return table
-function saveManager.GetTemporaryNoHourglassRunData(entity)
-    return saveManager.GetData(saveManager.PersistenceCategory.TEMPORARY_NO_HOURGLASS, saveManager.LifetimeCategory.RUN, entity)
-end
-
----@param entity Entity?
----@return table
-function saveManager.GetTemporaryNoHourglassFloorData(entity)
-    return saveManager.GetData(saveManager.PersistenceCategory.TEMPORARY_NO_HOURGLASS, saveManager.LifetimeCategory.FLOOR, entity)
-end
-
----@param entity Entity?
----@return table
-function saveManager.GetTemporaryNoHourglassRoomData(entity)
-    return saveManager.GetData(saveManager.PersistenceCategory.TEMPORARY_NO_HOURGLASS, saveManager.LifetimeCategory.ROOM, entity)
-end
-
-function saveManager.GetPersistentGlobalData()
-    return saveManager.GetData(saveManager.PersistenceCategory.PERSISTENT, saveManager.LifetimeCategory.GLOBAL)
-end
-
----@param entity Entity?
----@return table
-function saveManager.GetPersistentRunData(entity)
-    return saveManager.GetData(saveManager.PersistenceCategory.PERSISTENT, saveManager.LifetimeCategory.RUN, entity)
-end
-
----@param entity Entity?
----@return table
-function saveManager.GetPersistentFloorData(entity)
-    return saveManager.GetData(saveManager.PersistenceCategory.PERSISTENT, saveManager.LifetimeCategory.FLOOR, entity)
-end
-
----@param entity Entity?
----@return table
-function saveManager.GetPersistentRoomData(entity)
-    return saveManager.GetData(saveManager.PersistenceCategory.PERSISTENT, saveManager.LifetimeCategory.ROOM, entity)
+function saveManager.GetPersistentData(entity)
+    return saveManager.GetData(saveManager.PersistenceCategory.PERSISTENT, entity)
 end
 
 
 ---@param newSaveManager CustomSaveManager
 ---@param oldSaveManager CustomSaveManager
 function saveManager.Update(newSaveManager, oldSaveManager)
-    newSaveManager._saveData = CopyTableDeep(oldSaveManager._saveData)
-    newSaveManager._saveDataPreviousRooms = CopyTableDeep(oldSaveManager._saveDataPreviousRooms)
+    newSaveManager._saveDataIndependent = CopyTableDeep(oldSaveManager._saveDataIndependent)
+    newSaveManager._saveDataIndependentPreviousRooms = CopyTableDeep(oldSaveManager._saveDataIndependentPreviousRooms)
+    newSaveManager._saveDataEntities = CopyTableDeep(oldSaveManager._saveDataEntities)
+    newSaveManager._saveDataEntitiesPreviousRooms = CopyTableDeep(oldSaveManager._saveDataEntitiesPreviousRooms)
 end
 
 return saveManager

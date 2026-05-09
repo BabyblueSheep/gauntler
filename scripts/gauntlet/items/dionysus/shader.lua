@@ -70,7 +70,8 @@ end)
 ---@param damageFlags DamageFlag
 ---@param source EntityRef
 ---@param damageCooldown integer
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
+---@param extraSource EntityRef
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown, extraSource)
     local player = entity:ToPlayer()
     if player == nil then return end
 

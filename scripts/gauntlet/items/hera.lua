@@ -49,11 +49,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
 
     for _, entity in ipairs(Isaac.GetRoomEntities()) do
         if entity.Type == EntityType.ENTITY_FAMILIAR and entity.Variant == FamiliarVariant.MINISAAC then
-            if TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassRunData(entity).Hera == nil then
+            if TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(entity).Hera == nil then
                 goto continue
             end
 
-            if TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassRunData(entity).Hera.Minisaac then
+            if TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(entity).Hera.Minisaac then
                 entity:Remove()
                 goto continue
             end
@@ -106,11 +106,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
                 local familiar = player:AddMinisaac(entity.Position)
                 familiar.Velocity = rng:RandomVector() * TheGauntlet.Utility.RandomFloat(0, 5, rng)
 
-                local familiarData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassRunData(familiar)
+                local familiarData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(familiar)
                 familiarData.Hera = {
                     Minisaac = true
                 }
-                local familiarPersistentData = TheGauntlet.CustomSaveManager.GetPersistentRunData(familiar)
+                local familiarPersistentData = TheGauntlet.CustomSaveManager.GetPersistentData(familiar)
                 familiarPersistentData.Hera = {
                     Minisaac = true
                 }
@@ -122,13 +122,13 @@ end)
 --Hack to make Hera Minisaacs not persist between exit-continuing
 ---@param familiar EntityFamiliar
 TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, function (_, familiar)
-    local familiarData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassRunData(familiar)
-    local familiarPersistentData = TheGauntlet.CustomSaveManager.GetPersistentRunData(familiar)
+    local familiarData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(familiar)
+    local familiarPersistentData = TheGauntlet.CustomSaveManager.GetPersistentData(familiar)
 
     if familiarPersistentData.Hera == nil then return end
 
     if familiarPersistentData.Hera.Minisaac then
-        if not familiarData.Hera.Minisaac then
+        if not familiarData.Hera then
             familiar:Remove()
         end
     end
