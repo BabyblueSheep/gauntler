@@ -1,6 +1,6 @@
 TheGauntlet.Items.Hades.Constants = {
     SKULL_STATUS_DURATION = 30 * 5,
-    CHANCE_TO_APPLY_SKULL = 10.05,
+    CHANCE_TO_APPLY_SKULL = 0.05,
 }
 
 
