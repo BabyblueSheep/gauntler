@@ -248,6 +248,7 @@ local demeterBoogerChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGau
 local hadesSkullChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Hades.Constants.CHANCE_TO_APPLY_SKULL * 100)
 
 local zeusBoltPipGiveChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL * 100)
+local zeusBerserkIntervalSeconds = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Zeus.Constants.BERSERK_TIME_INTERVAL_FRAMES / 30)
 
 local function RegisterLanguageKeys(language, localizationItems)
     EID:addItemPoolName(TheGauntlet.GauntletRoom.ITEM_POOL_ID, language, localizationItems["pool.gauntlet.name"])
@@ -338,7 +339,7 @@ local function RegisterLanguageKeys(language, localizationItems)
     local zeusCaseTranslationItems = {
         {
             CollectibleType.COLLECTIBLE_BERSERK, "berserk",
-            { TheGauntlet.Items.Zeus.Constants.BERSERK_TIME_INTERVAL_SECONDS }
+            { zeusBerserkIntervalSeconds }
         },
         {
             CollectibleType.COLLECTIBLE_ERASER, "eraser",

@@ -1,4 +1,4 @@
-TheGauntlet.Items.Zeus.Constants.CHANCE_TO_STRIKE_ENEMY = -0.75
+TheGauntlet.Items.Zeus.Constants.CHANCE_TO_STRIKE_ENEMY = 0.75
 TheGauntlet.Items.Zeus.Constants.BOLT_DAMAGE = 20
 TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL = 0.1
 

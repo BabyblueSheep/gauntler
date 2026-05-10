@@ -1,8 +1,7 @@
-TheGauntlet.Items.Zeus.Constants.BERSERK_TIME_INTERVAL_SECONDS = 2
+TheGauntlet.Items.Zeus.Constants.BERSERK_TIME_INTERVAL_FRAMES = 2 * 30
 
 
 
-local timeIntervalFrames = TheGauntlet.Items.Zeus.Constants.BERSERK_TIME_INTERVAL_SECONDS * 30
 
 TheGauntlet.Items.Zeus.RegisterBoltAmountForItem(CollectibleType.COLLECTIBLE_BERSERK, function (configItem, player, slot)
     return 0
@@ -17,7 +16,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player
 
     if breathOfLifeEffect == nil then return end
 
-    if player.FrameCount % timeIntervalFrames == 0 then
+    if player.FrameCount % TheGauntlet.Items.Zeus.Constants.BERSERK_TIME_INTERVAL_FRAMES == 0 then
         TheGauntlet.Items.Zeus.ScheduleLightningBolt(TheGauntlet.Items.Zeus.TargetType.RANDOM_POSITION, player)
     end
 end)
