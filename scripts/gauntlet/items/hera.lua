@@ -4,6 +4,7 @@ TheGauntlet.Items.Hera.Constants = {
     PREGNANT_STATUS_DURATION_FRAMES = 30 * 15,
 
     AMOUNT_OF_ENEMIES_TO_IMPREGNATE = 2,
+    EXTRA_AMOUNT_TO_IMPREGNATE_PER_COLLECTIBLE = 1,
 
     SPAWNED_MINISAAC_MINIMUM_AMOUNT = 1,
     SPAWNED_MINISAAC_MAXIMUM_AMOUNT = 2,
@@ -71,7 +72,10 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     local rng = RNG(game:GetRoom():GetSpawnSeed())
     TheGauntlet.Utility.ShuffleListInPlace(enemiesToImpregnante, rng)
 
-    local amountOfEnemiesToImpregnante = math.min(#enemiesToImpregnante, TheGauntlet.Items.Hera.Constants.AMOUNT_OF_ENEMIES_TO_IMPREGNATE)
+    local amountOfEnemiesToImpregnante = TheGauntlet.Items.Hera.Constants.AMOUNT_OF_ENEMIES_TO_IMPREGNATE
+    amountOfEnemiesToImpregnante = amountOfEnemiesToImpregnante + PlayerManager.GetNumCollectibles(TheGauntlet.Items.Hera.COLLECTIBLE_TYPE) * TheGauntlet.Items.Hera.Constants.EXTRA_AMOUNT_TO_IMPREGNATE_PER_COLLECTIBLE
+    amountOfEnemiesToImpregnante = math.min(#enemiesToImpregnante, amountOfEnemiesToImpregnante)
+
     for i = 1, amountOfEnemiesToImpregnante do
         local enemy = enemiesToImpregnante[i]
         

@@ -172,6 +172,16 @@ end, function (descObj)
 end)
 
 
+EID:AddSelfConditional({
+    TheGauntlet.Items.Aphrodite.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Ares.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Hades.COLLECTIBLE_TYPE,
+    TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE
+}, "No Effect (Copies)")
+
+
 local newChanceDescriptions = {}
 
 local itemsWithNewChance = {
@@ -308,9 +318,12 @@ local function RegisterLanguageKeys(language, localizationItems)
         EID:addCollectible(collectibleType, collectibleDescription, collectibleName, language)
     end
 
+    EID:addSelfCondition(TheGauntlet.Items.Athena.COLLECTIBLE_TYPE, localizationItems["item.athena.description.duplicate"], language)
+    EID:addSelfCondition(TheGauntlet.Items.Hera.COLLECTIBLE_TYPE, localizationItems["item.hera.description.duplicate"], language)
+    EID:addSelfCondition(TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE, localizationItems["item.poseidon.description.duplicate"], language)
 
     EID.descriptions[language].ConditionalDescs["Gauntlet Hephaestus if no Golden then only Trinket"] = { localizationItems["item.hephaestus.description.without_golden_trinket"] }
-
+    
     EID:addSynergyCondition(CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES, TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE, localizationItems["item.zeus.description.book_of_virtues"] , nil, language)
     EID:addBookOfBelialBuffsCondition(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE, localizationItems["item.zeus.description.judas_birthright"] , nil, nil, language)
 

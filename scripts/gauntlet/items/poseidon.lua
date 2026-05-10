@@ -1,6 +1,8 @@
 TheGauntlet.Items.Poseidon = {}
 
 TheGauntlet.Items.Poseidon.Constants = {
+    FLOW_STRENGTH_DAMP_IF_ABOVE_BASE_LENGTH = 0.5,
+
     ENEMY_FLOW_SPEED_BASE = 1,
     ENEMY_FLOW_SPEED_STAGE = 0.05,
     PICKUP_FLOW_SPEED = 0.5,
@@ -81,12 +83,14 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
         if not player:HasCollectible(TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE) then goto continue end
 
         local direction = Isaac.GetAxisAlignedUnitVectorFromDir(player:GetFireDirection())
-        targetCurrent = targetCurrent + direction
+        targetCurrent = targetCurrent + direction * player:GetCollectibleNum(TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE)
 
         ::continue::
     end
 
-    targetCurrent = targetCurrent:Normalized()
+    if targetCurrent:Length() > 1 then
+        targetCurrent = targetCurrent:Resized(1 + (targetCurrent:Length() - 1) * TheGauntlet.Items.Poseidon.Constants.FLOW_STRENGTH_DAMP_IF_ABOVE_BASE_LENGTH)
+    end
 
     if targetCurrent:Length() > EPSILON then
         for _, entity in ipairs(Isaac.GetRoomEntities()) do
@@ -109,6 +113,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
             ::continue::
         end
     end
+
+    targetCurrent = targetCurrent:Normalized()
 
     local shouldBeLoud = true
     if targetCurrent:Length() < EPSILON then

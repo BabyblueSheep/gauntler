@@ -48,37 +48,42 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
 
     if data.Athena == nil then
         data.Athena = {}
+        data.Athena.MaximumShieldAmount = 5
     end
     if dataHourglass.Athena == nil then
         dataHourglass.Athena = {}
     end
 
-    for i = 1, TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT do
+    local shieldAmount = TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT + (player:GetCollectibleNum(TheGauntlet.Items.Athena.COLLECTIBLE_TYPE) - 1)
+    data.Athena.MaximumShieldAmount = math.max(data.Athena.MaximumShieldAmount, shieldAmount)
+
+    for i = 1, shieldAmount do
         ---@type EntityPtr
         local shieldEffect = data.Athena["ShieldEntity"..tostring(i)]
         local shieldSavedData = dataHourglass.Athena["ShieldSavedData"..tostring(i)]
 
         if not (shieldEffect ~= nil and shieldEffect.Ref ~= nil) then
-            if hasAthena then
-                local effect = TheGauntlet.Utility.SpawnEffect
-                (
-                    EntityType.ENTITY_EFFECT, TheGauntlet.Items.Athena.SHIELD_EFFECT_VARIANT, 0,
-                    player.Position, Vector.Zero,
-                    player
-                )
-                effect:Update()
-                data.Athena["ShieldEntity"..tostring(i)] = EntityPtr(effect)
-                if shieldSavedData ~= nil then
-                    local shieldData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(effect)
-                    for k, v in pairs(shieldSavedData) do
-                        shieldData[k] = v
-                    end
+            local effect = TheGauntlet.Utility.SpawnEffect
+            (
+                EntityType.ENTITY_EFFECT, TheGauntlet.Items.Athena.SHIELD_EFFECT_VARIANT, 0,
+                player.Position, Vector.Zero,
+                player
+            )
+            effect:Update()
+            data.Athena["ShieldEntity"..tostring(i)] = EntityPtr(effect)
+            if shieldSavedData ~= nil then
+                local shieldData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(effect)
+                for k, v in pairs(shieldSavedData) do
+                    shieldData[k] = v
                 end
             end
-        else
-            if not hasAthena and (shieldEffect ~= nil and shieldEffect.Ref ~= nil) then
-                shieldEffect.Ref:Remove()
-            end
+        end
+    end
+
+    for i = shieldAmount + 1, data.Athena.MaximumShieldAmount do
+        local shieldEffect = data.Athena["ShieldEntity"..tostring(i)]
+        if shieldEffect ~= nil and shieldEffect.Ref ~= nil then
+            shieldEffect.Ref:Remove()
         end
     end
 
@@ -90,7 +95,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
     end
     dataHourglass.Athena.RotationTimer = dataHourglass.Athena.RotationTimer + 1
 
-    for i = 1, TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT do
+    for i = 1, shieldAmount do
         ---@type EntityPtr
         local shieldEffectPtr = data.Athena["ShieldEntity"..tostring(i)]
         if shieldEffectPtr == nil or shieldEffectPtr.Ref == nil then
@@ -122,7 +127,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
             shieldData.Unretracting = false
         end
 
-        local direction = Vector.FromAngle(dataHourglass.Athena.RotationTimer * TheGauntlet.Items.Athena.Constants.SHIELD_ROTATION_SPEED + i / TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT * 360)
+        local direction = Vector.FromAngle(dataHourglass.Athena.RotationTimer * TheGauntlet.Items.Athena.Constants.SHIELD_ROTATION_SPEED + i / shieldAmount * 360)
         local distanceFromPlayer = TheGauntlet.Utility.Lerp(40, 20, shieldData.EasedRetractTimer)
         shieldEffect.Position = player.Position + direction * distanceFromPlayer
         shieldEffect.Velocity = Vector.Zero

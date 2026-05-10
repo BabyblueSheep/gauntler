@@ -30,6 +30,7 @@ return {
         "Grants [1] rotating shields around Isaac#"..
         "Shields reflect projectiles and knock enemies back#"..
         "{{Timer}} Shields go on a [2] second cooldown after deflecting",
+    ["item.athena.description.duplicate"] = "Grants an additional shield",
 
     ["item.demeter.name"] = "Demeter",
     ["item.demeter.description"] =
@@ -68,11 +69,13 @@ return {
     ["item.hera.description"] =
         "{{GauntletHeraStatusEffect}} Entering a room inflicts Pregnant on [1] enemies#"..
         "{{Timer}} Killing a Pregnant enemy spawns [2]-[3] Minisaac for the room",
+    ["item.hera.description.duplicate"] = "Inflicts Pregnant on an additional enemy",
 
     ["item.poseidon.name"] = "Poseidon",
     ["item.poseidon.description"] =
         "All rooms are flooded#"..
         "Holding the fire buttons causes water to flow in the direction held, pushing enemies and consumables back",
+    ["item.poseidon.description.duplicate"] = "Water flow is stronger",
 
     ["item.zeus.name"] = "Zeus",
     ["item.zeus.description"] =
