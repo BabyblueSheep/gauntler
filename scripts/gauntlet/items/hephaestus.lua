@@ -92,21 +92,24 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
     
     local room = game:GetRoom()
 
-    local spawnPosition = room:FindFreePickupSpawnPosition(room:GetCenterPos(), nil, true)
-
     local rng = Isaac.GetPlayer():GetCollectibleRNG(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE)
 
-    local goldenPickupEntry = nil
-    while goldenPickupEntry == nil do
-        local randomGoldenPickupEntry = TheGauntlet.Utility.RandomItemFromList(possibleGoldenPickups, rng)
-        if randomGoldenPickupEntry.Condition() then
-            goldenPickupEntry = randomGoldenPickupEntry
-        end
-    end
+    for i = 1, PlayerManager.GetNumCollectibles(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE) do
+        local spawnPosition = room:FindFreePickupSpawnPosition(room:GetCenterPos(), nil, true)
 
-    TheGauntlet.Utility.SpawnPickup
-    (
-        goldenPickupEntry.Type, goldenPickupEntry.Variant, goldenPickupEntry.SubType,
-        spawnPosition, Vector.Zero, nil
-    )
+
+        local goldenPickupEntry = nil
+        while goldenPickupEntry == nil do
+            local randomGoldenPickupEntry = TheGauntlet.Utility.RandomItemFromList(possibleGoldenPickups, rng)
+            if randomGoldenPickupEntry.Condition() then
+                goldenPickupEntry = randomGoldenPickupEntry
+            end
+        end
+
+        TheGauntlet.Utility.SpawnPickup
+        (
+            goldenPickupEntry.Type, goldenPickupEntry.Variant, goldenPickupEntry.SubType,
+            spawnPosition, Vector.Zero, nil
+        )
+    end
 end)

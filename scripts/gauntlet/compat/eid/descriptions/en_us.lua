@@ -63,6 +63,7 @@ return {
     ["item.hephaestus.description.without_golden_trinket"] =
         "{{Trinket}} Spawns 1 random trinket#"..
         "Entering a new floor spawns a random golden pickup",
+    ["item.hephaestus.description.duplicate"] = "Entering a new floor spawns an additional golden pickup",
 
     ["item.hera.name"] = "Hera",
     ["item.hera.description"] =

@@ -320,6 +320,7 @@ local function RegisterLanguageKeys(language, localizationItems)
 
     EID:addSelfCondition(TheGauntlet.Items.Athena.COLLECTIBLE_TYPE, localizationItems["item.athena.description.duplicate"], language)
     EID:addSelfCondition(TheGauntlet.Items.Hera.COLLECTIBLE_TYPE, localizationItems["item.hera.description.duplicate"], language)
+    EID:addSelfCondition(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE, localizationItems["item.hephaestus.description.duplicate"], language)
     EID:addSelfCondition(TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE, localizationItems["item.poseidon.description.duplicate"], language)
 
     EID.descriptions[language].ConditionalDescs["Gauntlet Hephaestus if no Golden then only Trinket"] = { localizationItems["item.hephaestus.description.without_golden_trinket"] }
