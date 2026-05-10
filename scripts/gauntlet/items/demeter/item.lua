@@ -99,13 +99,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ROOM_TRIGGER_CLEAR, function (_, si
     end
 end)
 
----@param collectibleType CollectibleType
----@param charge integer
----@param firstTime boolean
----@param slot integer
----@param varData integer
 ---@param player EntityPlayer
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, collectibleType, charge, firstTime, slot, varData, player)
+---@param collectibleType CollectibleType
+---@param firstTime boolean
+---@param wispOrInnate boolean
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_ADDED, function (_, player, collectibleType, firstTime, wispOrInnate)
     if TheGauntlet.Items.Demeter.GetSeason() == TheGauntlet.Items.Demeter.Season.NO_SEASON then
         TheGauntlet.Items.Demeter.SetSeason(TheGauntlet.Items.Demeter.Season.WINTER)
     end
@@ -114,8 +112,8 @@ end, TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE)
 ---@param player EntityPlayer
 ---@param collectibleType CollectibleType
 ---@param removeFromPlayerForm boolean
----@param wisp boolean
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, function (_, player, collectibleType, removeFromPlayerForm, wisp)
+---@param wispOrInnate boolean
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, function (_, player, collectibleType, removeFromPlayerForm, wispOrInnate)
     if PlayerManager.AnyoneHasCollectible(collectibleType) then return end
 
     TheGauntlet.Items.Demeter.SetSeason(TheGauntlet.Items.Demeter.Season.NO_SEASON)

@@ -78,8 +78,8 @@ end)
 ---@param player EntityPlayer
 ---@param collectibleType CollectibleType
 ---@param removeFromPlayerForm boolean
----@param wisp boolean
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, function (_, player, collectibleType, removeFromPlayerForm, wisp)
+---@param wispOrInnate boolean
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_REMOVED, function (_, player, collectibleType, removeFromPlayerForm, wispOrInnate)
     if collectibleType == TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE then
         if player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE_ACTIVE then
             player:RemoveCollectible(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE_ACTIVE)

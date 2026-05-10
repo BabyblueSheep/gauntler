@@ -152,12 +152,10 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_RENDER, function (_)
     room:SetWaterCurrent(actualWaterCurrent)
 end)
 
----@param collectibleType CollectibleType
----@param charge integer
----@param firstTime boolean
----@param slot integer
----@param varData integer
 ---@param player EntityPlayer
-TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, collectibleType, charge, firstTime, slot, varData, player)
+---@param collectibleType CollectibleType
+---@param firstTime boolean
+---@param wispOrInnate boolean
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_TRIGGER_COLLECTIBLE_ADDED, function (_, player, collectibleType, firstTime, wispOrInnate)
     framesLeftToUpdateVisualWater = 15
 end, TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE)
