@@ -44,8 +44,6 @@ saveManager._saveDataEntities = {}
 saveManager._saveDataEntitiesPreviousRooms = {}
 
 
-local hasDataBeenLoaded = false
-
 local function ClearTables()
     for _, keyPersistence in ipairs(saveKeysPersistenceAll) do
         saveManager._saveDataIndependent[keyPersistence] = {}
@@ -117,43 +115,7 @@ end
 
 
 
-local keysInSavedTable = { "Independent", "IndependentHourglass" }
-
----@param player EntityPlayer
-mod:AddPriorityCallback(ModCallbacks.MC_POST_PLAYER_INIT, CallbackPriority.IMPORTANT, function (_, player)
-    if not hasDataBeenLoaded then
-        if mod:HasData() then
-            local tableToLoad = json.decode(mod:LoadData())
-            local doesTableMatchThisManagersLayout = true
-            for _, keyEntity in ipairs(keysInSavedTable) do
-                if tableToLoad[keyEntity] == nil then
-                    doesTableMatchThisManagersLayout = false
-                end
-            end
-
-            if doesTableMatchThisManagersLayout then
-                saveManager._saveDataIndependent[saveKeys.PERSISTENT] = CopyTableDeep(tableToLoad.Independent)
-                saveManager._saveDataIndependentPreviousRooms[saveKeys.PERSISTENT] = CopyTableDeep(tableToLoad.IndependentHourglass)
-            end
-        end
-
-        hasDataBeenLoaded = true
-    end
-end)
-
 mod:AddPriorityCallback(ModCallbacks.MC_PRE_GAME_EXIT, CallbackPriority.IMPORTANT, function (_, shouldSave)
-    if shouldSave then
-        local tableToSave = {
-            Independent = CopyTableDeep(saveManager._saveDataIndependent[saveKeys.PERSISTENT]),
-            IndependentHourglass = CopyTableDeep(saveManager._saveDataIndependentPreviousRooms[saveKeys.PERSISTENT]),
-        }
-        local stringToSave = json.encode(tableToSave)
-
-        mod:SaveData(stringToSave)
-    end
-
-    hasDataBeenLoaded = false
-
     ClearTables()
 end)
 

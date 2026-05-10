@@ -63,7 +63,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
         local data = TheGauntlet.DataHolder.GetTemporaryData(extraSource.Entity:ToKnife():GetHitboxParentKnife())
         hasSkull = data.Hades ~= nil and data.Hades.AppliesSkull
     elseif shouldApplyBomb then
-        local data = TheGauntlet.DataHolder.GetPersistentData(source.Entity)
+        local data = TheGauntlet.SaveManager.GetRoomSave(source.Entity)
         hasSkull = data.Hades ~= nil and data.Hades.AppliesSkull
     else
         local data = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(source.Entity)
@@ -204,7 +204,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_BOMB, function (_, bomb)
     if player == nil then return end
 
     if TheGauntlet.Items.Hades.ShouldProc(player) then
-        TheGauntlet.DataHolder.GetPersistentData(bomb).Hades = {
+        TheGauntlet.SaveManager.GetRoomSave(bomb).Hades = {
             AppliesSkull = true
         }
 

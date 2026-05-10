@@ -37,7 +37,7 @@ TheGauntlet:AddCallback(TheGauntlet.Utility.Callbacks.PRE_SELECT_GAUNTLET_ROOM_W
 
     local wave = StageAPI.ChooseRoomLayout({
         RoomList = waveLayoutsToUse,
-        Seed = roomSave.WaveSeed,
+        Seed = roomSave.GauntletRoom.WaveSeed,
         Shape = room:GetRoomShape(),
         RoomType = room:GetType(),
         RequireRoomType = false,
@@ -64,7 +64,7 @@ StageAPI.AddCallback("The Gauntlet", stageAPICallbacks.POST_SELECT_STAGE_MUSIC, 
 
     local tempSave = TheGauntlet.SaveManager.GetTempSave()
 
-    if not tempSave.IsGauntletAmbushOngoing then return end
+    if not tempSave.GauntletRoom.IsGauntletAmbushOngoing then return end
 
     return Music.MUSIC_CHALLENGE_FIGHT
 end)

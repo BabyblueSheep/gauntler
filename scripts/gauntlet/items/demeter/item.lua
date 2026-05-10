@@ -30,7 +30,6 @@ TheGauntlet.Items.Demeter.Season = {
 
 TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.DefaultSaveKeys.GLOBAL, {
     DemeterCurrentSeason = TheGauntlet.Items.Demeter.Season.NO_SEASON,
-    DemeterTempSavedSeason = TheGauntlet.Items.Demeter.Season.NO_SEASON,
 })
 
 ---Returns the current Demeter season.

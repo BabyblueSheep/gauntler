@@ -11,11 +11,11 @@ return function (configItem, player, slot)
     if configItem.ChargeType == 2 then
         return 0
     elseif configItem.ChargeType == 1 then
-        local chargeAmount = playerSave.PreviousChargeAmount
+        local chargeAmount = playerSave.Zeus.PreviousChargeAmount
         if chargeAmount == 0 then return chargeAmount end
         return chargeAmount // 110
     else
-        local chargeAmount = playerSave.PreviousChargeAmount
+        local chargeAmount = playerSave.Zeus.PreviousChargeAmount
         if chargeAmount == 0 then return chargeAmount end
         return chargeAmount
     end

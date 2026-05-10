@@ -110,7 +110,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_KILL, function (_, entity, k
                 familiarData.Hera = {
                     Minisaac = true
                 }
-                local familiarPersistentData = TheGauntlet.DataHolder.GetPersistentData(familiar)
+                local familiarPersistentData = TheGauntlet.SaveManager.GetRunSave(familiar)
                 familiarPersistentData.Hera = {
                     Minisaac = true
                 }
@@ -123,7 +123,7 @@ end)
 ---@param familiar EntityFamiliar
 TheGauntlet:AddCallback(ModCallbacks.MC_FAMILIAR_INIT, function (_, familiar)
     local familiarData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(familiar)
-    local familiarPersistentData = TheGauntlet.DataHolder.GetPersistentData(familiar)
+    local familiarPersistentData = TheGauntlet.SaveManager.GetRunSave(familiar)
 
     if familiarPersistentData.Hera == nil then return end
 

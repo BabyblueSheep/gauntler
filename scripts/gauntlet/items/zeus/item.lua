@@ -11,6 +11,11 @@ end
 
 local boltAmountDefaultCase = include("scripts.gauntlet.items.zeus.cases.default")
 
+TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.DefaultSaveKeys.PLAYER, {
+    Zeus = TheGauntlet.Items.Demeter.Season.NO_SEASON,
+    DemeterTempSavedSeason = TheGauntlet.Items.Demeter.Season.NO_SEASON,
+})
+
 --If Isaac has no active items, always give a custom active one
 --To prevent said active being dropped when picking up another active, also give Schoolbag without the costume
 ---@param player EntityPlayer
@@ -120,8 +125,8 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_ITEM, CallbackPriority.EARLY
     local itemConfig = Isaac.GetItemConfig():GetCollectible(collectibleType)
 
     local playerSave = TheGauntlet.SaveManager.GetRunSave(player)
-    playerSave.PreviousChargeAmount = player:GetActiveCharge(slot)
-    playerSave.PreviousTotalChargeAmount = player:GetTotalActiveCharge(slot)
+    playerSave.Zeus.PreviousChargeAmount = player:GetActiveCharge(slot)
+    playerSave.Zeus.PreviousTotalChargeAmount = player:GetTotalActiveCharge(slot)
 
     Isaac.CreateTimer(function ()
         boltAmount = boltAmountDefaultCase(itemConfig, player, slot)

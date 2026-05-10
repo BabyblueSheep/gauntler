@@ -11,6 +11,32 @@ local function DoesDoorLeadToGauntletRoom(door)
     return TheGauntlet.GauntletRoom.IsRoomGauntletRoom(targetRoom)
 end
 
+---Opens a door to a Gauntlet Room, if it leads to one.
+---@param gridIndex integer
+function TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(gridIndex)
+    local gridEntity = game:GetRoom():GetGridEntity(gridIndex)
+    if gridEntity == nil then return end
+
+    local door = gridEntity:ToDoor()
+    if door == nil then return end
+
+    if not DoesDoorLeadToGauntletRoom(door) then return end
+
+    local roomConfig = game:GetLevel():GetCurrentRoomDesc().Data
+    if roomConfig.Type == RoomType.ROOM_SECRET or roomConfig.Type == RoomType.ROOM_SUPERSECRET then return end
+
+    local sprite = door:GetSprite()
+    local gridSave = TheGauntlet.SaveManager.GetRoomSave(door:GetGridIndex())
+    local tempSave = TheGauntlet.SaveManager.GetTempSave(door:GetGridIndex())
+
+    if not gridSave.GauntletRoom.FedHeart then
+        gridSave.GauntletRoom.FedHeart = true
+        sprite:Play("KeyOpen", true)
+        sfxManager:Play(SoundEffect.SOUND_MEAT_JUMPS)
+    end
+    tempSave.GauntletRoom.IsOpen = true
+end
+
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
@@ -63,24 +89,27 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_
         sprite:SetFrame(frame)
     end
     
-    if not gridSave.Init then
-        gridSave.FedHeart = false
+    if not gridSave.GauntletRoom then
+        gridSave.GauntletRoom = {
+            FedHeart = false
+        }
+
         --Doors to a Gauntlet Room through red rooms are always unlocked (consistent with vanilla)
         if roomDescriptor.Flags & RoomDescriptor.FLAG_RED_ROOM == RoomDescriptor.FLAG_RED_ROOM then
-            gridSave.FedHeart = true
+            gridSave.GauntletRoom.FedHeart = true
         end
-        
-        gridSave.Init = true
     end
 
-    if not tempSave.Init then
-        tempSave.WasClear = isClear
-        tempSave.IsOpen = isClear
+    if not tempSave.GauntletRoom then
+        tempSave.GauntletRoom = {
+            WasClear = isClear,
+            IsOpen = isClear,
+        }
 
         --Entering a Gauntlet Room makes it always open, even if the main entrance wasn't open (consistent with vanilla)
         local targetRoom = level:GetCurrentRoomDesc():GetNeighboringRooms()[door.Slot]
         if targetRoom.VisitedCount > 0 then
-            gridSave.FedHeart = true
+            gridSave.GauntletRoom.FedHeart = true
         end
 
         local forceOpen = false
@@ -90,11 +119,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_
             end
         end
         if forceOpen then
-            tempSave.IsOpen = true
+            tempSave.GauntletRoom.IsOpen = true
         end
-        tempSave.WasOpen = tempSave.IsOpen
+        tempSave.GauntletRoom.WasOpen = tempSave.GauntletRoom.IsOpen
 
-        if not gridSave.FedHeart then
+        if not gridSave.GauntletRoom.FedHeart then
             sprite:Play("KeyClosed", true)
         else
             if forceOpen or isClear then
@@ -105,36 +134,34 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_
             end
         end
 
-        tempSave.PreviousAnimation = sprite:GetAnimation()
-
-        tempSave.Init = true
+        tempSave.GauntletRoom.PreviousAnimation = sprite:GetAnimation()
     end
 
     --I hope this can't happen outside using D7?
     if door.State ~= DoorState.STATE_OPEN then
-        if sprite:GetAnimation() == "Close" and tempSave.PreviousAnimation == "Closed" and tempSave.IsOpen == false then
+        if sprite:GetAnimation() == "Close" and tempSave.GauntletRoom.PreviousAnimation == "Closed" and tempSave.GauntletRoom.IsOpen == false then
             sprite:Play("Closed", true)
         end
     end
     door.State = DoorState.STATE_OPEN
 
     --Wack scenario likely from the fact that the original door is a Challenge Door
-    if sprite:GetAnimation() == "Open" and tempSave.PreviousAnimation == "Opened" then
+    if sprite:GetAnimation() == "Open" and tempSave.GauntletRoom.PreviousAnimation == "Opened" then
         sprite:Play("Opened", true)
     end
 
-    if isClear and not tempSave.WasClear then
-        tempSave.IsOpen = true
+    if isClear and not tempSave.GauntletRoom.WasClear then
+        tempSave.GauntletRoom.IsOpen = true
     end
-    if not isClear and tempSave.WasClear then
-        tempSave.IsOpen = false
+    if not isClear and tempSave.GauntletRoom.WasClear then
+        tempSave.GauntletRoom.IsOpen = false
     end
 
-    if not gridSave.FedHeart then
+    if not gridSave.GauntletRoom.FedHeart then
         door.CollisionClass = GridCollisionClass.COLLISION_WALL
     else
         local animation = sprite:GetAnimation()
-        if tempSave.IsOpen then
+        if tempSave.GauntletRoom.IsOpen then
             door.CollisionClass = GridCollisionClass.COLLISION_WALL_EXCEPT_PLAYER
 
             if animation ~= "Open" and animation ~= "Opened" and animation ~= "KeyOpen" then
@@ -160,20 +187,20 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_UPDATE, function (_
         sfxManager:Play(SoundEffect.SOUND_MEAT_FEET_SLOW0)
         sfxManager:Play(SoundEffect.SOUND_METAL_DOOR_OPEN)
     end
-    if gridSave.FedHeart == true then
-        if sprite:GetAnimation() == "Open" and tempSave.PreviousAnimation ~= "Open" then
+    if gridSave.GauntletRoom.FedHeart == true then
+        if sprite:GetAnimation() == "Open" and tempSave.GauntletRoom.PreviousAnimation ~= "Open" then
             sfxManager:Play(SoundEffect.SOUND_METAL_DOOR_OPEN)
         end
-        if sprite:GetAnimation() == "Close" and tempSave.PreviousAnimation ~= "Close" then
+        if sprite:GetAnimation() == "Close" and tempSave.GauntletRoom.PreviousAnimation ~= "Close" then
             sfxManager:Play(SoundEffect.SOUND_METAL_DOOR_CLOSE)
         end
     end
 
     sprite:Update()
 
-    tempSave.WasOpen = tempSave.IsOpen
-    tempSave.WasClear = isClear
-    tempSave.PreviousAnimation = sprite:GetAnimation()
+    tempSave.GauntletRoom.WasOpen = tempSave.GauntletRoom.IsOpen
+    tempSave.GauntletRoom.WasClear = isClear
+    tempSave.GauntletRoom.PreviousAnimation = sprite:GetAnimation()
 
     return false
 end)
@@ -197,7 +224,7 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_ITEM, CallbackPriority.EARLY
 
         local tempSave = TheGauntlet.SaveManager.GetTempSave(door:GetGridIndex())
 
-        tempSave.IsOpen = false
+        tempSave.GauntletRoom.IsOpen = false
 
         ::continue::
     end
@@ -207,10 +234,13 @@ end)
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_GRID_ENTITY_DOOR_RENDER, function (_, door)
     if not DoesDoorLeadToGauntletRoom(door) then return end
 
+    local roomConfig = Game():GetLevel():GetCurrentRoomDesc().Data
+    if roomConfig.Type == RoomType.ROOM_SECRET or roomConfig.Type == RoomType.ROOM_SUPERSECRET then return end
+
     local sprite = door:GetSprite()
     local gridSave = TheGauntlet.SaveManager.GetRoomSave(door:GetGridIndex())
 
-    if not gridSave.FedHeart then
+    if not gridSave.GauntletRoom.FedHeart then
         sprite:Play("KeyClosed", true)
     end
 end)
@@ -232,11 +262,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PLAYER_GRID_COLLISION, function (_, play
     local roomConfig = Game():GetLevel():GetCurrentRoomDesc().Data
     if roomConfig.Type == RoomType.ROOM_SECRET or roomConfig.Type == RoomType.ROOM_SUPERSECRET then return end
 
-    local sprite = door:GetSprite()
     local gridSave = TheGauntlet.SaveManager.GetRoomSave(door:GetGridIndex())
-    local tempSave = TheGauntlet.SaveManager.GetTempSave(door:GetGridIndex())
 
-    if gridSave.FedHeart == true then return end
+    if gridSave.GauntletRoom.FedHeart == true then return end
 
     local tookDamage = false
     if player:GetHealthType() ~= HealthType.NO_HEALTH then
@@ -247,9 +275,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PLAYER_GRID_COLLISION, function (_, play
     end
     
     if tookDamage then
-        gridSave.FedHeart = true
-        sprite:Play("KeyOpen", true)
-        sfxManager:Play(SoundEffect.SOUND_MEAT_JUMPS)
+        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex())
     end
 end)
 
@@ -265,23 +291,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_TEAR_GRID_COLLISION, function (_, tear, 
 
     if gridEntity == nil then return end
 
-    if gridEntity:GetType() ~= GridEntityType.GRID_DOOR then return end
-    local door = gridEntity:ToDoor()
-    if not DoesDoorLeadToGauntletRoom(door) then return end
-
-    local roomConfig = Game():GetLevel():GetCurrentRoomDesc().Data
-    if roomConfig.Type == RoomType.ROOM_SECRET or roomConfig.Type == RoomType.ROOM_SUPERSECRET then return end
-
-    local sprite = door:GetSprite()
-    local gridSave = TheGauntlet.SaveManager.GetRoomSave(door:GetGridIndex())
-    local tempSave = TheGauntlet.SaveManager.GetTempSave(door:GetGridIndex())
-
-    if not gridSave.FedHeart then
-        gridSave.FedHeart = true
-        sprite:Play("KeyOpen", true)
-        sfxManager:Play(SoundEffect.SOUND_MEAT_JUMPS)
-    end
-    tempSave.IsOpen = true
+    TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(gridEntity:GetGridIndex())
 end)
 
 --#endregion
@@ -305,18 +315,8 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_ITEM, CallbackPriority.EARLY
     for _, doorSlot in pairs(DoorSlot) do
         local door = room:GetDoor(doorSlot)
         if door == nil then goto continue end
-        if not DoesDoorLeadToGauntletRoom(door) then goto continue end
 
-        local sprite = door:GetSprite()
-        local gridSave = TheGauntlet.SaveManager.GetRoomSave(door:GetGridIndex())
-        local tempSave = TheGauntlet.SaveManager.GetTempSave(door:GetGridIndex())
-
-        if not gridSave.FedHeart then
-            gridSave.FedHeart = true
-            sprite:Play("KeyOpen", true)
-            sfxManager:Play(SoundEffect.SOUND_MEAT_JUMPS)
-        end
-        tempSave.IsOpen = true
+        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex())
 
         ::continue::
     end
@@ -340,18 +340,8 @@ TheGauntlet:AddPriorityCallback(ModCallbacks.MC_USE_CARD, CallbackPriority.EARLY
     for _, doorSlot in pairs(DoorSlot) do
         local door = room:GetDoor(doorSlot)
         if door == nil then goto continue end
-        if not DoesDoorLeadToGauntletRoom(door) then goto continue end
 
-        local sprite = door:GetSprite()
-        local gridSave = TheGauntlet.SaveManager.GetRoomSave(door:GetGridIndex())
-        local tempSave = TheGauntlet.SaveManager.GetTempSave(door:GetGridIndex())
-
-        if not gridSave.FedHeart then
-            gridSave.FedHeart = true
-            sprite:Play("KeyOpen", true)
-            sfxManager:Play(SoundEffect.SOUND_MEAT_JUMPS)
-        end
-        tempSave.IsOpen = true
+        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex())
 
         ::continue::
     end
@@ -383,17 +373,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
         local door = room:GetDoor(doorSlot)
         if door == nil then goto continue end
         if not DoesDoorLeadToGauntletRoom(door) then goto continue end
-
-        local sprite = door:GetSprite()
+        
         local gridSave = TheGauntlet.SaveManager.GetRoomSave(door:GetGridIndex())
-        local tempSave = TheGauntlet.SaveManager.GetTempSave(door:GetGridIndex())
-
-        if not gridSave.FedHeart then
-            gridSave.FedHeart = true
-            sprite:Play("KeyOpen", true)
-            sfxManager:Play(SoundEffect.SOUND_MEAT_JUMPS)
-        end
-        tempSave.IsOpen = true
+        if gridSave.GauntletRoom.FedHeart then goto continue end
 
         local doorPosition = room:GetDoorSlotPosition(doorSlot)
         TheGauntlet.Utility.SpawnEffect
@@ -402,6 +384,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
             doorPosition, Vector.Zero,
             nil
         )
+
+        TheGauntlet.GauntletRoom.UnlockGauntletRoomDoor(door:GetGridIndex())
 
         ::continue::
     end
