@@ -165,6 +165,25 @@ local menu = {
                 end
             },
             {
+                str = "show chance", fsize = 2,
+                choices = { "enabled", "disabled" },
+                setting = 2,
+                variable = "TheGauntlet_ShowChance",
+                tooltip = {strset = {"whether the", "gauntlet room", "spawn chance", "should be", "visible"}},
+
+                load = function ()
+                    if TheGauntlet.SaveManager.GetSettingsSave().ShowChance ~= true then
+                        return 2
+                    end
+                    return 1
+                end,
+                store = function (value)
+                    value = value
+
+                    TheGauntlet.SaveManager.GetSettingsSave().ShowChance = value == 1
+                end
+            },
+            {
                 str = "chance y-offset", fsize = 2,
                 slider = true,
                 increment = 1, max = 8,
@@ -242,6 +261,12 @@ local menu = {
                 tooltip = {strset = {"ideas"}}},
             { str = "vinny p", fsize = 2,
                 tooltip = {strset = {"ideas"}}},
+            { str = "split", fsize = 2,
+                tooltip = {strset = {"thumbnail", "artist"}}},
+            { str = "oilyspoily", fsize = 2,
+                tooltip = {strset = {"playtesting"}}},
+            { str = "redstinger6615", fsize = 2,
+                tooltip = {strset = {"playtesting"}}},
         }
     }
 }
@@ -276,6 +301,15 @@ TheGauntlet.Settings = {
         return TheGauntlet.SaveManager.GetSettingsSave().RemoveDionysus
     end,
 
+    ShowChance = function ()
+        if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
+            return true
+        end
+        if TheGauntlet.SaveManager.GetSettingsSave().ShowChance == nil then
+            return true
+        end
+        return TheGauntlet.SaveManager.GetSettingsSave().ShowChance
+    end,
     ChanceOffsetX = function ()
         if not TheGauntlet.SaveManager.Utility.IsDataInitialized(true) then
             return 0

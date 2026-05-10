@@ -129,6 +129,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_HUD_RENDER, function (_)
     local room = game:GetRoom()
     local level = game:GetLevel()
 
+    if not TheGauntlet.Settings.ShowChance() then return end
+
     if not Options.FoundHUD then return end
     if not hud:IsVisible() then return end
     if game:GetSeeds():HasSeedEffect(SeedEffect.SEED_NO_HUD) then return end
