@@ -1,6 +1,6 @@
-local backupSaveManager = nil
+local backupDataHolder = nil
 if TheGauntlet ~= nil then
-    backupSaveManager = TheGauntlet.CustomSaveManager
+    backupDataHolder = TheGauntlet.DataHolder
 end
 
 TheGauntlet = RegisterMod("The Gauntlet", 1)
@@ -8,10 +8,10 @@ TheGauntlet = RegisterMod("The Gauntlet", 1)
 TheGauntlet.SaveManager = include("scripts.gauntlet.library.save_manager")
 include("scripts.gauntlet.library.status_effect_library")
 
----@type CustomSaveManager
-TheGauntlet.CustomSaveManager = include("scripts.gauntlet.library.custom_save_manager")(TheGauntlet)
-if backupSaveManager ~= nil then
-    TheGauntlet.CustomSaveManager.Update(TheGauntlet.CustomSaveManager, backupSaveManager)
+---@type DataHolder
+TheGauntlet.DataHolder = include("scripts.gauntlet.library.data_holder")(TheGauntlet)
+if backupDataHolder ~= nil then
+    TheGauntlet.DataHolder.Update(TheGauntlet.DataHolder, backupDataHolder)
 end
 
 include("scripts.gauntlet.library.dead_sea_scrolls_integration")

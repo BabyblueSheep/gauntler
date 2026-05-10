@@ -76,8 +76,9 @@ local function SpawnEnemyIndicator(type, variant, subtype, position)
         EntityType.ENTITY_EFFECT, FAKE_PENTAGRAM_VARIANT, 0,
         position, Vector.Zero, nil
     )
+    local data = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(effect)
 
-    effect:GetData().FakeAmbush = {
+    data.FakeAmbush = {
         Type = type,
         Variant = variant,
         SubType = subtype
@@ -86,6 +87,8 @@ local function SpawnEnemyIndicator(type, variant, subtype, position)
     --This seems to be correct, but who knows
     effect.SpriteScale = Vector.One * entityConfig:GetCollisionRadius() / 16
 
+    effect.SortingLayer = SortingLayer.SORTING_BACKGROUND
+
     sfxManager:Play(871) --SoundEffect.SOUND_SUMMON_PENTA
 end
 
@@ -93,7 +96,8 @@ end
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
     local sprite = effect:GetSprite()
     if sprite:IsFinished() then
-        local enemyData = effect:GetData().FakeAmbush
+        local data = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(effect)
+        local enemyData = data.FakeAmbush
 
         local entity = TheGauntlet.Utility.SpawnEntity
         (

@@ -1,17 +1,19 @@
+--Personal library I made to replace entity:GetData()
+--Besides (probably superfluous) performance benefits, this library respects Glowing Hourglass rewinds
+
 local json = require("json")
 
----@return CustomSaveManager
+---@return DataHolder
 return function (mod)
 
 
 
----@class CustomSaveManager
+---@class DataHolder
 local saveManager = {}
 
 local saveKeys = {
     TEMPORARY = "temporary",
     TEMPORARY_NO_HOURGLASS = "temporary_no_hourglass",
-    PERSISTENT = "persistent",
 
     PLAYER = "player",
     FAMILIAR = "familiar",
@@ -20,8 +22,8 @@ local saveKeys = {
     PER_ROOM_ENTITY = "per_room_entity",
 }
 
-local saveKeysPersistenceAll = { saveKeys.TEMPORARY, saveKeys.TEMPORARY_NO_HOURGLASS, saveKeys.PERSISTENT }
-local saveKeysPersistenceHourglassAffected = { saveKeys.TEMPORARY, saveKeys.PERSISTENT }
+local saveKeysPersistenceAll = { saveKeys.TEMPORARY, saveKeys.TEMPORARY_NO_HOURGLASS }
+local saveKeysPersistenceHourglassAffected = { saveKeys.TEMPORARY }
 local saveKeysPersistenceEntities = { saveKeys.TEMPORARY, saveKeys.TEMPORARY_NO_HOURGLASS }
 local saveKeysPersistenceHourglassAffectedEntities = { saveKeys.TEMPORARY }
 
@@ -41,6 +43,7 @@ saveManager._saveDataIndependentPreviousRooms = {}
 saveManager._saveDataEntities = {}
 saveManager._saveDataEntitiesPreviousRooms = {}
 
+
 local hasDataBeenLoaded = false
 
 local function ClearTables()
@@ -54,6 +57,7 @@ local function ClearTables()
             saveManager._saveDataEntities[keyPersistence][keyEntity] = {}
         end
     end
+
 
     for _, keyPersistence in ipairs(saveKeysPersistenceHourglassAffected) do
         saveManager._saveDataIndependentPreviousRooms[keyPersistence] = { {}, {} }
@@ -111,6 +115,8 @@ local function GetEntityKeyAndUniqueIndex(entity)
     end
 end
 
+
+
 local keysInSavedTable = { "Independent", "IndependentHourglass" }
 
 ---@param player EntityPlayer
@@ -150,6 +156,8 @@ mod:AddPriorityCallback(ModCallbacks.MC_PRE_GAME_EXIT, CallbackPriority.IMPORTAN
 
     ClearTables()
 end)
+
+
 
 ---@param slot integer
 mod:AddPriorityCallback(ModCallbacks.MC_POST_GLOWING_HOURGLASS_LOAD, CallbackPriority.IMPORTANT, function (_, slot)
@@ -206,28 +214,21 @@ end)
 saveManager.PersistenceCategory = {
     TEMPORARY = 0,
     TEMPORARY_NO_HOURGLASS = 1,
-    PERSISTENT = 2,
 }
 
 local persistenceCategoryToKey = {
     [0] = saveKeys.TEMPORARY,
     [1] = saveKeys.TEMPORARY_NO_HOURGLASS,
-    [2] = saveKeys.PERSISTENT
 }
 
 ---@param persistenceCategory PersistenceCategory
----@param entity Entity?
+---@param entity Entity | nil
 ---@return table
 function saveManager.GetData(persistenceCategory, entity)
     local persistenceKey = persistenceCategoryToKey[persistenceCategory]
 
     if entity == nil then
         return saveManager._saveDataIndependent[persistenceKey]
-    end
-
-    if persistenceCategory == saveManager.PersistenceCategory.PERSISTENT then
-        local tableSave = EntitySaveStateManager.GetEntityData(mod, entity)
-        return tableSave
     end
 
     local key, index = GetEntityKeyAndUniqueIndex(entity)
@@ -252,14 +253,9 @@ function saveManager.GetTemporaryNoHourglassData(entity)
     return saveManager.GetData(saveManager.PersistenceCategory.TEMPORARY_NO_HOURGLASS, entity)
 end
 
----@param entity Entity?
-function saveManager.GetPersistentData(entity)
-    return saveManager.GetData(saveManager.PersistenceCategory.PERSISTENT, entity)
-end
 
-
----@param newSaveManager CustomSaveManager
----@param oldSaveManager CustomSaveManager
+---@param newSaveManager DataHolder
+---@param oldSaveManager DataHolder
 function saveManager.Update(newSaveManager, oldSaveManager)
     newSaveManager._saveDataIndependent = CopyTableDeep(oldSaveManager._saveDataIndependent)
     newSaveManager._saveDataIndependentPreviousRooms = CopyTableDeep(oldSaveManager._saveDataIndependentPreviousRooms)

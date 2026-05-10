@@ -31,6 +31,8 @@ end
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function (_, isContinued)
     currentColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
     targetColor = TheGauntlet.Utility.CopyTableShallow(NO_COLOR)
+
+    TheGauntlet.Items.Demeter.RefreshSeasonVisuals()
 end)
 
 TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderName)

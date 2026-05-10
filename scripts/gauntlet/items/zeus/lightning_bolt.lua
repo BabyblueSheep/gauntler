@@ -140,7 +140,8 @@ local POINT_AMOUNT = 24
 
 ---@param effect EntityEffect
 local function FormLightningPoints(effect)
-    local beamPoints = effect:GetData().BeamPoints
+    local data = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(effect)
+    local beamPoints = data.BeamPoints
 
     local rng = effect:GetDropRNG()
 
@@ -168,9 +169,10 @@ end
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, function(_, effect)
     if effect.Variant ~= TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT then return end
 
-    effect:GetData().BeamPoints = {}
+    local data = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(effect)
+    data.BeamPoints = {}
     for i = 1, POINT_AMOUNT do
-        table.insert(effect:GetData().BeamPoints, nil)
+        table.insert(data.BeamPoints, nil)
     end
 
     FormLightningPoints(effect)
@@ -200,9 +202,11 @@ coloredBeam:GetSprite():GetLayer(0):GetBlendMode():SetMode(BlendType.NORMAL)
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_EFFECT_RENDER, function(_, effect, offset)
     if effect.Variant ~= TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT then return end
 
+    local data = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(effect)
+
     local alpha = TheGauntlet.Utility.InverseLerp(4, 0, effect.FrameCount)
 
-    for i, point in ipairs(effect:GetData().BeamPoints) do
+    for i, point in ipairs(data.BeamPoints) do
         local whiteColor = Color(1, 1, 1, alpha)
         whiteBeam:Add(Point(Isaac.WorldToScreen(point.Position), 0, point.Width * 0.5, whiteColor))
         local coloredColor = Color(0.6, 0.8, 1, alpha)

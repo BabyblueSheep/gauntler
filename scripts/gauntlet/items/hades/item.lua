@@ -60,13 +60,13 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     local hasSkull = false
     if shouldApplySpiritSword and extraSource ~= nil and extraSource.Entity ~= nil then
-        local data = TheGauntlet.CustomSaveManager.GetTemporaryData(extraSource.Entity:ToKnife():GetHitboxParentKnife())
+        local data = TheGauntlet.DataHolder.GetTemporaryData(extraSource.Entity:ToKnife():GetHitboxParentKnife())
         hasSkull = data.Hades ~= nil and data.Hades.AppliesSkull
     elseif shouldApplyBomb then
-        local data = TheGauntlet.CustomSaveManager.GetPersistentData(source.Entity)
+        local data = TheGauntlet.DataHolder.GetPersistentData(source.Entity)
         hasSkull = data.Hades ~= nil and data.Hades.AppliesSkull
     else
-        local data = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(source.Entity)
+        local data = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(source.Entity)
         hasSkull = data.Hades ~= nil and data.Hades.AppliesSkull
     end
 
@@ -126,7 +126,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, function (_, tear)
     if player == nil then return end
 
     if TheGauntlet.Items.Hades.ShouldProc(player) then
-        TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(tear).Hades = {
+        TheGauntlet.DataHolder.GetTemporaryNoHourglassData(tear).Hades = {
             AppliesSkull = true
         }
 
@@ -142,8 +142,8 @@ end)
 ---@param splitTearType SplitTearType | string
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_SPLIT_TEAR, function (_, tear, sourceEntity, splitTearType)
     if sourceEntity.Type == EntityType.ENTITY_TEAR then
-        local sourceData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(sourceEntity)
-        local tearData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(tear)
+        local sourceData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(sourceEntity)
+        local tearData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(tear)
 
         if sourceData.Hades then
             tearData.Hades = {
@@ -153,8 +153,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_SPLIT_TEAR, function (_, tear,
     elseif sourceEntity.Type == EntityType.ENTITY_KNIFE then
         if not (sourceEntity.Variant == KnifeVariant.SPIRIT_SWORD or sourceEntity.Variant == KnifeVariant.TECH_SWORD) then return end
 
-        local sourceData = TheGauntlet.CustomSaveManager.GetTemporaryData(sourceEntity)
-        local tearData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(tear)
+        local sourceData = TheGauntlet.DataHolder.GetTemporaryData(sourceEntity)
+        local tearData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(tear)
 
         if sourceData.Hades then
             tearData.Hades = {
@@ -175,7 +175,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, function (_, tear)
     local player = TheGauntlet.Utility.GetPlayerFromEntity(tear.SpawnerEntity, true)
     if player == nil then return end
 
-    local tearData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(tear)
+    local tearData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(tear)
     if tearData.Hades == nil then
         tearData.Hades = {
             AppliesSkull = false
@@ -183,7 +183,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_TEAR_UPDATE, function (_, tear)
     end
 
     if tear.Parent ~= nil and tear.Parent.Type == EntityType.ENTITY_TEAR then
-        local parentData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(tear.Parent)
+        local parentData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(tear.Parent)
         if parentData.Hades ~= nil then
             tearData.Hades.AppliesSkull = parentData.Hades.AppliesSkull
         end
@@ -204,7 +204,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_BOMB, function (_, bomb)
     if player == nil then return end
 
     if TheGauntlet.Items.Hades.ShouldProc(player) then
-        TheGauntlet.CustomSaveManager.GetPersistentData(bomb).Hades = {
+        TheGauntlet.DataHolder.GetPersistentData(bomb).Hades = {
             AppliesSkull = true
         }
 
@@ -222,7 +222,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, function (_, effect)
     if player == nil then return end
 
     if TheGauntlet.Items.Hades.ShouldProc(player) then
-        TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(effect).Hades = {
+        TheGauntlet.DataHolder.GetTemporaryNoHourglassData(effect).Hades = {
             AppliesSkull = true
         }
     end
@@ -238,7 +238,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, function (_, effect)
     if player == nil then return end
 
     if TheGauntlet.Items.Hades.ShouldProc(player) then
-        TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(effect).Hades = {
+        TheGauntlet.DataHolder.GetTemporaryNoHourglassData(effect).Hades = {
             AppliesSkull = true
         }
     end
@@ -246,7 +246,7 @@ end, EffectVariant.PLAYER_CREEP_HOLYWATER_TRAIL)
 
 ---@param effect EntityEffect
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
-    local data = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(effect)
+    local data = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(effect)
     if data.Hades and data.Hades.AppliesSkull and effect.FrameCount == 0 then
         effect.Color = AQUARIUS_CREEP_COLOR
     end
@@ -262,7 +262,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_SWORD, function (_, knife)
     if player == nil then return end
 
     if TheGauntlet.Items.Hades.ShouldProc(player) then
-        local data = TheGauntlet.CustomSaveManager.GetTemporaryData(knife)
+        local data = TheGauntlet.DataHolder.GetTemporaryData(knife)
         data.Hades = {
             AppliesSkull = true
         }

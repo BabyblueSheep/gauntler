@@ -43,8 +43,8 @@ end
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
     local hasAthena = player:HasCollectible(TheGauntlet.Items.Athena.COLLECTIBLE_TYPE)
 
-    local dataHourglass = TheGauntlet.CustomSaveManager.GetTemporaryData(player)
-    local data = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(player)
+    local dataHourglass = TheGauntlet.DataHolder.GetTemporaryData(player)
+    local data = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(player)
 
     if data.Athena == nil then
         data.Athena = {}
@@ -69,7 +69,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                 effect:Update()
                 data.Athena["ShieldEntity"..tostring(i)] = EntityPtr(effect)
                 if shieldSavedData ~= nil then
-                    local shieldData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(effect)
+                    local shieldData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(effect)
                     for k, v in pairs(shieldSavedData) do
                         shieldData[k] = v
                     end
@@ -101,7 +101,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
         local shieldEffect = shieldEffectPtr.Ref
 
         local shieldSprite = shieldEffect:GetSprite()
-        local shieldData = TheGauntlet.CustomSaveManager.GetTemporaryNoHourglassData(shieldEffect)
+        local shieldData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(shieldEffect)
 
         if shieldData.DisabledTimer == nil then
             shieldData.DisabledTimer = 0
