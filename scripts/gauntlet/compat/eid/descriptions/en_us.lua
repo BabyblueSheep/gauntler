@@ -15,8 +15,7 @@ return {
 
     ["item.ares.name"] = "Ares",
     ["item.ares.description"] =
-        "{{ChallengeRoom}} Spawns an additional Challenge Room each even numbered floor#"..
-        "{{BossRushRoom}} Spawns an additional Boss Challenge Room each odd numbered floor#"..
+        "{{ChallengeRoom}} Spawns an additional (Boss) Challenge Room each even/odd numbered floor#"..
         "Clearing a {{ChallengeRoom}} Challenge Room grants ↑ {{Damage}} +[1] Damage for the floor#"..
         "Clearing a {{BossRushRoom}} Boss Challenge Room grants ↑ {{Damage}} +[2] Damage for the floor",
 

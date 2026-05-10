@@ -55,6 +55,9 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
     end
 
     local shieldAmount = TheGauntlet.Items.Athena.Constants.SHIELD_AMOUNT + (player:GetCollectibleNum(TheGauntlet.Items.Athena.COLLECTIBLE_TYPE) - 1)
+    if not hasAthena then
+        shieldAmount = 0
+    end
     data.Athena.MaximumShieldAmount = math.max(data.Athena.MaximumShieldAmount, shieldAmount)
 
     for i = 1, shieldAmount do

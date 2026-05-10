@@ -21,7 +21,7 @@ EID:addIcon("GauntletHeraStatusEffect",     "StatusEffects", 1, 8, 8, 0, 0, eidI
 
 
 EID:setModIndicatorName("The Gauntlet")
-EID:setModIndicatorIcon("GauntletGauntletRoom")
+EID:setModIndicatorIcon("GauntletGauntletRoomStat")
 
 
 
