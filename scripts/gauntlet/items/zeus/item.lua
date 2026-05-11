@@ -12,8 +12,10 @@ end
 local boltAmountDefaultCase = include("scripts.gauntlet.items.zeus.cases.default")
 
 TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.DefaultSaveKeys.PLAYER, {
-    Zeus = TheGauntlet.Items.Demeter.Season.NO_SEASON,
-    DemeterTempSavedSeason = TheGauntlet.Items.Demeter.Season.NO_SEASON,
+    Zeus = {
+		PreviousChargeAmount = 0,
+		PreviousTotalChargeAmount = 0,
+	},
 })
 
 --If Isaac has no active items, always give a custom active one
@@ -22,19 +24,7 @@ TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.Defaul
 local function TryGiveZeusActiveItem(player, firstTime)
     if player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == 0 or player:GetActiveItem(ActiveSlot.SLOT_PRIMARY) == CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES then
         player:AddCollectible(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE_ACTIVE, 0, firstTime)
-
-        local hasSchoolbagCostume = false
-        for _, costume in ipairs(player:GetCostumeSpriteDescs()) do
-            if costume:GetItemConfig().ID == CollectibleType.COLLECTIBLE_SCHOOLBAG then
-                hasSchoolbagCostume = true
-                break
-            end
-        end
-
-        player:AddInnateCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 1)
-        if not hasSchoolbagCostume then
-            player:RemoveCostume(Isaac.GetItemConfig():GetCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG))
-        end
+		player:AddInnateCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 1, "GauntletZeusSchoolbagHack", -1, false)
     end
 end
 
@@ -71,7 +61,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ADD_COLLECTIBLE, function (_, colle
 
     if hasActiveThatIsntZeus then
         player:RemoveCollectible(TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE_ACTIVE)
-        player:AddInnateCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, -1)
+        player:RemoveInnateCollectible(CollectibleType.COLLECTIBLE_SCHOOLBAG, 1, "GauntletZeusSchoolbagHack")
     end
 end)
 
