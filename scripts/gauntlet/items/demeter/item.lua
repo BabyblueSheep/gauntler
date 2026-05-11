@@ -99,6 +99,16 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ROOM_TRIGGER_CLEAR, function (_, si
     end
 end)
 
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_START_GREED_WAVE, function (_)
+    if not PlayerManager.AnyoneHasCollectible(TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE) then return end
+
+    if TheGauntlet.Items.Demeter.GetSeason() == TheGauntlet.Items.Demeter.Season.NO_SEASON then
+        TheGauntlet.Items.Demeter.SetSeason(TheGauntlet.Items.Demeter.Season.WINTER)
+    else
+        TheGauntlet.Items.Demeter.IncrementSeason()
+    end
+end)
+
 ---@param player EntityPlayer
 ---@param collectibleType CollectibleType
 ---@param firstTime boolean

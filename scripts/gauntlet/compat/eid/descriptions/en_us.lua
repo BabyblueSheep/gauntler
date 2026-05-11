@@ -38,6 +38,7 @@ return {
         "{{GauntletDemeterSpring}} [1]% chance to shoot a sticky booger#"..
         "{{GauntletDemeterSummer}} Enemies constantly burn#"..
         "{{GauntletDemeterAutumn}} Enemies are permanently slowed down",
+	["item.demeter.description.greed"] = "{{GreedMode}} Effect also cycles after every wave",
 
     ["item.dionysus.name"] = "Dionysus",
     ["item.dionysus.description"] =

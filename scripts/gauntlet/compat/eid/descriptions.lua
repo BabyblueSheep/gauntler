@@ -4,6 +4,7 @@ if EID == nil then return end
 
 
 
+EID:AddConditional(TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE, EID.IsGreedMode, "Gauntlet Demeter Greed")
 EID:AddConditional(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE, function ()
     return not Isaac.GetPersistentGameData():Unlocked(Achievement.GOLDEN_TRINKET)
 end, "Gauntlet Hephaestus if no Golden then only Trinket")
@@ -324,6 +325,7 @@ local function RegisterLanguageKeys(language, localizationItems)
     EID:addSelfCondition(TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE, localizationItems["item.hephaestus.description.duplicate"], language)
     EID:addSelfCondition(TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE, localizationItems["item.poseidon.description.duplicate"], language)
 
+    EID.descriptions[language].ConditionalDescs["Gauntlet Demeter Greed"] = localizationItems["item.demeter.description.greed"]
     EID.descriptions[language].ConditionalDescs["Gauntlet Hephaestus if no Golden then only Trinket"] = { localizationItems["item.hephaestus.description.without_golden_trinket"] }
     
     EID:addSynergyCondition(CollectibleType.COLLECTIBLE_BOOK_OF_VIRTUES, TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE, localizationItems["item.zeus.description.book_of_virtues"] , nil, language)
