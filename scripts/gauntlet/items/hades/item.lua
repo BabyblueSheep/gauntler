@@ -25,6 +25,12 @@ local AQUARIUS_CREEP_COLOR = Color
     0.8, 0.8, 0.8
 )
 
+local bombRocketIds = {
+	[BombVariant.BOMB_THROWABLE] = true,
+	[BombVariant.BOMB_ROCKET] = true,
+	[BombVariant.BOMB_ROCKET_GIGA] = true
+}
+
 
 
 TheGauntlet.Items.Hades.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Hades")
@@ -62,7 +68,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     if shouldApplySpiritSword and extraSource ~= nil and extraSource.Entity ~= nil then
         local data = TheGauntlet.DataHolder.GetTemporaryData(extraSource.Entity:ToKnife():GetHitboxParentKnife())
         hasSkull = data.Hades ~= nil and data.Hades.AppliesSkull
-    elseif shouldApplyBomb then
+    elseif shouldApplyBomb and BombVariant[source.Variant] ~= true then
         local data = TheGauntlet.SaveManager.GetRoomSave(source.Entity)
         hasSkull = data.Hades ~= nil and data.Hades.AppliesSkull
     else
@@ -204,9 +210,16 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_FIRE_BOMB, function (_, bomb)
     if player == nil then return end
 
     if TheGauntlet.Items.Hades.ShouldProc(player) then
-        TheGauntlet.SaveManager.GetRoomSave(bomb).Hades = {
-            AppliesSkull = true
-        }
+        if bombRocketIds[bomb.Variant] == true then
+            local tearData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(bomb)
+            tearData.Hades = {
+                AppliesSkull = false
+            }
+        else
+            TheGauntlet.SaveManager.GetRoomSave(bomb).Hades = {
+                AppliesSkull = true
+            }
+        end
 
         bomb.Color = BOMB_BONE_COLOR
     end
