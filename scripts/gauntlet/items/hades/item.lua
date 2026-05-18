@@ -68,7 +68,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     if shouldApplySpiritSword and extraSource ~= nil and extraSource.Entity ~= nil then
         local data = TheGauntlet.DataHolder.GetTemporaryData(extraSource.Entity:ToKnife():GetHitboxParentKnife())
         hasSkull = data.Hades ~= nil and data.Hades.AppliesSkull
-    elseif shouldApplyBomb and BombVariant[source.Variant] ~= true then
+    elseif shouldApplyBomb and bombRocketIds[source.Variant] ~= true then
         local data = TheGauntlet.SaveManager.GetRoomSave(source.Entity)
         hasSkull = data.Hades ~= nil and data.Hades.AppliesSkull
     else
