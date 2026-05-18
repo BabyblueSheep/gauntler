@@ -73,7 +73,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     TheGauntlet.Utility.ShuffleListInPlace(enemiesToImpregnante, rng)
 
     local amountOfEnemiesToImpregnante = TheGauntlet.Items.Hera.Constants.AMOUNT_OF_ENEMIES_TO_IMPREGNATE
-    amountOfEnemiesToImpregnante = amountOfEnemiesToImpregnante + PlayerManager.GetNumCollectibles(TheGauntlet.Items.Hera.COLLECTIBLE_TYPE) * TheGauntlet.Items.Hera.Constants.EXTRA_AMOUNT_TO_IMPREGNATE_PER_COLLECTIBLE
+    amountOfEnemiesToImpregnante = amountOfEnemiesToImpregnante + (PlayerManager.GetNumCollectibles(TheGauntlet.Items.Hera.COLLECTIBLE_TYPE) - 1) * TheGauntlet.Items.Hera.Constants.EXTRA_AMOUNT_TO_IMPREGNATE_PER_COLLECTIBLE
     amountOfEnemiesToImpregnante = math.min(#enemiesToImpregnante, amountOfEnemiesToImpregnante)
 
     for i = 1, amountOfEnemiesToImpregnante do
