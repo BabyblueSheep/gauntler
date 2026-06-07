@@ -17,6 +17,8 @@ If you complete five waves of enemies without taking a single heart of damage, y
 [url=https://steamcommunity.com/workshop/filedetails/?id=1978904635]MiniMAPI[/url] is supported, enabling custom map icons for Gauntlet Rooms.
 Modded floors built with [url=https://steamcommunity.com/workshop/filedetails/?id=1348031964]StageAPI[/url] are compatible with Gauntlet Rooms, allowing for modded waves to appear.
 
+This mod has its own [url=https://isaacguru.com/mod/the_gauntlet]IsaacGuru's Laboratory page[/url] for detailed information on Gauntlet Rooms and Olympian items.
+
 [h1]Credits[/h1]
 [b]DoodleDude[/b] - Director, Spriter, Idea-haver
 [b]babybluesheep[/b] - Main Coder
@@ -27,7 +29,7 @@ Modded floors built with [url=https://steamcommunity.com/workshop/filedetails/?i
 [b]Andre Doruk[/b] - Trailer
 [b]My mom and dad[/b] - Created me
 </description>
-    <version>1.2</version>
+    <version>1.3</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>
