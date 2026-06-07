@@ -1,3 +1,11 @@
+DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.0.1",
+[[
+{FSIZE3}1.0.1
+
+{FSIZE2}Compatibility Fixes
+- Fix an issue with StageAPI support
+]])
+
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.0",
 [[
 {FSIZE3}1.0 : Release

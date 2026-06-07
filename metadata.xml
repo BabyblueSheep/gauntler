@@ -7,24 +7,28 @@
 This mod requires Repentogon to work! Click on the Repentogon warning above or visit [url=https://repentogon.com]repentogon.com[/url] for further instructions.
 
 [h1]The Gauntlet[/h1]
-The Gauntlet is a new Challenge Room type that has a chance to spawn depending on the number of Challenge and Boss Challenge Rooms you clear. Enter the Gauntlet by sacrificing a heart of health, and fight against waves of enemies and bosses. Don’t get hit.
+The Gauntlet is a new Challenge Room type that can rarely spawn during runs, whose spawn chance can be increased by clearing Challenge and Boss Challenge Rooms.  Enter the Gauntlet by sacrificing a heart of health, and fight against waves of enemies and bosses. Don’t get hit.
 
 [h1]Olympian Items[/h1]
 If you complete five waves of enemies without taking a single heart of damage, you’ll be rewarded with an Olympian Item. Olympian items are a set of twelve items with effects that resemble the abilities of various ancient Greek Gods.
 
+[h1]Compatibility[/h1]
+[url=https://steamcommunity.com/sharedfiles/filedetails/?id=836319872]External Item Descriptions[/url] and [url=https://steamcommunity.com/sharedfiles/filedetails/?id=3404171769]Accurate Blurbs[/url] are fully supported for all Olympian items!
+[url=https://steamcommunity.com/workshop/filedetails/?id=1978904635]MiniMAPI[/url] is supported, enabling custom map icons for Gauntlet Rooms.
+Modded floors built with [url=https://steamcommunity.com/workshop/filedetails/?id=1348031964]StageAPI[/url] are compatible with Gauntlet Rooms, allowing for modded waves to appear.
+
 [h1]Credits[/h1]
 [b]DoodleDude[/b] - Director, Spriter, Idea-haver
-[b]Babybluesheep[/b] - Main Coder, Bugfixer
-[bPoyo[/b] - Gauntlet Room Spriter
-[b]Conboi[/b] - Ideas Guy
+[b]babybluesheep[/b] - Main Coder
+[b]Poyo[/b] - Gauntlet Room Spriter
+[b]ConBoi[/b] - Ideas Guy
 [b]Split[/b] - Thumbnail Artist
-[b]Oilyspoily[/b] - Playtester
-[b]Redstinger665[/b] - Playtester
+[b]oilyspoily, Redstinger665[/b] - Playtesters
 [b]Andre Doruk[/b] - Trailer
 [b]My mom and dad[/b] - Created me
 </description>
-    <version>1.1</version>
-    <visibility>Private</visibility>
+    <version>1.2</version>
+    <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Items"/>
     <tag id="Active Items"/>
