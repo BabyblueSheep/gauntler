@@ -2,6 +2,39 @@
 <metadata>
     <name>The Gauntlet</name>
     <directory>gauntler</directory>
-    <description></description>
-    <version>1.0</version>
+    <id>3740075326</id>
+    <description>[url=https://repentogon.com][img]https://files.catbox.moe/az2isy.gif[/img][/url] 
+This mod requires Repentogon to work! Click on the Repentogon warning above or visit [url=https://repentogon.com]repentogon.com[/url] for further instructions.
+
+[h1]The Gauntlet[/h1]
+The Gauntlet is a new Challenge Room type that has a chance to spawn depending on the number of Challenge and Boss Challenge Rooms you clear. Enter the Gauntlet by sacrificing a heart of health, and fight against waves of enemies and bosses. Don’t get hit.
+
+[h1]Olympian Items[/h1]
+If you complete five waves of enemies without taking a single heart of damage, you’ll be rewarded with an Olympian Item. Olympian items are a set of twelve items with effects that resemble the abilities of various ancient Greek Gods.
+
+[h1]Credits[/h1]
+[b]DoodleDude[/b] - Director, Spriter, Idea-haver
+[b]Babybluesheep[/b] - Main Coder, Bugfixer
+[bPoyo[/b] - Gauntlet Room Spriter
+[b]Conboi[/b] - Ideas Guy
+[b]Split[/b] - Thumbnail Artist
+[b]Oilyspoily[/b] - Playtester
+[b]Redstinger665[/b] - Playtester
+[b]Andre Doruk[/b] - Trailer
+[b]My mom and dad[/b] - Created me
+</description>
+    <version>1.1</version>
+    <visibility>Private</visibility>
+    <tag id="Lua"/>
+    <tag id="Items"/>
+    <tag id="Active Items"/>
+    <tag id="Familiars"/>
+    <tag id="Babies"/>
+    <tag id="Rooms"/>
+    <tag id="Enemies"/>
+    <tag id="Bosses"/>
+    <tag id="Hazards"/>
+    <tag id="Challenges"/>
+    <tag id="Graphics"/>
+    <tag id="Shaders"/>
 </metadata>
