@@ -62,7 +62,7 @@ StageAPI.AddCallback("The Gauntlet", stageAPICallbacks.POST_SELECT_STAGE_MUSIC, 
 
     if room:IsAmbushDone() then return end
 
-    local tempSave = TheGauntlet.SaveManager.GetTempSave()
+    local tempSave = TheGauntlet.DataHolder.GetTemporaryNoHourglassData()
 
     if not tempSave.GauntletRoom.IsGauntletAmbushOngoing then return end
 
