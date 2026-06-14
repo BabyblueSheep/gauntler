@@ -1,3 +1,17 @@
+DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.0.2",
+[[
+{FSIZE3}1.0.2
+
+{FSIZE2}Tweaks
+- Tweak Athena shield visuals
+{FSIZE2}Fixes
+- Fix nil errors with Dionysus
+- Fix certain enemies being incorrectly
+impregnanted with Hera
+{FSIZE2}Compatibility Fixes
+- Reworded Accurate Blurbs descriptions
+]])
+
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.0.1",
 [[
 {FSIZE3}1.0.1

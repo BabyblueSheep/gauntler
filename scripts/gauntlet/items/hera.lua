@@ -33,12 +33,17 @@ function TheGauntlet.Items.Hera.CanEntityBeImpregnanted(entity)
     local returnValue = Isaac.RunCallback(TheGauntlet.Utility.Callbacks.HERA_CAN_ENTITY_BE_IMPREGNANTED, entity)
     if type(returnValue) == "boolean" then return returnValue end
 
-    if not entity:IsActiveEnemy(false) then return false end
-    if not entity:IsVulnerableEnemy() then return false end
+    if entity:ToNPC() == nil then return false end
 
+    if not entity:IsActiveEnemy(false) then return false end
+    if entity:IsInvincible() then return false end
+
+    if entity:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS) then return false end
     if entity.Type == EntityType.ENTITY_DUMMY then return false end
     if entity.FrameCount > 0 then return false end
     if entity:IsBoss() then return false end
+
+    if entity:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then return false end
 
     return true
 end

@@ -15,6 +15,14 @@ TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Dionysus")
 ---@param additive boolean?
 function TheGauntlet.Items.Dionysus.ForcePlayerDrunk(player, duration, additive)
     local data = TheGauntlet.DataHolder.GetTemporaryData(player)
+
+    if data.Dionysus == nil then
+        data.Dionysus = {
+            DrunkMovementTimer = 0,
+            PreviousVelocity = Vector.Zero
+        }
+    end
+
     if additive then
         data.Dionysus.DrunkMovementTimer = data.TheGauntletDionysusDrunkMovementTimer + duration
     else
@@ -41,6 +49,13 @@ end)
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, function (_, player)
     local data = TheGauntlet.DataHolder.GetTemporaryData(player)
+
+    if data.Dionysus == nil then
+        data.Dionysus = {
+            DrunkMovementTimer = 0,
+            PreviousVelocity = Vector.Zero
+        }
+    end
 
     if data.Dionysus.DrunkMovementTimer > 0 then
         data.Dionysus.DrunkMovementTimer = data.Dionysus.DrunkMovementTimer - 1

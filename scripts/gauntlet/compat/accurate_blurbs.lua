@@ -1,16 +1,16 @@
 local itemDescriptions = {
-    [TheGauntlet.Items.Aphrodite.COLLECTIBLE_TYPE] = "Charm enemy when hurt",
+    [TheGauntlet.Items.Aphrodite.COLLECTIBLE_TYPE] = "Charm the enemy when hurt",
     [TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE] = "Musical blocking buddy",
-    [TheGauntlet.Items.Ares.COLLECTIBLE_TYPE] = "More challenge rooms + DMG up on challenge clear",
-    [TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE] = "(DMG up + piercing) when shooting aligned with arrowhead",
-    [TheGauntlet.Items.Athena.COLLECTIBLE_TYPE] = "5 reflective shield orbitals",
+    [TheGauntlet.Items.Ares.COLLECTIBLE_TYPE] = "More Challenges + DMG on Challenge clear",
+    [TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE] = "Rotating (DMG up + piercing) direction",
+    [TheGauntlet.Items.Athena.COLLECTIBLE_TYPE] = "Reflective shield orbitals",
     [TheGauntlet.Items.Demeter.COLLECTIBLE_TYPE] = "Cycling season-themed effects on room entry",
-    [TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE] = "All stats up + get (dizzy + slippery) when hurt",
-    [TheGauntlet.Items.Hades.COLLECTIBLE_TYPE] = "Tears may curse enemies + cursed enemies reanimate on kill",
-    [TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE] = "Random golden trinket + golden pickup on floor entry",
-    [TheGauntlet.Items.Hera.COLLECTIBLE_TYPE] = "Enemies can spawn Minisaacs when killed",
-    [TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE] = "Controllable water flow",
-    [TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE] = "Damaging lightning bolts when using actives"
+    [TheGauntlet.Items.Dionysus.COLLECTIBLE_TYPE] = "All stats up + get (trippy + slippery) when hurt",
+    [TheGauntlet.Items.Hades.COLLECTIBLE_TYPE] = "Tears may curse for friendly Bony on kill",
+    [TheGauntlet.Items.Hephaestus.COLLECTIBLE_TYPE] = "Golden trinket + golden pickup on floor entry",
+    [TheGauntlet.Items.Hera.COLLECTIBLE_TYPE] = "Minisaac-spawning enemies on room entry",
+    [TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE] = "Rooms are flooded + controllable current",
+    [TheGauntlet.Items.Zeus.COLLECTIBLE_TYPE] = "Summon lightning on active use"
 }
 
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, function()

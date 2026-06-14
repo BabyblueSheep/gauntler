@@ -72,6 +72,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                 player.Position, Vector.Zero,
                 player
             )
+            effect.SpriteOffset = Vector(0, -10)
             effect:Update()
             data.Athena["ShieldEntity"..tostring(i)] = EntityPtr(effect)
             if shieldSavedData ~= nil then
@@ -131,6 +132,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
         end
 
         local direction = Vector.FromAngle(dataHourglass.Athena.RotationTimer * TheGauntlet.Items.Athena.Constants.SHIELD_ROTATION_SPEED + i / shieldAmount * 360)
+        direction = direction * Vector(1.2, 1)
         local distanceFromPlayer = TheGauntlet.Utility.Lerp(40, 20, shieldData.EasedRetractTimer)
         shieldEffect.Position = player.Position + direction * distanceFromPlayer
         shieldEffect.Velocity = Vector.Zero
