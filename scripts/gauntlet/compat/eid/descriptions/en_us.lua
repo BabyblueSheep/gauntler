@@ -104,5 +104,5 @@ return {
     ["item.abyss.locust_effect.zeus"] = "{{Collectible"..Isaac.GetItemIdByName("Zeus").."}} Spawns a lightning bolt when dealing damage",
 
     ["card.gauntletdisc.name"] = "Gauntlet Disc",
-    ["card.gauntletdisc.description"] = "Grants [1]-[2] random item effects from the Gauntlet item pool for [3] seconds.",
+    ["card.gauntletdisc.description"] = "Grants [1]-[2] random item effects from the Gauntlet Room item pool for [3] seconds.",
 }
