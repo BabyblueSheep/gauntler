@@ -10,6 +10,8 @@ TheGauntlet.Items.Artemis.Constants = {
 
 
 
+local game = Game()
+
 TheGauntlet.Items.Artemis.COLLECTIBLE_TYPE = Isaac.GetItemIdByName("Artemis")
 
 local PIERCING_TEAR_VARIANTS = {
@@ -135,6 +137,10 @@ arrowSprite:Play("Left")
 
 ---@param player EntityPlayer
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_RENDER, function (_, player)
+    if game:GetRoom():GetRenderMode() == RenderMode.RENDER_WATER_REFLECT then
+        return
+    end
+
     local data = TheGauntlet.DataHolder.GetTemporaryData(player)
     if data.Artemis == nil then
         return

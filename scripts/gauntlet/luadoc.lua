@@ -3,5 +3,6 @@
 --Mainly used for cross-mod stuff.
 
 AccurateBlurbs = {}
+FiendFolio = {}
 MinimapAPI = {}
 StageAPI = {}

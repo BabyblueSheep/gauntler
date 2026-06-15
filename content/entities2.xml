@@ -7,4 +7,7 @@
 	<entity id="3" variant="2049" subtype="0" name="TheGauntlet Apollo Baby" anm2path="gauntlet/familiars/apollo baby.anm2"
 			shadowSize="8" numGridCollisionPoints="12" collisionMass="3" collisionRadius="13" friction="1"
 			tags="cansacrifice" customtags="" />
+	
+	<entity id="5" variant="300" subtype="150" name="Gauntlet Disc" anm2path="gauntlet/items/pick ups/gauntlet disc.anm2"
+			shadowSize="16" numGridCollisionPoints="24" collisionMass="3" collisionRadius="12" friction="1" />
 </entities>

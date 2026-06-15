@@ -109,6 +109,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
         ---@type Entity
         local shieldEffect = shieldEffectPtr.Ref
 
+        shieldEffect.SpriteOffset = Vector(0, -10)
+
         local shieldSprite = shieldEffect:GetSprite()
         local shieldData = TheGauntlet.DataHolder.GetTemporaryNoHourglassData(shieldEffect)
 
@@ -232,3 +234,12 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
         ::continue::
     end
 end)
+
+---@param effect EntityEffect
+TheGauntlet:AddCallback(ModCallbacks.MC_PRE_EFFECT_RENDER, function (_, effect, offset)
+    if game:GetRoom():GetRenderMode() == RenderMode.RENDER_WATER_REFLECT then
+        effect.SpriteOffset = Vector(0, 0)
+    else
+        effect.SpriteOffset = Vector(0, -10)
+    end
+end, TheGauntlet.Items.Athena.SHIELD_EFFECT_VARIANT)

@@ -83,6 +83,10 @@ TheGauntlet.Compat.EID = {}
 include("scripts.gauntlet.compat.eid.main")
 include("scripts.gauntlet.compat.eid.data")
 include("scripts.gauntlet.compat.eid.descriptions")
+TheGauntlet.Compat.FiendFolio = {}
+include("scripts.gauntlet.compat.fiend_folio.gauntlet_disc.gauntlet_disc")
+include("scripts.gauntlet.compat.fiend_folio.gauntlet_disc.item_icons")
+include("scripts.gauntlet.compat.fiend_folio.item_tags")
 include("scripts.gauntlet.compat.minimapi")
 include("scripts.gauntlet.compat.stageapi")
 

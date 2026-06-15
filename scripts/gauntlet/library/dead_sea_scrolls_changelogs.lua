@@ -1,3 +1,15 @@
+DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1",
+[[
+{FSIZE3}1.1 : Fiend Folio Compat
+
+{FSIZE2}Fixes
+- Fix certain effects rendering
+incorrectly in water reflections
+{FSIZE2}Fiend Folio Compat
+- Added suppport for Stackable Items
+- Added Gauntlet Disc
+]])
+
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.0.2",
 [[
 {FSIZE3}1.0.2

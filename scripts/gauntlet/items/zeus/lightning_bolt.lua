@@ -208,9 +208,15 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_EFFECT_RENDER, function(_, effect, o
 
     for i, point in ipairs(data.BeamPoints) do
         local whiteColor = Color(1, 1, 1, alpha)
-        whiteBeam:Add(Point(Isaac.WorldToScreen(point.Position), 0, point.Width * 0.5, whiteColor))
         local coloredColor = Color(0.6, 0.8, 1, alpha)
-        coloredBeam:Add(Point(Isaac.WorldToScreen(point.Position), 0, point.Width, coloredColor))
+
+        local pointPosition = Isaac.WorldToScreen(point.Position + offset)
+        if game:GetRoom():GetRenderMode() == RenderMode.RENDER_WATER_REFLECT then
+            pointPosition = Isaac.WorldToScreen(data.BeamPoints[1].Position + (data.BeamPoints[1].Position - point.Position) + offset)
+        end
+
+        whiteBeam:Add(Point(pointPosition, 0, point.Width * 0.5, whiteColor))
+        coloredBeam:Add(Point(pointPosition, 0, point.Width, coloredColor))
     end
     coloredBeam:Render()
     whiteBeam:Render()
