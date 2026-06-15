@@ -3,8 +3,13 @@ DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1",
 {FSIZE3}1.1 : Fiend Folio Compat
 
 {FSIZE2}Fixes
+- Change Hades status effect
+behavior for bosses
+{FSIZE2}Fixes
 - Fix certain effects rendering
 incorrectly in water reflections
+- Fix Aphrodite charming enemies
+that shouldn't be charmed
 {FSIZE2}Fiend Folio Compat
 - Added suppport for Stackable Items
 - Added Gauntlet Disc

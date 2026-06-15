@@ -1,3 +1,5 @@
+if FiendFolio == nil then return end
+
 local game = Game()
 
 local itemIcons = {}
@@ -55,12 +57,16 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_RENDER, function (_)
 			tab.Pos = tab.Pos + tab.Vel
 			tab.FrameCount = tab.FrameCount + 1
 		end
-		
+
 		tab.Sprite:Render(Isaac.WorldToScreen(tab.Pos), Vector.Zero, Vector.Zero)
-		
+
 		if tab.FrameCount >= 120*2 or (tab.IsRemoval and tab.FrameCount >= itemIconsDisappearDuration)
 				or (tab.FrameCount >= itemIconsStartDuration and tab.Player.Position:Distance(tab.Pos) < 10) then
 			itemIcons[k] = nil
 		end
 	end
+end)
+
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function() 
+	itemIcons = {}
 end)

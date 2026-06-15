@@ -38,6 +38,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
     end
     if enemyToCharm == nil then return end
 
+    if (not enemyToCharm:IsActiveEnemy(false)) or enemyToCharm:IsInvincible() then return end
+
     if enemyToCharm:IsBoss() then
         if enemyToCharm:GetBossStatusEffectCooldown() > 0 then
             return

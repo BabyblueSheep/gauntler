@@ -1,10 +1,13 @@
 --UUUUUUUUUUUGHHHHHHH
 
+TheGauntlet.Compat.FiendFolio.GauntletDisc = {}
+TheGauntlet.Compat.FiendFolio.GauntletDisc.PICKUP_SUBTYPE = Isaac.GetEntitySubTypeByName("Gauntlet Disc")
+TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID = Isaac.GetCardIdByName("Gauntlet Disc")
+
 if FiendFolio == nil then return end
 
 
 
-TheGauntlet.Compat.FiendFolio.GauntletDisc = {}
 TheGauntlet.Compat.FiendFolio.GauntletDisc.Constants = {
     MINIMUM_ITEM_SPAWNED_FROM_DISC_COUNT = 3,
     MAXIMUM_ITEM_SPAWNED_FROM_DISC_COUNT = 5,
@@ -23,8 +26,6 @@ local itemConfig = Isaac.GetItemConfig()
 local game = Game()
 local sfxManager = SFXManager()
 
-TheGauntlet.Compat.FiendFolio.GauntletDisc.PICKUP_SUBTYPE = Isaac.GetEntitySubTypeByName("Gauntlet Disc")
-TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID = Isaac.GetCardIdByName("Gauntlet Type")
 TheGauntlet.Compat.FiendFolio.GauntletDisc.USE_SOUND_EFFECT = FiendFolio.Sounds.TaintedTreasureDisc
 
 TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.DefaultSaveKeys.PLAYER , {
@@ -35,7 +36,7 @@ TheGauntlet.SaveManager.Utility.AddDefaultRunData(TheGauntlet.SaveManager.Defaul
 
 FiendFolio.PocketObjectMimicCharges[TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID] = 6
 table.insert(FiendFolio.ItemDiscs, TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID)
-table.insert(FiendFolio.PocketObjects, TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID)
+FiendFolio.PocketObjects[TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID] = true
 table.insert(FiendFolio.PocketObjectWeights, { TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID, 0.2 })
 
 --Copied from FF

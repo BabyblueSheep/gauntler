@@ -11,14 +11,34 @@ StatusEffectLibrary.RegisterStatusEffect(
         1.0, 1.0, 1.0, 1.0,
         0.15, 0.15, 0.15,
         1.0, 1.0, 1.0, 0.5
-    )
+    ),
+    nil, true
 )
+
+--Copied from Status Effect Library to bypass BossStatusEffectCooldown
+---@param ent Entity
+local function IsValidTarget(ent)
+		if not ent:ToNPC() and not ent:ToPlayer() then
+			return false
+		end
+		if ent.Type == EntityType.ENTITY_DUMMY then
+			return true
+		end
+		if ent:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS)
+			or (ent:ToNPC() and not ent:IsActiveEnemy(false))
+			or (ent:ToNPC() and ent:IsInvincible())
+		then
+			return false
+		end
+		return true
+	end
 
 ---Inflict the Calcified status effect to an enemy.
 ---@param entity Entity
 ---@param source EntityRef
 ---@param duration integer
 function TheGauntlet.Items.Hades.InflictStatusEffect(entity, duration, source)
+    if not IsValidTarget(entity) then return end
     StatusEffectLibrary:AddStatusEffect
     (
         entity,

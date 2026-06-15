@@ -35,10 +35,10 @@ function TheGauntlet.Items.Hera.CanEntityBeImpregnanted(entity)
 
     if entity:ToNPC() == nil then return false end
 
+    if entity:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS) then return false end
     if not entity:IsActiveEnemy(false) then return false end
     if entity:IsInvincible() then return false end
 
-    if entity:HasEntityFlags(EntityFlag.FLAG_NO_STATUS_EFFECTS) then return false end
     if entity.Type == EntityType.ENTITY_DUMMY then return false end
     if entity.FrameCount > 0 then return false end
     if entity:IsBoss() then return false end
