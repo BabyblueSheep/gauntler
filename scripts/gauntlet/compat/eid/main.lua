@@ -5,6 +5,8 @@ if EID == nil then return end
 local eidIcons = Sprite()
 eidIcons:Load("gfx/gauntlet/ui/eid_inline_icons.anm2", true)
 
+EID:addIcon("Card"..TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID, "CardFronts", 0, 16, 16, -3, -2, eidIcons)
+
 EID:addIcon("GauntletGauntletRoomStat",         "GauntletRoom", 0, 14, 14, 0, -1, eidIcons)
 EID:addIcon("GauntletGauntletRoomMap",          "GauntletRoom", 1, 9, 9, 0, 3, eidIcons)
 EID:addIcon("GauntletGauntletRoomStatSmall",    "GauntletRoom", 2, 9, 9, 0, 1, eidIcons)

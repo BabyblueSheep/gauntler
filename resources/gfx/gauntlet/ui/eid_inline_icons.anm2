@@ -3,9 +3,11 @@
     <Content>
         <Spritesheets>
             <Spritesheet Id="0" Path="eid_inline_icons.png"/>
+            <Spritesheet Id="1" Path="../items/pick ups/gauntlet disc.png"/>
         </Spritesheets>
         <Layers>
             <Layer Id="0" Name="" SpritesheetId="0"/>
+            <Layer Id="1" Name="" SpritesheetId="1"/>
         </Layers>
         <Nulls/>
         <Events/>
@@ -22,6 +24,20 @@
                     <Frame XPosition="0" YPosition="0" XPivot="0" YPivot="0" XCrop="18" YCrop="0" Width="9" Height="9" XScale="100" YScale="100" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
                     <Frame XPosition="0" YPosition="0" XPivot="0" YPivot="0" XCrop="28" YCrop="0" Width="7" Height="9" XScale="100" YScale="100" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
                 </LayerAnimation>
+                <LayerAnimation LayerId="1" Visible="true"/>
+            </LayerAnimations>
+            <NullAnimations/>
+            <Triggers/>
+        </Animation>
+        <Animation Name="CardFronts" FrameNum="1" Loop="true">
+            <RootAnimation>
+                <Frame XPosition="0" YPosition="0" Delay="1" Visible="true" XScale="100" YScale="100" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
+            </RootAnimation>
+            <LayerAnimations>
+                <LayerAnimation LayerId="0" Visible="true"/>
+                <LayerAnimation LayerId="1" Visible="true">
+                    <Frame XPosition="0" YPosition="0" XPivot="0" YPivot="0" XCrop="32" YCrop="0" Width="32" Height="32" XScale="50" YScale="50" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
+                </LayerAnimation>
             </LayerAnimations>
             <NullAnimations/>
             <Triggers/>
@@ -35,6 +51,7 @@
                     <Frame XPosition="0" YPosition="0" XPivot="0" YPivot="0" XCrop="4" YCrop="12" Width="9" Height="9" XScale="100" YScale="100" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
                     <Frame XPosition="0" YPosition="0" XPivot="0" YPivot="0" XCrop="20" YCrop="13" Width="8" Height="8" XScale="100" YScale="100" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
                 </LayerAnimation>
+                <LayerAnimation LayerId="1" Visible="true"/>
             </LayerAnimations>
             <NullAnimations/>
             <Triggers/>
@@ -50,6 +67,7 @@
                     <Frame XPosition="0" YPosition="0" XPivot="0" YPivot="0" XCrop="32" YCrop="25" Width="8" Height="9" XScale="100" YScale="100" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
                     <Frame XPosition="0" YPosition="0" XPivot="0" YPivot="0" XCrop="41" YCrop="25" Width="9" Height="9" XScale="100" YScale="100" Delay="1" Visible="true" RedTint="255" GreenTint="255" BlueTint="255" AlphaTint="255" RedOffset="0" GreenOffset="0" BlueOffset="0" Rotation="0" Interpolated="false"/>
                 </LayerAnimation>
+                <LayerAnimation LayerId="1" Visible="true"/>
             </LayerAnimations>
             <NullAnimations/>
             <Triggers/>

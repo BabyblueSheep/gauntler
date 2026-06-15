@@ -4,9 +4,19 @@ TheGauntlet.Compat.FiendFolio.GauntletDisc = {}
 TheGauntlet.Compat.FiendFolio.GauntletDisc.PICKUP_SUBTYPE = Isaac.GetEntitySubTypeByName("Gauntlet Disc")
 TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID = Isaac.GetCardIdByName("Gauntlet Disc")
 
+---@param pickup EntityPickup
+local function ReplaceGauntletDisc(_, pickup)
+	if pickup.Variant ~= PickupVariant.PICKUP_TAROTCARD then return end
+	if pickup.SubType ~= TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID then return end
+
+	pickup:Morph(pickup.Type, pickup.Variant, Card.CARD_JUSTICE, false)
+end
+
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_PICKUP_INIT, ReplaceGauntletDisc)
+
 if FiendFolio == nil then return end
 
-
+TheGauntlet:RemoveCallback(ModCallbacks.MC_POST_PICKUP_INIT, ReplaceGauntletDisc)
 
 TheGauntlet.Compat.FiendFolio.GauntletDisc.Constants = {
     MINIMUM_ITEM_SPAWNED_FROM_DISC_COUNT = 3,

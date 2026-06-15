@@ -251,6 +251,8 @@ local hadesSkullChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntl
 local zeusBoltPipGiveChance = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Zeus.Constants.CHANCE_TO_GIVE_PIP_ON_KILL * 100)
 local zeusBerserkIntervalSeconds = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Items.Zeus.Constants.BERSERK_TIME_INTERVAL_FRAMES / 30)
 
+local gauntletDiscItemDurationSeconds = TheGauntlet.Utility.NumberToPresentableNumber(TheGauntlet.Compat.FiendFolio.GauntletDisc.Constants.ITEM_FROM_DISC_DURATION / 30)
+
 local function RegisterLanguageKeys(language, localizationItems)
     EID:addItemPoolName(TheGauntlet.GauntletRoom.ITEM_POOL_ID, language, localizationItems["pool.gauntlet.name"])
 
@@ -305,6 +307,13 @@ local function RegisterLanguageKeys(language, localizationItems)
         },
     }
 
+    local cardTranslationItems = {
+        {
+            TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID, "gauntletdisc",
+            { TheGauntlet.Compat.FiendFolio.GauntletDisc.Constants.MINIMUM_ITEM_SPAWNED_FROM_DISC_COUNT, TheGauntlet.Compat.FiendFolio.GauntletDisc.Constants.MAXIMUM_ITEM_SPAWNED_FROM_DISC_COUNT, gauntletDiscItemDurationSeconds }
+        },
+    }
+
     for _, item in ipairs(collectibleTranslationItems) do
         local collectibleType = item[1]
         local localizationKeyName = item[2]
@@ -318,6 +327,21 @@ local function RegisterLanguageKeys(language, localizationItems)
         end
 
         EID:addCollectible(collectibleType, collectibleDescription, collectibleName, language)
+    end
+
+    for _, item in ipairs(cardTranslationItems) do
+        local cardType = item[1]
+        local localizationKeyName = item[2]
+        local placeholderValues = item[3]
+
+        local collectibleName = localizationItems["card."..localizationKeyName..".name"]
+        local collectibleDescription = localizationItems["card."..localizationKeyName..".description"]
+
+        for placeholderNumber, placeholderValue in ipairs(placeholderValues) do
+            collectibleDescription = string.gsub(collectibleDescription, "%["..tostring(placeholderNumber).."%]", placeholderValue)
+        end
+
+        EID:addCard(cardType, collectibleDescription, collectibleName, language)
     end
 
     EID:addSelfCondition(TheGauntlet.Items.Athena.COLLECTIBLE_TYPE, localizationItems["item.athena.description.duplicate"], language)

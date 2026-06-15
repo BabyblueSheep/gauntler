@@ -102,4 +102,7 @@ return {
     ["item.abyss.locust_effect.demeter"] = "{{Collectible"..CollectibleType.COLLECTIBLE_SINUS_INFECTION.."}} Attaches a booger tear when dealing damage",
     ["item.abyss.locust_effect.poseidon"] = "{{Collectible"..Isaac.GetItemIdByName("Poseidon").."}} Pushes nearby enemies in its direction when charging",
     ["item.abyss.locust_effect.zeus"] = "{{Collectible"..Isaac.GetItemIdByName("Zeus").."}} Spawns a lightning bolt when dealing damage",
+
+    ["card.gauntletdisc.name"] = "Gauntlet Disc",
+    ["card.gauntletdisc.description"] = "Grants [1]-[2] random item effects from the Gauntlet item pool for [3] seconds.",
 }
