@@ -1,3 +1,7 @@
+if FiendFolio == nil then return end
+
+
+
 local game = Game()
 
 local originalFireworkExplosion = FiendFolio.FireworkExplosion

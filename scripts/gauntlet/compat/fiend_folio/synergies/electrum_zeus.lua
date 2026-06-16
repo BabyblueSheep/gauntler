@@ -1,3 +1,7 @@
+if FiendFolio == nil then return end
+
+
+
 ---@param effect EntityEffect
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_INIT, function(_, effect)
     if effect.Variant ~= TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT then return end

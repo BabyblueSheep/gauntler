@@ -1,5 +1,9 @@
 TheGauntlet.Items.Zeus.Constants.AVGM_BOLT_AMOUNT = 1
 
+if FiendFolio == nil then return end
+
+
+
 TheGauntlet.Items.Zeus.RegisterBoltAmountForItem(FiendFolio.ITEM.COLLECTIBLE.AVGM, function (configItem, player, slot)
     local data = player:GetData().ffsavedata
     if data.AVGMuses == 0 then

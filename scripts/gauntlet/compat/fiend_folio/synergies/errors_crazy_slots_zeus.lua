@@ -1,5 +1,9 @@
 TheGauntlet.Items.Zeus.Constants.ERRORS_CRAZY_SLOTS_BOLT_AMOUNT = 1
 
+if FiendFolio == nil then return end
+
+
+
 TheGauntlet.Items.Zeus.RegisterBoltAmountForItem(FiendFolio.ITEM.COLLECTIBLE.ERRORS_CRAZY_SLOTS, function (configItem, player, slot)
     local data = player:GetData().ffsavedata
     if data.CrazyErrorSlot == nil then

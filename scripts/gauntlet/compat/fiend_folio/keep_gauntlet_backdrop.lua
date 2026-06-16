@@ -1,3 +1,7 @@
+if FiendFolio == nil then return end
+
+
+
 local originalbackdropReplacer = FiendFolio.backdropReplacer
 
 function FiendFolio:backdropReplacer()

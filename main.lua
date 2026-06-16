@@ -93,6 +93,7 @@ include("scripts.gauntlet.compat.fiend_folio.synergies.errors_crazy_slots_zeus")
 include("scripts.gauntlet.compat.fiend_folio.synergies.excelsior_zeus")
 include("scripts.gauntlet.compat.fiend_folio.synergies.golden_frog_head_zeus")
 include("scripts.gauntlet.compat.fiend_folio.synergies.nyx_poseidon")
+include("scripts.gauntlet.compat.fiend_folio.synergies.tipsy_geode_dionysus")
 
 include("scripts.gauntlet.compat.minimapi")
 

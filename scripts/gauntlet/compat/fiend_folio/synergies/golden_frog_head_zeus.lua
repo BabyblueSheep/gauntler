@@ -1,3 +1,7 @@
+if FiendFolio == nil then return end
+
+
+
 TheGauntlet.Items.Zeus.RegisterBoltAmountForItem(FiendFolio.ITEM.COLLECTIBLE.FROG_HEAD, function (configItem, player, slot)
     return 0
 end)

@@ -1,3 +1,7 @@
+if FiendFolio == nil then return end
+
+
+
 local originalNyxShouldDoFloodEffect = FiendFolio.nyxShouldDoFloodEffect
 
 function FiendFolio:nyxShouldDoFloodEffect(player, tearFlags)

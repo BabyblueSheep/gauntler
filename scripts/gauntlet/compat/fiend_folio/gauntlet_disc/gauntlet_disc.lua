@@ -1,6 +1,14 @@
 --UUUUUUUUUUUGHHHHHHH
 
 TheGauntlet.Compat.FiendFolio.GauntletDisc = {}
+
+TheGauntlet.Compat.FiendFolio.GauntletDisc.Constants = {
+    MINIMUM_ITEM_SPAWNED_FROM_DISC_COUNT = 3,
+    MAXIMUM_ITEM_SPAWNED_FROM_DISC_COUNT = 5,
+
+    ITEM_FROM_DISC_DURATION = 30 * 60
+}
+
 TheGauntlet.Compat.FiendFolio.GauntletDisc.PICKUP_SUBTYPE = Isaac.GetEntitySubTypeByName("Gauntlet Disc")
 TheGauntlet.Compat.FiendFolio.GauntletDisc.CARD_ID = Isaac.GetCardIdByName("Gauntlet Disc")
 
@@ -18,12 +26,6 @@ if FiendFolio == nil then return end
 
 TheGauntlet:RemoveCallback(ModCallbacks.MC_POST_PICKUP_INIT, ReplaceGauntletDisc)
 
-TheGauntlet.Compat.FiendFolio.GauntletDisc.Constants = {
-    MINIMUM_ITEM_SPAWNED_FROM_DISC_COUNT = 3,
-    MAXIMUM_ITEM_SPAWNED_FROM_DISC_COUNT = 5,
-
-    ITEM_FROM_DISC_DURATION = 30 * 60
-}
 TheGauntlet.Compat.FiendFolio.GauntletDisc.Fallbacks = {
     TheGauntlet.Items.Aphrodite.COLLECTIBLE_TYPE,
     TheGauntlet.Items.Apollo.COLLECTIBLE_TYPE,

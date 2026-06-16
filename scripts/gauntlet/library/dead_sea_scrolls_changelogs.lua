@@ -14,9 +14,11 @@ that shouldn't be charmed
 {FSIZE2}Fiend Folio Compat
 - Added Gauntlet Disc
 - Added suppport for Stackable Items
-- Added synergy between Nyx and Poseidon
-- Added synergy between Excelsior and Zeus
-- Added synergy between Electrum and Zeus
+- Added synergies between: 
+{CLR3Nyx and Poseidon}
+{CLR3Excelsior and Zeus}
+{CLR3Electrum and Zeus}
+{CLR3Tipsy Geode and Dionysus}
 - Added various effects for
 active items and Zeus
 {FSIZE2}Compatibility Fixes
