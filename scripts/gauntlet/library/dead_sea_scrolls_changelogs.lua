@@ -16,11 +16,16 @@ that shouldn't be charmed
 - Added suppport for Stackable Items
 - Added synergy between Nyx and Poseidon
 - Added synergy between Excelsior and Zeus
-- Added compatibility for Spirit Urn
+- Added synergy between Electrum and Zeus
+- Added various effects for
+active items and Zeus
 {FSIZE2}Compatibility Fixes
+- Fix misspell in Zeus
+EID description
 - Gauntlet Rooms don't use
 incorrect backdrop with
 Fiend Folio anymore
+- Added compatibility for Spirit Urn
 ]])
 
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.0.2",

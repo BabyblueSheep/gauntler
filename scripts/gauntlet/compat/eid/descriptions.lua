@@ -399,6 +399,37 @@ local function RegisterLanguageKeys(language, localizationItems)
         TheGauntlet.Compat.EID.RegisterZeusDescription(collectibleType, language, description)
     end
 
+    if FiendFolio then
+        local zeusFiendFolioCaseTranslationItems = {
+            {
+                FiendFolio.ITEM.COLLECTIBLE.AVGM, "avgm",
+                { TheGauntlet.Items.Zeus.Constants.AVGM_BOLT_AMOUNT }
+            },
+            {
+                FiendFolio.ITEM.COLLECTIBLE.ERRORS_CRAZY_SLOTS, "errors_crazy_slots",
+                { TheGauntlet.Items.Zeus.Constants.ERRORS_CRAZY_SLOTS_BOLT_AMOUNT, TheGauntlet.Items.Zeus.Constants.ONE_TIME_USE_BOLT_AMOUNT }
+            },
+            {
+                FiendFolio.ITEM.COLLECTIBLE.FROG_HEAD, "golden_frog_head",
+                { }
+            },
+        }
+
+        for _, item in ipairs(zeusFiendFolioCaseTranslationItems) do
+            local collectibleType = item[1]
+            local localizationKeyName = item[2]
+            local placeholderValues = item[3]
+
+            local description = localizationItems["item.zeus.description.bolt_spawn."..localizationKeyName]
+
+            for placeholderNumber, placeholderValue in ipairs(placeholderValues) do
+                description = string.gsub(description, "%["..tostring(placeholderNumber).."%]", placeholderValue)
+            end
+
+            TheGauntlet.Compat.EID.RegisterZeusDescription(collectibleType, language, description)
+        end
+    end
+
     EID.descriptions[language].AbyssLocustEffects["Gauntlet Demeter Booger"] = localizationItems["item.abyss.locust_effect.demeter"]
     EID.descriptions[language].AbyssLocustEffects["Gauntlet Hades Status"] = localizationItems["item.abyss.locust_effect.hades"]
     EID.descriptions[language].AbyssLocustEffects["Gauntlet Poseidon Push"] = localizationItems["item.abyss.locust_effect.poseidon"]

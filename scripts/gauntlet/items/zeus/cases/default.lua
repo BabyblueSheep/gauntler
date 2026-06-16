@@ -1,3 +1,5 @@
+TheGauntlet.Items.Zeus.Constants.ONE_TIME_USE_BOLT_AMOUNT = 16
+
 ---@param configItem ItemConfigItem
 ---@param player EntityPlayer
 ---@param slot ActiveSlot
@@ -5,7 +7,7 @@
 return function (configItem, player, slot)
     local playerSave = TheGauntlet.SaveManager.GetRunSave(player)
 
-    if player:GetActiveItem(slot) == 0 then return 16 end
+    if player:GetActiveItem(slot) == 0 then return TheGauntlet.Items.Zeus.Constants.ONE_TIME_USE_BOLT_AMOUNT end
     if player:GetTotalActiveCharge(slot) == playerSave.Zeus.PreviousTotalChargeAmount and Game():GetDebugFlags() & DebugFlag.INFINITE_ITEM_CHARGES == 0 then return 0 end
 
     if configItem.ChargeType == 2 then

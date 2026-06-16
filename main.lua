@@ -82,13 +82,17 @@ TheGauntlet.Compat = {}
 include("scripts.gauntlet.compat.accurate_blurbs")
 
 TheGauntlet.Compat.FiendFolio = {}
-include("scripts.gauntlet.compat.fiend_folio.gauntlet_disc.gauntlet_disc")
-include("scripts.gauntlet.compat.fiend_folio.gauntlet_disc.item_icons")
-include("scripts.gauntlet.compat.fiend_folio.excelsior_zeus")
 include("scripts.gauntlet.compat.fiend_folio.item_tags")
 include("scripts.gauntlet.compat.fiend_folio.keep_gauntlet_backdrop")
-include("scripts.gauntlet.compat.fiend_folio.nyx_poseidon")
 include("scripts.gauntlet.compat.fiend_folio.spirit_urn_gauntlets")
+include("scripts.gauntlet.compat.fiend_folio.gauntlet_disc.gauntlet_disc")
+include("scripts.gauntlet.compat.fiend_folio.gauntlet_disc.item_icons")
+include("scripts.gauntlet.compat.fiend_folio.synergies.avgm_zeus")
+include("scripts.gauntlet.compat.fiend_folio.synergies.electrum_zeus")
+include("scripts.gauntlet.compat.fiend_folio.synergies.errors_crazy_slots_zeus")
+include("scripts.gauntlet.compat.fiend_folio.synergies.excelsior_zeus")
+include("scripts.gauntlet.compat.fiend_folio.synergies.golden_frog_head_zeus")
+include("scripts.gauntlet.compat.fiend_folio.synergies.nyx_poseidon")
 
 include("scripts.gauntlet.compat.minimapi")
 

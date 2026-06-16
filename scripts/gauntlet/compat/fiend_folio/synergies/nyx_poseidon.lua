@@ -1,7 +1,5 @@
 local originalNyxShouldDoFloodEffect = FiendFolio.nyxShouldDoFloodEffect
 
----@param player EntityPlayer
----@param tearFlags TearFlags
 function FiendFolio:nyxShouldDoFloodEffect(player, tearFlags)
     if player:HasCollectible(TheGauntlet.Items.Poseidon.COLLECTIBLE_TYPE) then
         return true
@@ -12,7 +10,6 @@ end
 
 local originalNyxFlood = FiendFolio.nyxFlood
 
----@param gem EntityFamiliar
 function FiendFolio:nyxFlood(gem)
     local player = gem.Player or Isaac.GetPlayer(0)
 
