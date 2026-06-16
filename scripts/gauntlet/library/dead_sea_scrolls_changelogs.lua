@@ -1,6 +1,7 @@
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1",
 [[
-{FSIZE3}1.1 : Fiend Folio Compat
+{FSIZE3}1.1 : Fiend Folio
+{FSIZE3}Compat
 
 {FSIZE2}Fixes
 - Change Hades status effect
@@ -11,8 +12,15 @@ incorrectly in water reflections
 - Fix Aphrodite charming enemies
 that shouldn't be charmed
 {FSIZE2}Fiend Folio Compat
-- Added suppport for Stackable Items
 - Added Gauntlet Disc
+- Added suppport for Stackable Items
+- Added synergy between Nyx and Poseidon
+- Added synergy between Excelsior and Zeus
+- Added compatibility for Spirit Urn
+{FSIZE2}Compatibility Fixes
+- Gauntlet Rooms don't use
+incorrect backdrop with
+Fiend Folio anymore
 ]])
 
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.0.2",

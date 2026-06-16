@@ -81,13 +81,19 @@ end)
 ---Creates a lightning bolt at a given position.
 ---@param position Vector
 ---@param source? Entity
-function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source)
+---@param color? Color
+function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source, color)
+    if color == nil then
+        color = Color.Default
+    end
+    
     local bolt = TheGauntlet.Utility.SpawnEffect
     (
         EntityType.ENTITY_EFFECT, TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT, 0,
         position, Vector.Zero,
         source
     )
+    bolt.Color = color
     bolt.RenderZOffset = -1000
 
     sfxManager:Play(TheGauntlet.Items.Zeus.THUNDER_ZAP_SOUND_EFFECT, 1, 2, false, math.random() * 0.4 + 0.8)
@@ -97,7 +103,7 @@ function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source)
         tearFlags = tearFlags | TearFlags.TEAR_BURN
     end
 
-    game:BombExplosionEffects(position, TheGauntlet.Items.Zeus.Constants.BOLT_DAMAGE, tearFlags, Color.Default, bolt, 0.5)
+    game:BombExplosionEffects(position, TheGauntlet.Items.Zeus.Constants.BOLT_DAMAGE, tearFlags, color, bolt, 0.5)
 
     if game:GetRoom():HasWater() then
 
@@ -132,6 +138,8 @@ function TheGauntlet.Items.Zeus.SpawnLightningBolt(position, source)
         spark.DisableFollowParent = true
         spark.TearFlags = TearFlags.TEAR_SPECTRAL | TearFlags.TEAR_JACOBS
         spark.SpriteOffset = Vector(0, -18)
+
+        spark.Color = color
 
     end
 end
@@ -209,6 +217,10 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PRE_EFFECT_RENDER, function(_, effect, o
     for i, point in ipairs(data.BeamPoints) do
         local whiteColor = Color(1, 1, 1, alpha)
         local coloredColor = Color(0.6, 0.8, 1, alpha)
+        if effect.Color ~= Color.Default then
+            coloredColor = effect.Color
+            coloredColor.A = alpha
+        end
 
         local pointPosition = Isaac.WorldToScreen(point.Position + offset)
         if game:GetRoom():GetRenderMode() == RenderMode.RENDER_WATER_REFLECT then
