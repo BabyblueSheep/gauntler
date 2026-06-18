@@ -17,8 +17,10 @@ TheGauntlet:AddCallback(ModCallbacks.MC_GET_SHADER_PARAMS, function (_, shaderNa
     if shaderName ~= "TheGauntlet Drunk Distortion" then return end
 
     local pitchDifferenceTarget = TheGauntlet.Utility.Lerp(0, 0.1, currentDrunkAmount)
-    if Isaac.GetFrameCount() % 30 == 0 then
-        musicManager:PitchSlide(1 + math.random() * pitchDifferenceTarget)
+    if currentDrunkAmount > 0 then
+        if Isaac.GetFrameCount() % 30 == 0 then
+            musicManager:PitchSlide(musicManager:GetCurrentPitch() + (math.random() - 0.5) * 2 * pitchDifferenceTarget)
+        end
     end
     if currentDrunkAmount == 0 and previousDrunkAmount ~= 0 then
         musicManager:PitchSlide(1)

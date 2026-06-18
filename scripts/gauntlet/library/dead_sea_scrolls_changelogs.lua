@@ -1,3 +1,14 @@
+DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1.1",
+[[
+{FSIZE3}1.1.1
+
+{FSIZE2}Fixes
+- Fix Gauntlet Door not accounting
+for White Fireplace effect
+- Fix Dionysus breaking music
+pitch shifting
+]])
+
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1",
 [[
 {FSIZE3}1.1 : Fiend Folio

@@ -267,7 +267,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_PLAYER_GRID_COLLISION, function (_, play
     if gridSave.GauntletRoom.FedHeart == true then return end
 
     local tookDamage = false
-    if player:GetHealthType() ~= HealthType.NO_HEALTH then
+    local canTakeDamage = player:GetHealthType() == HealthType.NO_HEALTH or player:HasInstantDeathCurse()
+    if not canTakeDamage then
         local cooldown = (player:GetTrinketMultiplier(TrinketType.TRINKET_BLIND_RAGE) + 1) * 60
         tookDamage = player:TakeDamage(2, DamageFlag.DAMAGE_NO_PENALTIES | DamageFlag.DAMAGE_NO_MODIFIERS, EntityRef(nil), cooldown)
     else
