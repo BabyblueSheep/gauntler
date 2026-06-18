@@ -50,7 +50,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
 
             local enemyPositions = {}
             for _, entity in ipairs(Isaac.GetRoomEntities()) do
-                if entity:IsActiveEnemy() then
+                if entity:IsActiveEnemy() and not entity:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then
                     table.insert(enemyPositions, entity.Position)
                 end
             end
@@ -244,16 +244,29 @@ end)
 ---@param damageFlags DamageFlag
 ---@param source EntityRef
 ---@param damageCooldown integer
+TheGauntlet:AddCallback(ModCallbacks.MC_PRE_PLAYER_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
+    if source.Entity == nil then return end
+    if source.Entity.Type ~= EntityType.ENTITY_EFFECT then return end
+    if source.Entity.Variant ~= TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT then return end
+
+    if damageFlags & DamageFlag.DAMAGE_EXPLOSION == 0 then return end
+
+    if entity.Type == EntityType.ENTITY_PLAYER then return false end
+end)
+
+---@param entity Entity
+---@param damage number
+---@param damageFlags DamageFlag
+---@param source EntityRef
+---@param damageCooldown integer
 TheGauntlet:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, function (_, entity, damage, damageFlags, source, damageCooldown)
     if source.Entity == nil then return end
     if source.Entity.Type ~= EntityType.ENTITY_EFFECT then return end
     if source.Entity.Variant ~= TheGauntlet.Items.Zeus.BOLT_EFFECT_VARIANT then return end
 
-    if entity.Type ~= EntityType.ENTITY_PLAYER then return end
-
     if damageFlags & DamageFlag.DAMAGE_EXPLOSION == 0 then return end
 
-    return false
+    if entity:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then return false end
 end)
 
 ---@param entity Entity

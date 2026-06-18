@@ -14,7 +14,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
     local isOnMines = (level:GetStage() == LevelStage.STAGE2_1 or level:GetStage() == LevelStage.STAGE2_2) and (level:GetStageType() == StageType.STAGETYPE_REPENTANCE or level:GetStageType() == StageType.STAGETYPE_REPENTANCE_B)
     local subtypeToUse = TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_SUBTYPE
     if isOnMines then
-        subtypeToUse = TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_MINES_SUBTYPE
+        --Boss Challenge variants with rails seem to be unused??? I guess???
+        --subtypeToUse = TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_MINES_SUBTYPE
     end
 
     local entranceRoomConfigToPlace = RoomConfig.GetRandomRoom

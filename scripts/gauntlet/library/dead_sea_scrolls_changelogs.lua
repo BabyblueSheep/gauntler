@@ -1,3 +1,20 @@
+DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1.2",
+[[
+{FSIZE3}1.1.2
+
+{FSIZE2}Fixes
+- Remove Gauntlet Room layouts
+with Mines rails
+- Fix Ares using incorrect
+Boss Challenge room layouts
+- Zeus bolts can't break
+Holy Mantle anymore
+- Zeus bolts don't target
+friendly enemies anymore
+- Athena doesn't interact with
+friendly enemies anymore
+]])
+
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1.1",
 [[
 {FSIZE3}1.1.1

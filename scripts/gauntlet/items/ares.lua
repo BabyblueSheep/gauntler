@@ -32,11 +32,11 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
     local rng = RNG(level:GetDungeonPlacementSeed())
 
     local entranceRoomConfigToPlace = nil
-    local entranceRoomValidPlacementIndexes = nil
+    local entranceRoomValidPlacementIndexes = {}
 
-    local GENERATION_ATTEMPT_COUNT = 5
+    local GENERATION_ATTEMPT_COUNT = 50
 
-    for _ = 1, GENERATION_ATTEMPT_COUNT do
+    for i = 1, GENERATION_ATTEMPT_COUNT do
         entranceRoomConfigToPlace = RoomConfig.GetRandomRoom
         (
             rng:Next(),
@@ -49,6 +49,14 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
             0
         )
 
+        if roomSubtype == RoomSubType.CHALLENGE_BOSS then
+            local isRoomMines = string.find(entranceRoomConfigToPlace.Name, "(mines)") ~= nil
+            local isOnMines = (level:GetStage() == LevelStage.STAGE2_1 or level:GetStage() == LevelStage.STAGE2_2) and (level:GetStageType() == StageType.STAGETYPE_REPENTANCE or level:GetStageType() == StageType.STAGETYPE_REPENTANCE_B)
+
+            --Boss Challenge variants with rails seem to be unused??? I guess???
+            if isRoomMines then goto continue end
+        end
+
         entranceRoomValidPlacementIndexes = level:FindValidRoomPlacementLocations
         (
             entranceRoomConfigToPlace, nil,
@@ -56,6 +64,8 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
         )
 
         if #entranceRoomValidPlacementIndexes ~= 0 then break end
+
+        ::continue::
     end
 
     if #entranceRoomValidPlacementIndexes == 0 then return end

@@ -186,7 +186,7 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_PLAYER_UPDATE, function (_, player)
                 local collidingEnemies = Isaac.FindInRadius(shieldEffect.Position, TheGauntlet.Items.Athena.Constants.SHIELD_HITBOX_SIZE, EntityPartition.ENEMY)
                 if #collidingEnemies > 0 then
                     local enemy = collidingEnemies[1]:ToNPC()
-                    if enemy ~= nil and enemy:IsActiveEnemy() then
+                    if enemy ~= nil and enemy:IsActiveEnemy() and not enemy:HasEntityFlags(EntityFlag.FLAG_FRIENDLY) then
                         enemy.Velocity = Vector.Zero
                         enemy:AddKnockback(EntityRef(player), direction * 10, 15, true)
 
