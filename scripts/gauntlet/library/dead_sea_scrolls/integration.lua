@@ -1,4 +1,4 @@
-local deadSeaScrollsCore = include("scripts.gauntlet.library.dead_sea_scrolls_core")
+local deadSeaScrollsCore = include("scripts.gauntlet.library.dead_sea_scrolls.core")
 
 local modName = "Dead Sea Scrolls (The Gauntlet)"
 

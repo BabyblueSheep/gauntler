@@ -1,3 +1,8 @@
+if not REPENTOGON then
+    error("[The Gauntlet] The Gauntlet requires REPENTOGON to be installed in order to work!", 0)
+    return
+end
+
 local backupDataHolder = nil
 if TheGauntlet ~= nil then
     backupDataHolder = TheGauntlet.DataHolder
@@ -7,6 +12,7 @@ TheGauntlet = RegisterMod("The Gauntlet", 1)
 
 TheGauntlet.SaveManager = include("scripts.gauntlet.library.save_manager")
 include("scripts.gauntlet.library.status_effect_library")
+include("scripts.gauntlet.library.tearflagslib.main")
 
 ---@type DataHolder
 TheGauntlet.DataHolder = include("scripts.gauntlet.library.data_holder")(TheGauntlet)
@@ -14,8 +20,8 @@ if backupDataHolder ~= nil then
     TheGauntlet.DataHolder.Update(TheGauntlet.DataHolder, backupDataHolder)
 end
 
-include("scripts.gauntlet.library.dead_sea_scrolls_integration")
-include("scripts.gauntlet.library.dead_sea_scrolls_changelogs")
+include("scripts.gauntlet.library.dead_sea_scrolls.integration")
+include("scripts.gauntlet.library.dead_sea_scrolls.changelogs")
 
 TheGauntlet.Utility = {}
 include("scripts.gauntlet.utility.callbacks")
