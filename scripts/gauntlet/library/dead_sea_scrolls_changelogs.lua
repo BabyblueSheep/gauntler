@@ -1,3 +1,12 @@
+DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1.3",
+[[
+{FSIZE3}1.1.3
+
+{FSIZE2}Fixes
+- Gauntlet Rooms no longer
+generate during the Ascent
+]])
+
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1.2",
 [[
 {FSIZE3}1.1.2

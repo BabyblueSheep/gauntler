@@ -7,6 +7,10 @@ local roomNeighbourOffsets = {
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_LEVEL, function (_)
     local level = game:GetLevel()
 
+    if level:IsAscent() then
+        return
+    end
+
     local rng = RNG(level:GetDungeonPlacementSeed())
 
     if rng:RandomFloat() > TheGauntlet.GauntletRoom.GetGenerationChance() then return end
