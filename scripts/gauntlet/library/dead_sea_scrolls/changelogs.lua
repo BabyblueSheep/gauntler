@@ -4,7 +4,7 @@ DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1.4",
 {FSIZE3}Compat pt. 2
 
 {FSIZE2}Tweaks
-Prevent loading if
+- Prevent loading if
 REPENTOGON is disabled
 {FSIZE2}Fixes
 - Gauntlet Rooms use correct
