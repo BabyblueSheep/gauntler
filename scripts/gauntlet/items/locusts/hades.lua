@@ -1,8 +1,18 @@
-TheGauntlet.Items.Hades.Constants.LOCUST_STATUS_EFFECT_DURATION = 30 * 5
+TheGauntlet.Items.Hades.Constants.LOCUST_STATUS_EFFECT_DURATION = 30 * 5 --UNUSED
 TheGauntlet.Items.Hades.Constants.LOCUST_CHANCE_TO_APPLY_STATUS_EFFECT = 0.05
 
 
 
+---@param locust EntityFamiliar
+---@param player EntityPlayer
+TheGauntlet:AddCallback(TearFlagsLib.Callback.POLL_LOCUST_TEARFLAGS, function(_, locust, player)
+    local rng = player:GetCollectibleRNG(TheGauntlet.Items.Hades.COLLECTIBLE_TYPE)
+    if rng:RandomFloat() < TheGauntlet.Items.Hades.Constants.LOCUST_CHANCE_TO_APPLY_STATUS_EFFECT then
+        TearFlagsLib.AddTearFlags(locust, TheGauntlet.Items.Hades.TEAR_FLAG)
+    end
+end, TheGauntlet.Items.Hades.COLLECTIBLE_TYPE)
+
+--[[
 ---@param entity Entity
 ---@param damage number
 ---@param damageFlags DamageFlag
@@ -25,3 +35,4 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, function (_, entit
 
     TheGauntlet.Items.Hades.InflictStatusEffect(entity, TheGauntlet.Items.Hades.Constants.LOCUST_STATUS_EFFECT_DURATION, source)
 end)
+]]
