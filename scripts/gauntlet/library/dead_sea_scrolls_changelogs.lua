@@ -1,3 +1,14 @@
+DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1.4",
+[[
+{FSIZE3}1.1.4
+
+{FSIZE2}Fixes
+- Gauntlet Rooms use correct
+icon in Mirror Dimension
+- Gauntlet room skulls
+act like skulls now
+]])
+
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1.3",
 [[
 {FSIZE3}1.1.3

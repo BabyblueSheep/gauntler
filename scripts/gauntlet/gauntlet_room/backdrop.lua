@@ -1,14 +1,22 @@
 TheGauntlet.GauntletRoom.BACKDROP_TYPE = Isaac.GetBackdropIdByName("TheGauntlet Gauntlet Room Backdrop")
 
+
+
+local game = Game()
+
+--[[
 TheGauntlet:AddCallback(ModCallbacks.MC_PRE_BACKDROP_CHANGE, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
 
     return TheGauntlet.GauntletRoom.BACKDROP_TYPE
 end)
+]]
 
 local updateColorModifierFrameAmount = 0
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_NEW_ROOM, function (_)
     if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
+
+    game:GetRoom():SetBackdropType(TheGauntlet.GauntletRoom.BACKDROP_TYPE, 1)
 
     local fxParams = Game():GetRoom():GetFXParams()
     fxParams.ColorModifier = ColorModifier(1.2, 0.8, 0.8, 0.2, 0, 1)
@@ -22,4 +30,18 @@ TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
         updateColorModifierFrameAmount = updateColorModifierFrameAmount - 1
         Game():GetRoom():UpdateColorModifier(true, true)
     end
+end)
+
+--Currently, specific alt rock behavior needs to be "hacked"
+
+TheGauntlet:AddPriorityCallback(ModCallbacks.MC_PRE_UPDATE, CallbackPriority.EARLY, function (_)
+    if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
+
+    game:GetRoom():SetBackdropType(BackdropType.SHEOL, 0)
+end)
+
+TheGauntlet:AddCallback(ModCallbacks.MC_POST_UPDATE, function (_)
+    if not TheGauntlet.GauntletRoom.IsCurrentRoomGauntletRoom() then return end
+
+    game:GetRoom():SetBackdropType(TheGauntlet.GauntletRoom.BACKDROP_TYPE, 0)
 end)

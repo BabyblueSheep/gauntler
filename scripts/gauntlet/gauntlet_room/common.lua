@@ -14,6 +14,9 @@ end
 ---@param roomDescriptor RoomDescriptor
 ---@return boolean
 function TheGauntlet.GauntletRoom.IsRoomGauntletRoom(roomDescriptor)
+    if roomDescriptor.Data == nil then
+        return false
+    end
     local typeIsCorrect = roomDescriptor.Data.Type == RoomType.ROOM_CHALLENGE
     local subtypesMatch = (roomDescriptor.Data.Subtype == TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_SUBTYPE) or (roomDescriptor.Data.Subtype == TheGauntlet.GauntletRoom.CHALLENGE_ROOM_GAUNTLET_MINES_SUBTYPE)
 
