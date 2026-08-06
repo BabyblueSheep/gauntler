@@ -1,12 +1,21 @@
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1.4",
 [[
-{FSIZE3}1.1.4
+{FSIZE3}1.2 : Fiend Folio
+{FSIZE3}Compat pt. 2
 
+{FSIZE2}Tweaks
+Prevent loading if
+REPENTOGON is disabled
 {FSIZE2}Fixes
 - Gauntlet Rooms use correct
 icon in Mirror Dimension
 - Gauntlet room skulls
 act like skulls now
+{FSIZE2}Fiend Folio Compat
+- Added exclusive Fiend Folio
+Gauntlet Rooms
+{FSIZE2}Misc Compatibility
+- Switched to TearFlagLib
 ]])
 
 DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1.3",
@@ -51,7 +60,7 @@ DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1",
 {FSIZE3}1.1 : Fiend Folio
 {FSIZE3}Compat
 
-{FSIZE2}Fixes
+{FSIZE2}Tweaks
 - Change Hades status effect
 behavior for bosses
 {FSIZE2}Fixes
