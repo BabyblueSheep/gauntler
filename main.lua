@@ -88,6 +88,7 @@ TheGauntlet.Compat = {}
 include("scripts.gauntlet.compat.accurate_blurbs")
 
 TheGauntlet.Compat.FiendFolio = {}
+include("scripts.gauntlet.compat.fiend_folio.add_custom_rooms")
 include("scripts.gauntlet.compat.fiend_folio.item_tags")
 include("scripts.gauntlet.compat.fiend_folio.keep_gauntlet_backdrop")
 include("scripts.gauntlet.compat.fiend_folio.spirit_urn_gauntlets")

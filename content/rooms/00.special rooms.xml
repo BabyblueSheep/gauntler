@@ -65,24 +65,6 @@
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
 		<door exists="True" x="13" y="3"/>
-		<spawn x="0" y="0">
-			<entity type="1300" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="12" y="0">
-			<entity type="1300" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="0" y="6">
-			<entity type="1300" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-		<spawn x="12" y="6">
-			<entity type="1300" variant="0" subtype="0" weight="1.0"/>
-		</spawn>
-	</room>
-	<room variant="5" name="" type="11" subtype="89" shape="1" width="13" height="7" difficulty="1" weight="1.0">
-		<door exists="True" x="-1" y="3"/>
-		<door exists="True" x="6" y="-1"/>
-		<door exists="True" x="6" y="7"/>
-		<door exists="True" x="13" y="3"/>
 		<spawn x="1" y="1">
 			<entity type="1940" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
@@ -96,7 +78,7 @@
 			<entity type="1940" variant="0" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="6" name="mines" type="11" subtype="90" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="5" name="mines" type="11" subtype="90" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -243,7 +225,7 @@
 			<entity type="6000" variant="5" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="7" name="mines" type="11" subtype="90" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="6" name="mines" type="11" subtype="90" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -366,7 +348,7 @@
 			<entity type="6000" variant="1" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="8" name="mines" type="11" subtype="90" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="7" name="mines" type="11" subtype="90" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
@@ -489,7 +471,7 @@
 			<entity type="6000" variant="1" subtype="0" weight="1.0"/>
 		</spawn>
 	</room>
-	<room variant="9" name="mines" type="11" subtype="90" shape="1" width="13" height="7" difficulty="1" weight="1.0">
+	<room variant="8" name="mines" type="11" subtype="90" shape="1" width="13" height="7" difficulty="1" weight="1.0">
 		<door exists="True" x="-1" y="3"/>
 		<door exists="True" x="6" y="-1"/>
 		<door exists="True" x="6" y="7"/>
