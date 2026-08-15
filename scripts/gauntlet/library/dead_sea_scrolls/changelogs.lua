@@ -1,4 +1,13 @@
-DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.1.4",
+DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.2.1",
+[[
+{FSIZE3}1.2.1
+
+{FSIZE2}Fixes
+- Fix certain projectiles
+incorrectly being bones
+]])
+
+DeadSeaScrollsMenu.AddChangelog("The Gauntlet", "1.2",
 [[
 {FSIZE3}1.2 : Fiend Folio
 {FSIZE3}Compat pt. 2

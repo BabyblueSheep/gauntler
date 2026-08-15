@@ -74,7 +74,7 @@ TheGauntlet:AddPriorityCallback(TearFlagsLib.Callback.POST_ADD_TEARFLAG, Callbac
     if bomb ~= nil then
         bomb.Color = BOMB_BONE_COLOR
     end
-end)
+end, TheGauntlet.Items.Hades.TEAR_FLAG)
 
 ---@param effect EntityEffect
 TheGauntlet:AddCallback(ModCallbacks.MC_POST_EFFECT_UPDATE, function (_, effect)
